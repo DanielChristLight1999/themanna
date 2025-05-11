@@ -4,9 +4,9 @@ import React from 'react'
 
 const Nav = () => {
   return (
-    <div className='flex bg-red-500 w-full items-center border-2 border-red-500 justify-between'>
-        <Image src={"/images/themanalogo.png"} width={100} height={100} alt="Themana Logo" />
-        <Headset />
+    <div className='flex w-full lg:px-28 p-6 items-center justify-between'>
+        <Image className='w-32' src={"/images/themanalogo.svg"} width={150} height={150} alt="Themana Logo" />
+        <Headset size={26} />
     </div>
   )
 }
