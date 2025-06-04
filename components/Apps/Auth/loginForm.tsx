@@ -3,6 +3,9 @@
 import React from 'react'
 import ReusableAuthForm from '../AuthForm'
 import { z } from 'zod'
+import { LoginUser } from '@/actions/authactions';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 
 const schema = z.object({
@@ -24,8 +27,15 @@ const fields = [
     }
 ]
 const LoginForm = () => {
+    const router = useRouter()
     const onSubmit = async (values: z.infer<typeof schema>) => {
-        console.log(values)
+        const response = await LoginUser(values.email, values.password)
+        if (response.error) {
+            toast.error(response.message)
+        } else {
+            toast.success(response.message)
+            router.replace("/")
+        }
     }
     return (
         <div className='flex flex-col justify-between h-full w-full'>
@@ -33,7 +43,7 @@ const LoginForm = () => {
                 <h1 className='text-4xl text-white font-bold text-center'>Log In</h1>
                 <p className='text-center text-white'>Please sign in to your account</p>
             </div>
-            <ReusableAuthForm type='login' submitButtonText='Login' onSubmit={onSubmit} schema={schema} fields={fields} defaultValues={{}} />
+            <ReusableAuthForm className='border-none' googleLogin={true} type='login' submitButtonText='Login' onSubmit={onSubmit} schema={schema} fields={fields} defaultValues={{ email: "", password: "" }} />
         </div>
     )
 }

@@ -1,0 +1,33 @@
+import prisma from '@/db'
+import React from 'react'
+import CartItemCard from './CartItemCard'
+import { getCart } from '@/lib/getData'
+import Link from 'next/link'
+
+const CartList = async ({ userid }: { userid: string }) => {
+    const cart = await getCart(userid)
+    if (cart.length === 0) {
+        return (
+            <div className="text-center py-12">
+                <h2 className="text-xl font-medium mb-4">Your cart is empty</h2>
+                <p className="text-muted-foreground mb-6">
+                    Add some delicious meals to your cart before proceeding to checkout.
+                </p>
+                <Link href="/" className="text-primary hover:underline">
+                    Browse our menu
+                </Link>
+            </div>
+        )
+    }
+    return (
+        <div className='flex flex-col items-center gap-4 w-full'>
+            <div className=' flex flex-col gap-4 w-full'>
+                {cart.map((item, index) => (
+                    <CartItemCard item={item} key={index} />
+                ))}
+            </div>
+        </div>
+    )
+}
+
+export default CartList

@@ -80,7 +80,7 @@
 
 @theme {
   --animate-bounce-slow: bounceslow 3s infinite;
-  
+
   @keyframes bounceslow {
     0%, 100% {
       transform: translateY(0);

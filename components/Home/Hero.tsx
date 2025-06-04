@@ -1,8 +1,8 @@
-import React from 'react'
+"use client"
 import { Button } from '../ui/button'
-import Link from 'next/link'
 import { Play } from 'lucide-react'
 import Image from 'next/image'
+import { LogOutOAuth, Signin } from '@/actions/authactions'
 
 const Hero = () => {
   return (
@@ -19,15 +19,14 @@ const Hero = () => {
           Sed ut perspiciatis unde omnis iste natus sit voluptatem accusantium doloremque laudantium
         </p>
         <div className='flex items-center mt-6 lg:justify-start lg:gap-4 justify-between w-full'>
-          <Button className='rounded-full shadow text-xl p-6  h-14' asChild>
-            <Link href='http://app.christlight-pc.local:3000/'> Order Now </Link>
+          <Button onClick={async () => await Signin()} className='rounded-full shadow text-xl p-6  h-14' >
+            Order Now
           </Button>
-          <Button variant={"link"} className=' rounded-full p-6 text-black text-xl h-14' asChild>
-            <Link href='/'> 
+          <Button variant={"link"} className=' rounded-full p-6 text-black text-xl h-14'>
               <Play fill='black' className='!size-12 bg-white shadow rounded-full p-4' />
               <span>Watch Video</span>
-            </Link>
           </Button>
+          {/* <Button onClick={async () => await LogOutOAuth()}>Logout</Button> */}
         </div>
       </div>
       <div className='w-full max-w-xl '>

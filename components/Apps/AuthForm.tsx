@@ -16,6 +16,8 @@ import AuthButton from './common/AuthButton';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { FcGoogle } from "react-icons/fc";
+import { LoginOAuth } from '@/actions/authactions';
+import { cn } from '@/lib/utils';
 
 type Field = {
   name: string;
@@ -30,7 +32,9 @@ type ReusableAuthFormProps<T extends ZodTypeAny> = {
   defaultValues: Record<string, any>;
   fields: Field[];
   onSubmit: (values: z.infer<T>) => void;
+  className?: string
   submitButtonText?: string;
+  googleLogin: boolean;
 };
 
 const ReusableAuthForm = <T extends ZodTypeAny>({
@@ -38,8 +42,10 @@ const ReusableAuthForm = <T extends ZodTypeAny>({
   type,
   defaultValues,
   fields,
+  className,
   onSubmit,
   submitButtonText = 'Submit',
+  googleLogin = true
 }: ReusableAuthFormProps<T>) => {
   const form = useForm<z.infer<T>>({
     resolver: zodResolver(schema),
@@ -49,9 +55,9 @@ const ReusableAuthForm = <T extends ZodTypeAny>({
   const loading = form.formState.isSubmitting;
 
   return (
-    <div className=' h-full border-red-500'>
+    <div className={cn(className)}>
       <Form {...form}>
-        <form className='bg-white z-[50] h-full rounded-t-4xl flex flex-col gap-4 p-10' onSubmit={form.handleSubmit(onSubmit)}>
+        <form className='bg-white flex flex-col gap-2 h-full rounded-lg gap-x-2 p-8 ' onSubmit={form.handleSubmit(onSubmit)}>
           {fields.map((field) => (
             <FormField
               key={field.name}
@@ -62,7 +68,6 @@ const ReusableAuthForm = <T extends ZodTypeAny>({
                   <FormLabel>{field.label}</FormLabel>
                   <FormControl>
                     <Input
-                      className='h-16'
                       {...formField}
                       placeholder={field.placeholder}
                       type={field.type}
@@ -73,22 +78,24 @@ const ReusableAuthForm = <T extends ZodTypeAny>({
               )}
             />
           ))}
-          <div>
+          <div className='col-span-2'>
             <Link className='text-[#FF7E00]' href="/auth/forgotpassword">Forgot Password?</Link>
           </div>
           <AuthButton
             variant="default"
-            className='rounded-2xl bg-[#FF7E00] shadow text-xl p-6  h-14'
+            className='rounded-2xl col-span-2 bg-[#FF7E00] shadow '
             buttonText={submitButtonText}
             loading={loading}
           />
-          {type === "login" ? <p>Don't have an account? <Link className='text-[#FF7E00]' href="/auth/signup">Signup</Link></p> : <p>Already have an account? <Link className='text-[#FF7E00]' href="/auth/login">Login</Link></p>}
-          <div className='flex w-full flex-col gap-4 items-center'>
-            <Button className='flex items-center gap-2 w-full rounded-2xl p-6 text-xl h-14'>
+          <div className='col-span-2 flex justify-center'>
+            {type === "login" ? <p>Don't have an account? <Link className='text-[#FF7E00]' href="/auth/signup">Signup</Link></p> : <p>Already have an account? <Link className='text-[#FF7E00]' href="/auth/login">Login</Link></p>}
+          </div>
+          {googleLogin ? <div className='flex w-full col-span-2 flex-col gap-4 items-center'>
+            <Button onClick={async () => await LoginOAuth()} className='flex items-center gap-2 w-full rounded-2xl p-6 text-xl h-14'>
               <FcGoogle className='!size-8' />
               <span>Sign in with Google</span>
             </Button>
-          </div>
+          </div> : ""}
         </form>
       </Form>
     </div>

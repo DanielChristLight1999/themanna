@@ -1,0 +1,265 @@
+// schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  CASHIER
+  CUSTOMER
+  AFFILIATE
+}
+
+enum OrderStatus {
+  PENDING // Just created
+  CONFIRMED // Confirmed and in preparation
+  IN_TRANSIT // Out for delivery
+  DELIVERED // Successfully delivered
+  CANCELLED // Cancelled by user or admin
+}
+
+enum OrderType {
+  ONLINE
+  POS
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PaymentMethod {
+  PAYSTACK
+  CASH
+  TRANSFER
+}
+
+enum DeliveryType {
+  DELIVERY
+  PICKUP
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  phone        String?
+  role         Role     @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  isActive     Boolean  @default(true)
+
+  orders      Order[]      @relation("CustomerOrders")
+  addresses   Address[]
+  affiliate   Affiliate?   @relation("UserAffiliate")
+  posSessions PosSession[] @relation("StaffSessions")
+  cartItems   CartItem[]
+}
+
+model Affiliate {
+  userId        String   @id
+  approved      Boolean  @default(false)
+  referralCode  String   @unique
+  totalEarnings Float    @default(0)
+  createdAt     DateTime @default(now())
+
+  user        User         @relation("UserAffiliate", fields: [userId], references: [id])
+  referrals   Referral[]
+  commissions Commission[]
+}
+
+model Referral {
+  id           String   @id @default(uuid())
+  affiliateId  String
+  referredUser String   @unique
+  referredAt   DateTime @default(now())
+
+  affiliate Affiliate @relation(fields: [affiliateId], references: [userId])
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  userId     String
+  label      String // e.g., "Home", "Work", "Mum's House"
+  street     String
+  city       String
+  state      String
+  postalCode String?
+  country    String   @default("Nigeria")
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id])
+  orders Order[]
+}
+
+model Commission {
+  id          String   @id @default(uuid())
+  affiliateId String
+  orderId     String   @unique
+  amount      Float
+  paid        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  affiliate Affiliate @relation(fields: [affiliateId], references: [userId])
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  products Product[]
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  costPrice   Float?
+  sku         String?  @unique
+  isActive    Boolean  @default(true)
+  categoryId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  category   Category       @relation(fields: [categoryId], references: [id])
+  images     ProductImage[]
+  inventory  Inventory?
+  orderItems OrderItem[]
+  cartItems  CartItem[]
+  posItems   PosItem[]
+}
+
+model ProductImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  productId Int
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Inventory {
+  id            Int      @id @default(autoincrement())
+  productId     Int      @unique
+  quantity      Int
+  lowStockAlert Int      @default(5)
+  updatedAt     DateTime @updatedAt
+
+  product      Product                @relation(fields: [productId], references: [id])
+  transactions InventoryTransaction[]
+}
+
+model InventoryTransaction {
+  id          Int      @id @default(autoincrement())
+  inventoryId Int
+  change      Int // positive = restock, negative = sale
+  reason      String?
+  createdAt   DateTime @default(now())
+
+  inventory Inventory @relation(fields: [inventoryId], references: [id])
+}
+
+model Order {
+  id            String        @id @default(uuid())
+  customerId    String
+  addressId     String?
+  affiliateCode String? // if referred via affiliate link
+  status        OrderStatus   @default(PENDING) // e.g., CONFIRMED, DELIVERED
+  orderType     String        @default("ONLINE") // ONLINE or POS
+  paymentStatus PaymentStatus @default(PENDING)
+  deliveryType  DeliveryType? @default(DELIVERY) // DELIVERY or PICKUP
+  deliveryAddr  String?
+  totalAmount   Float
+  taxAmount     Float?
+  deliveryFee   Float?
+  orderNotes    String?
+  placedAt      DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  customer   User        @relation("CustomerOrders", fields: [customerId], references: [id])
+  address    Address?    @relation(fields: [addressId], references: [id])
+  items      OrderItem[]
+  payment    Payment?
+  commission Commission?
+}
+
+model OrderItem {
+  id        Int    @id @default(autoincrement())
+  orderId   String
+  productId Int
+  quantity  Int
+  unitPrice Float
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String        @unique
+  method        PaymentMethod @default(PAYSTACK)// e.g. PAYSTACK, FLUTTERWAVE, CASH
+  amount        Float
+  status        PaymentStatus @default(PENDING)// PENDING, SUCCESS, FAILED
+  transactionId String?
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model PosSession {
+  id       String    @id @default(uuid())
+  staffId  String
+  openedAt DateTime  @default(now())
+  closedAt DateTime?
+
+  staff    User      @relation("StaffSessions", fields: [staffId], references: [id])
+  posItems PosItem[]
+}
+
+model PosItem {
+  id        Int    @id @default(autoincrement())
+  sessionId String
+  productId Int
+  quantity  Int
+  unitPrice Float
+
+  session PosSession @relation(fields: [sessionId], references: [id])
+  product Product    @relation(fields: [productId], references: [id])
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  productId Int
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+}
+
+model Setting {
+  id          Int     @id @default(autoincrement())
+  key         String  @unique
+  value       String
+  description String?
+}

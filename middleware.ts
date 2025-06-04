@@ -1,41 +1,73 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { auth } from "@/auth"
+import { stripAppSubdomain } from "./lib/utils";
 
 const PUBLIC_PATHS = ["/auth/login", "/auth/signup"];
-export default async function middleware(req: NextRequest) {
+export default auth(async (req) => {
 
     const hostname = req.headers.get('host')!;
     const subdomain = hostname.match(/^([^.]+)\./)?.[1];
     const pathname = req.nextUrl.pathname
+    // const issubdomain = subdomain?.startsWith('app');
+    console.log("hostname", hostname)
 
-    const issubdomain = subdomain?.startsWith('app');
+    const host = stripAppSubdomain(req.headers.get('host')?.toString() as string);
 
-    if (!issubdomain) {
+
+
+    if (!subdomain) {
+        const isPublicPath = PUBLIC_PATHS.some((publicpath) => pathname.startsWith(publicpath));
+        if (isPublicPath) {
+            return NextResponse.redirect(new URL(`http://app.${host}${pathname}`, req.url));
+        }
+        console.log("redirecting to app");
+
         return NextResponse.next();
     }
 
-    const isPublicPath = PUBLIC_PATHS.some((publicpath) => pathname.startsWith(publicpath));
 
-    if (isPublicPath) {
-        return NextResponse.rewrite(new URL(`/app${req.nextUrl.pathname}`, req.url));
+    switch (subdomain) {
+        case "app":
+            {
+                const PROTECTED_PATHS = ["/", "/profile", "/settings", "/checkout", "/orders"]; // Add all your exact protected paths here
+                const isProtectedPath = PROTECTED_PATHS.includes(pathname);
+                const isLoggedin = req.auth
+                if (!isLoggedin && isProtectedPath) {
+                    return NextResponse.redirect(new URL(`/auth/login`, req.url));
+                }
+                return NextResponse.rewrite(new URL(`/app${req.nextUrl.pathname}`, req.url));
+
+            }
+        case "admin":
+            {
+                const PROTECTED_PATHS = ["/", "/profile", "/settings", "/checkout", "/orders"]; // Add all your exact protected paths here
+                const isProtectedPath = PROTECTED_PATHS.includes(pathname);
+                const isLoggedin = req.auth
+                if (!isLoggedin && isProtectedPath) {
+                    return NextResponse.redirect(new URL(`/auth/login`, req.url));
+                }
+                return NextResponse.rewrite(new URL(`/admin${req.nextUrl.pathname}`, req.url));
+             }
+        default:
+            return NextResponse.next();
     }
+    // return NextResponse.rewrite(new URL(`/app${req.nextUrl.pathname}`, req.url));
+    // // return NextResponse.next();
 
-    const isLoggedin = false;
-    if (isLoggedin) {
-        return NextResponse.rewrite(new URL(`/app${req.nextUrl.pathname}`, req.url));
-    }else {
-        return NextResponse.rewrite(new URL(`/app/auth/login${req.nextUrl.pathname}`, req.url));
-    }
+})
 
-}
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next (Next.js internals)
-     * - static (static files)
-     * - favicon.ico, robots.txt, etc.
-     */
-    "/((?!_next|images|favicon.ico|robots.txt|sitemap.xml).*)",
-  ],
+    matcher: [
+        /*
+         * Match all request paths except for the ones starting with:
+         * - _next (Next.js internals)
+         * - static (static files)
+         * - favicon.ico, robots.txt, etc.
+         */
+        // "/((?!_next|images|favicon.ico|robots.txt|sitemap.xml).*)",
+        "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+$|.*\\.[^/]+$).*)",
+        // "/((?!_next/|favicon.ico|robots.txt|manifest.json|static/|.*\\..*).*)",
+
+    ],
 };

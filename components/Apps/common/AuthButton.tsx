@@ -11,7 +11,7 @@ interface AuthButtonProps {
 }
 const AuthButton = ({buttonText, loading, className, variant} : AuthButtonProps) => {
   return (
-    <Button className={className} variant={variant}>
+    <Button type="submit" className={className} variant={variant}>
         {loading ? <div className='animate-spin'>
             <LoaderCircle />
         </div> : buttonText}
