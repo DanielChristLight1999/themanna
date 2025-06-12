@@ -4,13 +4,17 @@ import { RestaurantSettings } from "@/components/admin/settings/restaurant-setti
 import { DeliverySettings } from "@/components/admin/settings/delivery-settings"
 import { PaymentSettings } from "@/components/admin/settings/payment-settings"
 import { UserRolesSettings } from "@/components/admin/settings/user-roles-settings"
+import { DeliverySettingsType, getRestaurantSettings } from "@/lib/getsettingsData"
+import { RestaurantInfo } from "@/lib/generated/prisma"
+import { PaymentSettingsType } from "@/actions/admin/settings-actions"
 
 export const metadata: Metadata = {
   title: "Settings | The Mana Restaurant Admin",
   description: "Configure settings for The Mana Restaurant",
 }
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const {restaurantInfo, deliverySettings, paymentSettings, adminusers} = await getRestaurantSettings()
   return (
     <div className="flex flex-col p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -25,16 +29,16 @@ export default function SettingsPage() {
           <TabsTrigger value="users">Users & Roles</TabsTrigger>
         </TabsList>
         <TabsContent value="restaurant" className="pt-6">
-          <RestaurantSettings />
+          <RestaurantSettings restaurant={restaurantInfo as RestaurantInfo} />
         </TabsContent>
         <TabsContent value="delivery" className="pt-6">
-          <DeliverySettings />
+          <DeliverySettings deliverySettings={deliverySettings as DeliverySettingsType} />
         </TabsContent>
         <TabsContent value="payment" className="pt-6">
-          <PaymentSettings />
+          <PaymentSettings initialSettings={paymentSettings as PaymentSettingsType} />
         </TabsContent>
         <TabsContent value="users" className="pt-6">
-          <UserRolesSettings />
+          <UserRolesSettings adminusers={adminusers} />
         </TabsContent>
       </Tabs>
     </div>

@@ -1,188 +1,191 @@
 "use client"
 
-import { useState } from "react"
+import AuthButton from "@/components/Apps/common/AuthButton"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
+} from "@/components/ui/card"
+import {
+  Form, FormControl, FormField, FormItem, FormLabel, FormMessage
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { DeliverySettingsType } from "@/lib/getsettingsData"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm, useFieldArray } from "react-hook-form"
+import { z } from "zod"
+import { toast } from "sonner"
+import { PlusCircleIcon, Trash2 } from "lucide-react"
+import { updateDeliverySettings } from "@/actions/admin/settings-actions"
 
-export function DeliverySettings() {
-  const [deliverySettings, setDeliverySettings] = useState({
-    enableDelivery: true,
-    enablePickup: true,
-    defaultDeliveryFee: 350,
-    minimumOrderAmount: 1000,
-    estimatedDeliveryTime: 45,
-    deliveryRadius: 10,
-    zones: [
-      { name: "Ikeja", fee: 350 },
-      { name: "Lekki", fee: 500 },
-      { name: "Victoria Island", fee: 500 },
-      { name: "Yaba", fee: 400 },
-    ],
+const formSchema = z.object({
+  defaultDeliveryFee: z.coerce.number().min(1),
+  minimumOrderAmount: z.coerce.number().min(1),
+  estimatedDeliveryTime: z.coerce.number().min(1),
+  deliveryRadius: z.coerce.number().min(1),
+})
+
+const deliveryZonesSchema = z.object({
+  zones: z.array(z.object({
+    name: z.string().min(1),
+    fee: z.coerce.number().min(1),
+  }))
+})
+
+export function DeliverySettings({ deliverySettings }: { deliverySettings: DeliverySettingsType }) {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      defaultDeliveryFee: deliverySettings.defaultDeliveryFee,
+      minimumOrderAmount: deliverySettings.minimumOrderAmount,
+      estimatedDeliveryTime: deliverySettings.estimatedDeliveryTime,
+      deliveryRadius: deliverySettings.deliveryRadius,
+    },
   })
 
-  const handleSave = () => {
-    // In a real app, this would call an API to save the settings
-    console.log("Saving delivery settings:", deliverySettings)
+  const deliveryZonesForm = useForm<z.infer<typeof deliveryZonesSchema>>({
+    resolver: zodResolver(deliveryZonesSchema),
+    defaultValues: {
+      zones: deliverySettings.zones,
+    },
+  })
+
+  const { fields, append, remove } = useFieldArray({
+    control: deliveryZonesForm.control,
+    name: "zones",
+  })
+
+  const onSubmitDelivery = async (data: z.infer<typeof formSchema>) => {
+    const result = await updateDeliverySettings({
+      enableDelivery: deliverySettings.enableDelivery,
+      enablePickup: deliverySettings.enablePickup,
+      ...data,
+      zones: deliverySettings.zones,
+    })
+
+    if (result.error) {
+      toast.error(result.message)
+    } else {
+      toast.success(result.message)
+    }
   }
+
+  const onSubmitZones = async (data: z.infer<typeof deliveryZonesSchema>) => {
+    const result = await updateDeliverySettings({
+      enableDelivery: deliverySettings.enableDelivery,
+      enablePickup: deliverySettings.enablePickup,
+      defaultDeliveryFee: deliverySettings.defaultDeliveryFee,
+      minimumOrderAmount: deliverySettings.minimumOrderAmount,
+      estimatedDeliveryTime: deliverySettings.estimatedDeliveryTime,
+      deliveryRadius: deliverySettings.deliveryRadius,
+      zones: data.zones,
+    })
+
+    if (result.error) {
+      toast.error(result.message)
+    } else {
+      toast.success(result.message)
+    }
+  }
+
 
   return (
     <div className="space-y-6">
+      {/* Delivery Options */}
       <Card>
         <CardHeader>
           <CardTitle>Delivery Options</CardTitle>
           <CardDescription>Configure your restaurant's delivery settings</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="enable-delivery">Enable Delivery</Label>
-              <p className="text-sm text-muted-foreground">Allow customers to order food for delivery</p>
-            </div>
-            <Switch
-              id="enable-delivery"
-              checked={deliverySettings.enableDelivery}
-              onCheckedChange={(checked) => setDeliverySettings({ ...deliverySettings, enableDelivery: checked })}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label htmlFor="enable-pickup">Enable Pickup</Label>
-              <p className="text-sm text-muted-foreground">Allow customers to order food for pickup</p>
-            </div>
-            <Switch
-              id="enable-pickup"
-              checked={deliverySettings.enablePickup}
-              onCheckedChange={(checked) => setDeliverySettings({ ...deliverySettings, enablePickup: checked })}
-            />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="default-delivery-fee">Default Delivery Fee (₦)</Label>
-              <Input
-                id="default-delivery-fee"
-                type="number"
-                value={deliverySettings.defaultDeliveryFee}
-                onChange={(e) =>
-                  setDeliverySettings({
-                    ...deliverySettings,
-                    defaultDeliveryFee: Number.parseInt(e.target.value),
-                  })
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="minimum-order">Minimum Order Amount (₦)</Label>
-              <Input
-                id="minimum-order"
-                type="number"
-                value={deliverySettings.minimumOrderAmount}
-                onChange={(e) =>
-                  setDeliverySettings({
-                    ...deliverySettings,
-                    minimumOrderAmount: Number.parseInt(e.target.value),
-                  })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="delivery-time">Estimated Delivery Time (minutes)</Label>
-              <Input
-                id="delivery-time"
-                type="number"
-                value={deliverySettings.estimatedDeliveryTime}
-                onChange={(e) =>
-                  setDeliverySettings({
-                    ...deliverySettings,
-                    estimatedDeliveryTime: Number.parseInt(e.target.value),
-                  })
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="delivery-radius">Delivery Radius (km)</Label>
-              <Input
-                id="delivery-radius"
-                type="number"
-                value={deliverySettings.deliveryRadius}
-                onChange={(e) =>
-                  setDeliverySettings({
-                    ...deliverySettings,
-                    deliveryRadius: Number.parseInt(e.target.value),
-                  })
-                }
-              />
-            </div>
-          </div>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmitDelivery)} className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField name="defaultDeliveryFee" control={form.control} render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Default Delivery Fee (₦)</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField name="minimumOrderAmount" control={form.control} render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Minimum Order Amount (₦)</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField name="estimatedDeliveryTime" control={form.control} render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estimated Delivery Time (min)</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField name="deliveryRadius" control={form.control} render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Delivery Radius (km)</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+              <AuthButton loading={form.formState.isSubmitting} buttonText="Save Settings" />
+            </form>
+          </Form>
         </CardContent>
-        <CardFooter>
-          <Button onClick={handleSave}>Save Changes</Button>
-        </CardFooter>
       </Card>
 
+      {/* Delivery Zones */}
       <Card>
         <CardHeader>
           <CardTitle>Delivery Zones</CardTitle>
-          <CardDescription>Configure delivery fees for different areas</CardDescription>
+          <CardDescription>Configure delivery fees for specific locations</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="zones" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="zones">Zones</TabsTrigger>
-              <TabsTrigger value="add">Add New Zone</TabsTrigger>
-            </TabsList>
-            <TabsContent value="zones" className="pt-4">
-              <div className="space-y-4">
-                {deliverySettings.zones.map((zone, index) => (
-                  <div key={index} className="grid grid-cols-3 gap-4 items-center">
-                    <div className="col-span-2">
-                      <Label className="mb-1 block">{zone.name}</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="number"
-                        value={zone.fee}
-                        onChange={(e) => {
-                          const updatedZones = [...deliverySettings.zones]
-                          updatedZones[index].fee = Number.parseInt(e.target.value)
-                          setDeliverySettings({
-                            ...deliverySettings,
-                            zones: updatedZones,
-                          })
-                        }}
-                      />
-                      <span className="text-sm">₦</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-            <TabsContent value="add" className="pt-4">
-              <div className="grid gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="zone-name">Zone Name</Label>
-                  <Input id="zone-name" placeholder="e.g., Surulere" />
+          <Form {...deliveryZonesForm}>
+            <form onSubmit={deliveryZonesForm.handleSubmit(onSubmitZones)} className="space-y-6">
+              {fields.map((field, index) => (
+                <div key={field.id} className="grid grid-cols-3 gap-4 items-end">
+                  <FormField name={`zones.${index}.name`} control={deliveryZonesForm.control} render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Zone Name</FormLabel>
+                      <FormControl><Input {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField name={`zones.${index}.fee`} control={deliveryZonesForm.control} render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Fee (₦)</FormLabel>
+                      <FormControl><Input type="number" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <Button
+                    variant="destructive"
+                    type="button"
+                    size={"icon"}
+                    className="mt-1"
+                    onClick={() => remove(index)}
+                  >
+                    <Trash2 />
+                  </Button>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="zone-fee">Delivery Fee (₦)</Label>
-                  <Input id="zone-fee" type="number" placeholder="e.g., 400" />
-                </div>
-                <Button className="w-full">Add Zone</Button>
+              ))}
+              <div className="flex flex-col gap-2 items-start">
+                <Button type="button" onClick={() => append({ name: "", fee: 0 })}>
+                  <PlusCircleIcon />
+                </Button>
+                <AuthButton
+                  loading={deliveryZonesForm.formState.isSubmitting}
+                  buttonText="Save Zones"
+                />
               </div>
-            </TabsContent>
-          </Tabs>
+            </form>
+          </Form>
         </CardContent>
-        <CardFooter>
-          <Button onClick={handleSave}>Save Changes</Button>
-        </CardFooter>
       </Card>
     </div>
   )

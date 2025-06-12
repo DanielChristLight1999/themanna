@@ -1,38 +1,14 @@
-"use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { getSessionsData } from "@/lib/getData"
 
-// Mock data - would be replaced with actual data from API
-const getStatsData = (period: string) => {
-  if (period === "today") {
-    return {
-      totalSessions: 8,
-      totalRevenue: 125000,
-      averageTicket: 15625,
-      activeSessions: 2,
-    }
-  } else if (period === "week") {
-    return {
-      totalSessions: 42,
-      totalRevenue: 685000,
-      averageTicket: 16309,
-      activeSessions: 2,
-    }
-  } else {
-    return {
-      totalSessions: 180,
-      totalRevenue: 2950000,
-      averageTicket: 16388,
-      activeSessions: 2,
-    }
-  }
-}
 
-export function PosSessionsStats() {
+export async function PosSessionsStats() {
+  const SessionstatsData = await getSessionsData()
   return (
     <Card>
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
@@ -56,21 +32,26 @@ export function PosSessionsStats() {
             <TabsTrigger value="month">This Month</TabsTrigger>
           </TabsList>
           <TabsContent value="today" className="pt-4">
-            <StatsCards stats={getStatsData("today")} />
+            <StatsCards stats={SessionstatsData.today} />
           </TabsContent>
           <TabsContent value="week" className="pt-4">
-            <StatsCards stats={getStatsData("week")} />
+            <StatsCards stats={SessionstatsData.week} />
           </TabsContent>
           <TabsContent value="month" className="pt-4">
-            <StatsCards stats={getStatsData("month")} />
+            <StatsCards stats={SessionstatsData.month} />
           </TabsContent>
         </Tabs>
       </CardContent>
     </Card>
   )
 }
-
-function StatsCards({ stats }: { stats: any }) {
+interface Stats {
+  totalSessions: number
+  totalRevenue: number
+  averageTicket: number
+  activeSessions: number
+}
+function StatsCards({ stats }: { stats: Stats }) {
   return (
     <div className="grid gap-4 md:grid-cols-4">
       <Card>

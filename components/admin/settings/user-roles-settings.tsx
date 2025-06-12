@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -10,100 +10,119 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PlusIcon } from "lucide-react"
+import { Role, User } from "@/lib/generated/prisma"
+import { getRolePermissions, saveRolePermissions } from "@/actions/admin/settings-actions"
+import { toast } from "sonner"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import AuthButton from "@/components/Apps/common/AuthButton"
+import { createUser } from "@/actions/admin/user-actions"
+import { useRouter } from "next/navigation"
 
-// Mock data - would be replaced with actual data from API
-const users = [
-  {
-    id: "USR-001",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "ADMIN",
-    status: "ACTIVE",
-  },
-  {
-    id: "USR-002",
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    role: "MANAGER",
-    status: "ACTIVE",
-  },
-  {
-    id: "USR-003",
-    name: "Mike Johnson",
-    email: "mike.johnson@example.com",
-    role: "CASHIER",
-    status: "ACTIVE",
-  },
-  {
-    id: "USR-004",
-    name: "Sarah Williams",
-    email: "sarah.williams@example.com",
-    role: "CASHIER",
-    status: "INACTIVE",
-  },
-  {
-    id: "USR-005",
-    name: "David Okafor",
-    email: "david.okafor@example.com",
-    role: "AFFILIATE",
-    status: "ACTIVE",
-  },
-]
 
 // Mock permissions data
-const permissions = {
-  ADMIN: {
-    orders: { view: true, create: true, update: true, delete: true },
-    products: { view: true, create: true, update: true, delete: true },
-    customers: { view: true, create: true, update: true, delete: true },
-    affiliates: { view: true, create: true, update: true, delete: true },
-    reports: { view: true, create: true, export: true },
-    settings: { view: true, update: true },
-    users: { view: true, create: true, update: true, delete: true },
-  },
-  MANAGER: {
-    orders: { view: true, create: true, update: true, delete: false },
-    products: { view: true, create: true, update: true, delete: false },
-    customers: { view: true, create: true, update: true, delete: false },
-    affiliates: { view: true, create: false, update: false, delete: false },
-    reports: { view: true, create: true, export: true },
-    settings: { view: true, update: false },
-    users: { view: true, create: false, update: false, delete: false },
-  },
-  CASHIER: {
-    orders: { view: true, create: true, update: false, delete: false },
-    products: { view: true, create: false, update: false, delete: false },
-    customers: { view: true, create: true, update: false, delete: false },
-    affiliates: { view: false, create: false, update: false, delete: false },
-    reports: { view: false, create: false, export: false },
-    settings: { view: false, update: false },
-    users: { view: false, create: false, update: false, delete: false },
-  },
-}
+// const permissions = {
+//   ADMIN: {
+//     orders: { view: true, create: true, update: true, delete: true },
+//     products: { view: true, create: true, update: true, delete: true },
+//     customers: { view: true, create: true, update: true, delete: true },
+//     affiliates: { view: true, create: true, update: true, delete: true },
+//     reports: { view: true, create: true, export: true },
+//     settings: { view: true, update: true },
+//     users: { view: true, create: true, update: true, delete: true },
+//   },
+//   MANAGER: {
+//     orders: { view: true, create: true, update: true, delete: false },
+//     products: { view: true, create: true, update: true, delete: false },
+//     customers: { view: true, create: true, update: true, delete: false },
+//     affiliates: { view: true, create: false, update: false, delete: false },
+//     reports: { view: true, create: true, export: true },
+//     settings: { view: true, update: false },
+//     users: { view: true, create: false, update: false, delete: false },
+//   },
+//   CASHIER: {
+//     orders: { view: true, create: true, update: false, delete: false },
+//     products: { view: true, create: false, update: false, delete: false },
+//     customers: { view: true, create: true, update: false, delete: false },
+//     affiliates: { view: false, create: false, update: false, delete: false },
+//     reports: { view: false, create: false, export: false },
+//     settings: { view: false, update: false },
+//     users: { view: false, create: false, update: false, delete: false },
+//   },
+// }
 
-export function UserRolesSettings() {
-  const [selectedRole, setSelectedRole] = useState("ADMIN")
-  const [rolePermissions, setRolePermissions] = useState(permissions)
+export const adminformSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  role: z.enum(["ADMIN", "MANAGER", "CASHIER", "AFFILIATE"], {
+    errorMap: () => ({ message: "Role is required" }),
+  }),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+})
 
-  const handlePermissionChange = (role: string, module: string, permission: string, checked: boolean) => {
-    setRolePermissions({
-      ...rolePermissions,
-      [role]: {
-        ...rolePermissions[role as keyof typeof rolePermissions],
-        [module]: {
-          ...rolePermissions[role as keyof typeof rolePermissions][
-            module as keyof (typeof rolePermissions)[keyof typeof rolePermissions]
-          ],
-          [permission]: checked,
-        },
-      },
+export function UserRolesSettings({ adminusers }: { adminusers: User[] }) {
+  const [selectedRole, setSelectedRole] = useState<Role>("ADMIN")
+  const [permissions, setPermissions] = useState<Record<string, any>>({})
+  const [isPending, startTransition] = useTransition()
+
+  const router = useRouter()
+
+  const form = useForm<z.infer<typeof adminformSchema>>({
+    resolver: zodResolver(adminformSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      role: "ADMIN",
+      password: "",
+    },
+  })
+
+
+
+
+  useEffect(() => {
+    startTransition(async () => {
+      const perms = await getRolePermissions(selectedRole)
+      if (perms) {
+        setPermissions(perms)
+      } else {
+        setPermissions({}) // fallback
+      }
     })
+  }, [selectedRole])
+
+  const handleChange = (module: string, action: string, value: boolean) => {
+    setPermissions((prev) => ({
+      ...prev,
+      [module]: {
+        ...prev[module],
+        [action]: value
+      }
+    }))
   }
 
-  const handleSave = () => {
-    // In a real app, this would call an API to save the permissions
-    console.log("Saving role permissions:", rolePermissions)
+  const handleSave = async () => {
+    const res = await saveRolePermissions(selectedRole, permissions)
+    if (res.error) {
+      toast.error(res.message)
+    } else {
+      toast.success(res.message)
+    }
   }
+
+  const onSubmit = async (data: z.infer<typeof adminformSchema>) => {
+    const response = await createUser(data);
+    if (response.error){
+      toast.error(response.message);
+      return;
+    }
+    toast.success(response.message);
+    form.reset();
+    router.refresh();
+  }
+
 
   return (
     <div className="space-y-6">
@@ -130,12 +149,12 @@ export function UserRolesSettings() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {users.map((user) => (
+                  {adminusers.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.role}</TableCell>
-                      <TableCell>{user.status}</TableCell>
+                      <TableCell>{user.isActive ? "Active" : "Inactive"}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm">
                           Edit
@@ -147,48 +166,67 @@ export function UserRolesSettings() {
               </Table>
             </TabsContent>
             <TabsContent value="add" className="pt-4">
-              <div className="grid gap-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="user-name">Full Name</Label>
-                    <Input id="user-name" placeholder="John Doe" />
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <FormField control={form.control} name="name" render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel>FullName</FormLabel>
+                        <FormControl>
+                          <Input type="text" placeholder="John Doe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={form.control} name="email" render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="johndoe@example.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="user-email">Email</Label>
-                    <Input id="user-email" type="email" placeholder="john.doe@example.com" />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <FormField control={form.control} name="role" render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel>Role</FormLabel>
+                        <FormControl>
+                          <Select value={field.value} onValueChange={field.onChange}>
+                            <SelectTrigger >
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ADMIN">Admin</SelectItem>
+                              <SelectItem value="MANAGER">Manager</SelectItem>
+                              <SelectItem value="CASHIER">Cashier</SelectItem>
+                              <SelectItem value="AFFILIATE">Affiliate</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                   <FormField control={form.control} name="password" render={({field}) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
                   </div>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="user-role">Role</Label>
-                    <Select>
-                      <SelectTrigger id="user-role">
-                        <SelectValue placeholder="Select role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ADMIN">Admin</SelectItem>
-                        <SelectItem value="MANAGER">Manager</SelectItem>
-                        <SelectItem value="CASHIER">Cashier</SelectItem>
-                        <SelectItem value="AFFILIATE">Affiliate</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="user-password">Password</Label>
-                    <Input id="user-password" type="password" />
-                  </div>
-                </div>
-                <Button className="w-full">
-                  <PlusIcon className="mr-2 h-4 w-4" />
-                  Add User
-                </Button>
-              </div>
+                  <AuthButton buttonText="Add User" loading={form.formState.isSubmitting} />
+                </form>
+              </Form>
             </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Role Permissions</CardTitle>
           <CardDescription>Configure what each role can access and modify</CardDescription>
@@ -245,6 +283,67 @@ export function UserRolesSettings() {
         </CardContent>
         <CardFooter>
           <Button onClick={handleSave}>Save Permissions</Button>
+        </CardFooter>
+      </Card> */}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Role Permissions</CardTitle>
+          <CardDescription>Edit permissions by role</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Select Role</Label>
+            <Select value={selectedRole} onValueChange={(val) => setSelectedRole(val as Role)}>
+              <SelectTrigger><SelectValue placeholder="Select Role" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ADMIN">Admin</SelectItem>
+                <SelectItem value="MANAGER">Manager</SelectItem>
+                <SelectItem value="CASHIER">Cashier</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {Object.keys(permissions).length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Module</TableHead>
+                  <TableHead>View</TableHead>
+                  <TableHead>Create</TableHead>
+                  <TableHead>Update</TableHead>
+                  <TableHead>Delete</TableHead>
+                  {Object.keys(permissions?.[Object.keys(permissions)[0]] || {}).includes("export") && (
+                    <TableHead>Export</TableHead>
+                  )}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Object.entries(permissions).map(([module, actions]) => (
+                  <TableRow key={module}>
+                    <TableCell className="capitalize font-medium">{module}</TableCell>
+                    {Object.entries(actions).map(([action, allowed]) => (
+                      <TableCell key={action}>
+                        <Checkbox
+                          checked={allowed as boolean}
+                          onCheckedChange={(val) =>
+                            handleChange(module, action, val as boolean)
+                          }
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <p className="text-muted-foreground text-sm">No permissions loaded</p>
+          )}
+        </CardContent>
+        <CardFooter>
+          <Button onClick={handleSave} disabled={isPending}>
+            {isPending ? "Saving..." : "Save Permissions"}
+          </Button>
         </CardFooter>
       </Card>
     </div>

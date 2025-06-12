@@ -14,7 +14,7 @@ const RootLayout = ({children} : Readonly<{children: React.ReactNode}>) => {
   return (
     <html lang="en">
       <body
-        className={`h-screen ${poppins.className}  antialiased`}
+        className={`flex flex-col items-center ${poppins.className}  antialiased`}
       >
         <TopNav />
         {children}

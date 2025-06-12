@@ -1,15 +1,17 @@
 import type { Metadata } from "next"
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "lucide-react"
-import { PosSessionsStats } from "@/components/admin/pos/pos-sessions-stats"
 import { PosSessionsTable } from "@/components/admin/pos/pos-sessions-table"
+import { PosSessionsStats } from "@/components/admin/pos/pos-sessions-stats"
+import { getAllPOSSessions } from "@/lib/getData"
 
 export const metadata: Metadata = {
   title: "POS Sessions | The Mana Restaurant Admin",
   description: "Manage POS sessions for The Mana Restaurant",
 }
 
-export default function PosSessionsPage() {
+export default async function PosSessionsPage() {
+  const allSessions = await getAllPOSSessions()
   return (
     <div className="flex flex-col p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -21,7 +23,7 @@ export default function PosSessionsPage() {
       </div>
 
       <PosSessionsStats />
-      <PosSessionsTable />
+      <PosSessionsTable sessions={allSessions} />
     </div>
   )
 }

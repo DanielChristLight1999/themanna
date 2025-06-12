@@ -106,16 +106,18 @@ export async function LoginUser(email: string, password: string) {
 export async function LoginAdmin(email: string, password: string) {
     try {
         const existinguser = await prisma.user.findUnique({
-            where: { email: email, role: Role.ADMIN }
+            where: { email: email }
         })
-        if (!existinguser) {
-            return { error: true, message: "Invalid email or password" }
+
+        const allowedRoles = new Set<Role>([Role.ADMIN, Role.CASHIER, Role.MANAGER]);
+
+        if (!existinguser || !allowedRoles.has(existinguser.role)) {
+            return { error: true, message: "Invalid email or password" };
         }
         const isMatch = await bcrypt.compare(password, existinguser.passwordHash as string);
         if (!isMatch) {
             return { error: true, message: "Invalid email or password" }
         }
-
         const url = await signIn("credentials", {
             email: email,
             password: password,
@@ -124,14 +126,15 @@ export async function LoginAdmin(email: string, password: string) {
         console.log("url", url)
         return { error: false, message: "Successfully signed in" }
     } catch (error) {
-        if(error instanceof AuthError){
+        if (error instanceof AuthError) {
             switch (error.type) {
                 case "CredentialsSignin":
                     return { error: true, message: "Invalid email or password" }
                 default: return { error: true, message: "Something went wrong" }
-            
+
             }
         }
+        console.log("error", error)
         return { error: true, message: "Something went wrong" }
     }
 }
@@ -174,9 +177,9 @@ export async function createUserAddress(data: z.infer<typeof addressSchema>) {
                 isDefault: isDefault
             }
         })
-        return {error: false, message: "Successfully added address"}
+        return { error: false, message: "Successfully added address" }
     } catch (error) {
         console.log(error)
-        return {error:true, message: "An error occured try again"}
+        return { error: true, message: "An error occured try again" }
     }
 }

@@ -116,7 +116,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="rounded-md border h-full w-full">
+    <div className="rounded-md overflow-auto border h-full w-full">
       {/* Desktop Table */}
       <div className={forceMobile ? "hidden" : "hidden md:block w-full"}>
         <Table>

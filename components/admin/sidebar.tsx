@@ -66,11 +66,6 @@ const navItems: NavItem[] = [
     icon: CreditCard,
   },
   {
-    title: "Point of Sale",
-    href: "/pos",
-    icon: Package,
-  },
-  {
     title: "Settings",
     href: "/settings",
     icon: Settings,

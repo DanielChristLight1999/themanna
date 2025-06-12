@@ -80,13 +80,14 @@ export async function getCategories() {
 export async function updateMenuItem(id: number, data: z.infer<typeof productFormSchema>) {
     try {
         console.log("Updating menu item with ID:", id, "and data:", data);
-        const validatedData = productFormSchema.safeParse(data);
-        if (!validatedData.success) {
-            console.error("Validation failed:", validatedData.error);
-            return { error: true, message: validatedData.error.message };
-        }
+        // const validatedData = productFormSchema.safeParse(data);
+        // if (!validatedData.success) {
+        //     console.error("Validation failed:", validatedData.error);
+        //     return { error: true, message: validatedData.error.message };
+        // }
 
-        const { name, description, categoryId, price, cost, stock, lowStockAlert, sku, images } = validatedData.data;
+        const { name, description, categoryId, price, cost, stock, lowStockAlert, sku, images } = data;
+
 
         const existingProduct = await prisma.product.findUnique({
             where: { id },
@@ -99,7 +100,7 @@ export async function updateMenuItem(id: number, data: z.infer<typeof productFor
         }
         const existingImages = existingProduct.images
 
-        const imageUrls: string[] = data.images
+        const imageUrls: string[] = images
         const deletedImages = existingImages.filter(oldImage => !imageUrls.includes(oldImage.url))
         const newImageUrls = imageUrls.filter(url => !existingImages.some(img => img.url === url));
 

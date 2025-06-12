@@ -102,17 +102,21 @@ async function generateAffiliateReport(start: Date, end: Date) {
 
 export async function getReportsData() {
     const categories = await prisma.category.findMany()
-    const products = await prisma.product.findMany({
+    const productsbaseData = await prisma.product.findMany({
         select: {
             id: true,
             name: true,
             price: true,
-            categoryId: true,
+            category: {select: {name: true}},
             costPrice: true,
             sku: true,
             isActive: true,
         }
     })
+    const products = productsbaseData.map((product) => ({
+      ...product,
+      category: product.category.name,
+    }))
     const users = await prisma.user.findMany({
         where: { role: "CUSTOMER" },
         select: {

@@ -1,38 +1,107 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { TimeInput } from "./time-input"
 import { ImageIcon, UploadIcon } from "lucide-react"
+import { RestaurantInfo } from "@/lib/generated/prisma"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { upload } from "@vercel/blob/client"
+import { updateRestaurantInfo } from "@/actions/admin/settings-actions"
+import { toast } from "sonner"
+import AuthButton from "@/components/Apps/common/AuthButton"
 
-export function RestaurantSettings() {
-  const [restaurantInfo, setRestaurantInfo] = useState({
-    name: "The Mana Restaurant",
-    description: "Authentic Nigerian cuisine with a modern twist.",
-    address: "123 Lagos Street, Ikeja, Lagos",
-    phone: "+234 812 345 6789",
-    email: "info@themanarestaurant.com",
-    website: "https://themanarestaurant.com",
-    logo: "/placeholder.svg?height=100&width=100",
-    openingHours: {
-      monday: { open: "08:00", close: "22:00" },
-      tuesday: { open: "08:00", close: "22:00" },
-      wednesday: { open: "08:00", close: "22:00" },
-      thursday: { open: "08:00", close: "22:00" },
-      friday: { open: "08:00", close: "23:00" },
-      saturday: { open: "10:00", close: "23:00" },
-      sunday: { open: "10:00", close: "22:00" },
-    },
+export const restaurantInfoSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1),
+  address: z.string().min(1),
+  phone: z.string().min(1),
+  email: z.string().min(1),
+  website: z.string().min(1),
+  logo: z.instanceof(File).optional().refine((file) => file?.type.startsWith("image/"), "Invalid file type. Please upload an image."),
+
+})
+
+async function uploadImage(file: (File)) {
+  let fileName: string;
+  let blob: Blob;
+
+  fileName = file.name;
+  blob = file;
+
+  // else {
+  //   fileName = file.name;
+  //   blob = await fetch(file.preview).then(res => res.blob());
+  // }
+
+  const response = await upload(`images/products/${fileName}`, blob, {
+    access: 'public',
+    handleUploadUrl: "/api/imageupload",
+
+  });
+
+  return response.url;
+}
+
+export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo }) {
+  const [previewLogo, setPreviewLogo] = useState<string | null>(restaurant.logo || null)
+
+  const form = useForm<z.infer<typeof restaurantInfoSchema>>({
+    resolver: zodResolver(restaurantInfoSchema),
+    defaultValues: {
+      name: restaurant.name,
+      description: restaurant.description,
+      address: restaurant.address,
+      phone: restaurant.phone,
+      email: restaurant.email,
+      website: restaurant.website,
+      logo: undefined,
+    }
   })
+  const handleLogoChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // Update form data
+      form.setValue("logo", file)
 
-  const handleSave = () => {
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file)
+      setPreviewLogo(previewUrl)
+
+      // Clean up the URL when component unmounts or when a new file is selected
+      return () => URL.revokeObjectURL(previewUrl)
+    }
+  }, [form])
+  const onSubmit = async (data: z.infer<typeof restaurantInfoSchema>) => {
+    console.log("data", data)
     // In a real app, this would call an API to save the settings
-    console.log("Saving restaurant settings:", restaurantInfo)
+    console.log("Saving restaurant settings:", data)
+    const updateData = {
+      ...restaurant,
+      name: data.name,
+      description: data.description,
+      address: data.address,
+      phone: data.phone,
+      email: data.email,
+      website: data.website,
+    }
+    if (data.logo) {
+      const imageurl = await uploadImage(data.logo)
+      updateData.logo = imageurl
+    }
+    const response = await updateRestaurantInfo(updateData)
+    if(response.error){
+      toast.error(response.message)
+      return
+    }
+    toast.success(response.message)
   }
 
   return (
@@ -43,95 +112,123 @@ export function RestaurantSettings() {
           <CardDescription>Update your restaurant's basic information</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="restaurant-name">Restaurant Name</Label>
-              <Input
-                id="restaurant-name"
-                value={restaurantInfo.name}
-                onChange={(e) => setRestaurantInfo({ ...restaurantInfo, name: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="restaurant-phone">Phone Number</Label>
-              <Input
-                id="restaurant-phone"
-                value={restaurantInfo.phone}
-                onChange={(e) => setRestaurantInfo({ ...restaurantInfo, phone: e.target.value })}
-              />
-            </div>
-          </div>
+          <Form {...form}>
+            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField control={form.control} name="name" render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Restaurant Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="restaurant-email">Email Address</Label>
-              <Input
-                id="restaurant-email"
-                type="email"
-                value={restaurantInfo.email}
-                onChange={(e) => setRestaurantInfo({ ...restaurantInfo, email: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="restaurant-website">Website</Label>
-              <Input
-                id="restaurant-website"
-                value={restaurantInfo.website}
-                onChange={(e) => setRestaurantInfo({ ...restaurantInfo, website: e.target.value })}
-              />
-            </div>
-          </div>
+                <FormField control={form.control} name="phone" render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="restaurant-address">Address</Label>
-            <Input
-              id="restaurant-address"
-              value={restaurantInfo.address}
-              onChange={(e) => setRestaurantInfo({ ...restaurantInfo, address: e.target.value })}
-            />
-          </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField control={form.control} name="email" render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={form.control} name="website" render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Website</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              </div>
+              <FormField control={form.control} name="address" render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={form.control} name="name" render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea rows={3} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
 
-          <div className="space-y-2">
-            <Label htmlFor="restaurant-description">Description</Label>
-            <Textarea
-              id="restaurant-description"
-              rows={3}
-              value={restaurantInfo.description}
-              onChange={(e) => setRestaurantInfo({ ...restaurantInfo, description: e.target.value })}
-            />
-          </div>
 
-          <div className="space-y-2">
-            <Label>Restaurant Logo</Label>
-            <div className="flex items-center gap-4">
-              <Card className="w-[100px] h-[100px] flex items-center justify-center relative overflow-hidden">
-                {restaurantInfo.logo ? (
-                  <Image
-                    src={restaurantInfo.logo || "/placeholder.svg"}
-                    alt="Restaurant logo"
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center justify-center text-muted-foreground">
-                    <ImageIcon className="h-8 w-8 mb-1" />
-                    <span className="text-xs">No logo</span>
-                  </div>
+              <FormField
+                control={form.control}
+                name="logo"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel>Restaurant Logo</FormLabel>
+                    <div className="flex items-center gap-4">
+                      <Card className="w-[100px] h-[100px] px-2 flex items-center justify-center relative overflow-hidden">
+                        {previewLogo ? (
+                          <Image
+                            src={previewLogo}
+                            alt="Restaurant logo preview"
+                            width={80}
+                            height={80}
+                            className="object-cover w-full"
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center justify-center text-muted-foreground">
+                            <ImageIcon className="h-8 w-8 mb-1" />
+                            <span className="text-xs">No logo</span>
+                          </div>
+                        )}
+                      </Card>
+                      <div>
+                        <Input
+                          id="logo-upload"
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleLogoChange}
+                          ref={field.ref}
+                        />
+                        <Label htmlFor="logo-upload">
+                          <Button variant="outline" className="gap-2" asChild>
+                            <div>
+                              <UploadIcon className="h-4 w-4" />
+                              Upload Logo
+                            </div>
+                          </Button>
+                        </Label>
+                      </div>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </Card>
-              <Button variant="outline" className="gap-2">
-                <UploadIcon className="h-4 w-4" />
-                Upload Logo
-              </Button>
-            </div>
-          </div>
+              />
+              <AuthButton buttonText="Save Changes" loading={form.formState.isSubmitting} />
+            </form>
+          </Form>
         </CardContent>
-        <CardFooter>
-          <Button onClick={handleSave}>Save Changes</Button>
-        </CardFooter>
       </Card>
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Business Hours</CardTitle>
           <CardDescription>Set your restaurant's opening and closing times</CardDescription>
@@ -172,7 +269,7 @@ export function RestaurantSettings() {
         <CardFooter>
           <Button onClick={handleSave}>Save Changes</Button>
         </CardFooter>
-      </Card>
+      </Card> */}
     </div>
   )
 }

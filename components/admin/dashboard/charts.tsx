@@ -215,7 +215,7 @@ export function DashboardCharts({ filterType, revenueBaseData, orderStatusBaseDa
             config={{
               orders: {
                 label: "Orders",
-                color: "hsl(var(--chart-2))",
+                color: "#FF7E00",
               },
             }}
             className="h-[300px] w-full"

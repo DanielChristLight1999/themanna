@@ -48,6 +48,18 @@ export default auth(async (req) => {
                 }
                 return NextResponse.rewrite(new URL(`/admin${req.nextUrl.pathname}`, req.url));
              }
+        case "pos":
+            {
+                const PROTECTED_PATHS = ["/", "/active-orders", "/new-order", "/past-orders", "end-session"]; // Add all your exact protected paths here
+                const isProtectedPath = PROTECTED_PATHS.includes(pathname);
+                const isLoggedin = req.auth
+                if (!isLoggedin && isProtectedPath) {
+                    return NextResponse.redirect(new URL(`/auth/login`, req.url));
+                }
+                const url = req.nextUrl.clone();
+                url.pathname = `/pos${req.nextUrl.pathname}`;
+                return NextResponse.rewrite(url);
+            }
         default:
             return NextResponse.next();
     }

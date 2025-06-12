@@ -1,5 +1,6 @@
 import prisma from "@/db";
 import { Customer } from "./columns/customersTableColumn";
+import { isAfter, startOfDay, startOfMonth, startOfWeek } from "date-fns";
 
 
 export async function getProducts() {
@@ -203,4 +204,103 @@ export async function getReportsData() {
         payments,
         commissions,
     }
+}
+
+export async function getSavedOrder(orderId: string) {
+    return await prisma.order.findUnique({
+        where: { id: orderId, status: "PENDING" },
+        include: {
+            session: {
+                include: {
+                    staff: true,
+                },
+            },
+            items: {
+                select: {
+                    quantity: true,
+                    product: {
+                        select: {
+                            id: true,
+                            name: true,
+                            price: true,
+                            images: { select: { url: true } },
+                        },
+                    },
+                },
+            },
+        },
+    })
+}
+
+
+export async function getSessionsData() {
+  const now = new Date()
+  const todayStart = startOfDay(now)
+  const weekStart = startOfWeek(now, { weekStartsOn: 1 })
+  const monthStart = startOfMonth(now)
+
+  const sessions = await prisma.posSession.findMany({
+    include: {
+      staff: { select: { id: true, name: true } },
+      orders: true,
+    },
+  })
+
+  // Helper: filter closed sessions based on closedAt
+  const closedSessionsSince = (date: Date) =>
+    sessions.filter((s) => s.closedAt && isAfter(s.closedAt, date))
+
+  // Helper: count active sessions based on openedAt
+  const activeSessionsSince = (date: Date) =>
+    sessions.filter((s) => !s.closedAt && isAfter(s.openedAt, date))
+
+  const summarize = (targetSessions: typeof sessions) => {
+    const totalSessions = targetSessions.length
+    const totalRevenue = targetSessions.reduce((acc, s) => acc + (s.posRevenue || 0), 0)
+    const totalOrders = targetSessions.reduce((acc, s) => acc + s.orders.length, 0)
+    const averageTicket = totalOrders > 0 ? totalRevenue / totalOrders : 0
+
+    return { totalSessions, totalRevenue, averageTicket }
+  }
+
+  return {
+    today: {
+      activeSessions: activeSessionsSince(todayStart).length,
+      ...summarize(closedSessionsSince(todayStart)),
+    },
+    week: {
+      activeSessions: activeSessionsSince(weekStart).length,
+      ...summarize(closedSessionsSince(weekStart)),
+    },
+    month: {
+      activeSessions: activeSessionsSince(monthStart).length,
+      ...summarize(closedSessionsSince(monthStart)),
+    },
+  }
+}
+
+export async function getAllPOSSessions() {
+  const data = await prisma.posSession.findMany({
+    include: {
+      staff: { select: { id: true, name: true } },
+      orders: true,
+    },
+    orderBy: { openedAt: "desc" },
+  })
+  const sessions = data.map((session) => ({
+    id: session.id,
+    cashier: session.staff.name,
+    startTime: session.openedAt,
+    endTime: session.closedAt,
+    status: session.closedAt ? "CLOSED" : "OPEN",
+    totalSales: session.totalSales,
+    totalOrders: session.orderCount,
+    paymentMethods: {
+      CASH: session.cashAmount,
+      CARD: session.transferAmt,
+      TRANSFER: session.transferAmt,
+    },
+  }) )
+
+  return sessions
 }

@@ -64,6 +64,27 @@ model User {
   affiliate   Affiliate?   @relation("UserAffiliate")
   posSessions PosSession[] @relation("StaffSessions")
   cartItems   CartItem[]
+
+  permissions UserPermission[]
+}
+
+model Permission {
+  id        Int      @id @default(autoincrement())
+  role      Role     @unique
+  settings  Json // Entire permissions object like { orders: { view: true, create: true, update: true, delete: true }, products: { view: true, create: true, update: true, delete: true } }
+  createdAt DateTime @default(now())
+}
+
+model UserPermission {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  module    String //e.g. orders, products, customers, affiliates
+  action    String //e.g. view, create, update, delete
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, module, action])
 }
 
 model Affiliate {
@@ -178,6 +199,7 @@ model InventoryTransaction {
 model Order {
   id            String        @id @default(uuid())
   customerId    String
+  sessionId     String?
   addressId     String?
   affiliateCode String? // if referred via affiliate link
   status        OrderStatus   @default(PENDING) // e.g., CONFIRMED, DELIVERED
@@ -194,6 +216,7 @@ model Order {
 
   customer   User        @relation("CustomerOrders", fields: [customerId], references: [id])
   address    Address?    @relation(fields: [addressId], references: [id])
+  session    PosSession? @relation(fields: [sessionId], references: [id])
   items      OrderItem[]
   payment    Payment?
   commission Commission?
@@ -223,14 +246,32 @@ model Payment {
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
+// model PosSession {
+//   id       String    @id @default(uuid())
+//   staffId  String
+//   openedAt DateTime  @default(now())
+//   closedAt DateTime?
+
+//   staff    User      @relation("StaffSessions", fields: [staffId], references: [id])
+//   orders   Order[]
+//   posItems PosItem[]
+// }
+
 model PosSession {
-  id       String    @id @default(uuid())
-  staffId  String
-  openedAt DateTime  @default(now())
-  closedAt DateTime?
+  id          String    @id @default(uuid())
+  staffId     String
+  openedAt    DateTime  @default(now())
+  closedAt    DateTime?
+  totalSales  Float     @default(0) // 💰 total ₦ for the session
+  orderCount  Int       @default(0) // 🧾 number of orders
+  cashAmount  Float     @default(0) // 💵 total paid in cash
+  transferAmt Float     @default(0) // 💸 total paid via transfer
+  posRevenue  Float     @default(0) // 🧾 subtotal w/o tax
+  taxAmount   Float     @default(0) // 🧾 session tax collected
 
   staff    User      @relation("StaffSessions", fields: [staffId], references: [id])
   posItems PosItem[]
+  orders   Order[] // requires sessionId in Order
 }
 
 model PosItem {
@@ -262,4 +303,41 @@ model Setting {
   key         String  @unique
   value       String
   description String?
+}
+
+model DeliverySetting {
+  id                    Int            @id @default(autoincrement())
+  enableDelivery        Boolean        @default(true)
+  enablePickup          Boolean        @default(true)
+  defaultDeliveryFee    Int            @default(350)
+  minimumOrderAmount    Int            @default(1000)
+  estimatedDeliveryTime Int            @default(45)
+  deliveryRadius        Int            @default(10)
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  zones                 DeliveryZone[]
+}
+
+model DeliveryZone {
+  id        Int      @id @default(autoincrement())
+  name      String
+  fee       Int
+  settingId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  setting DeliverySetting @relation(fields: [settingId], references: [id])
+}
+
+model RestaurantInfo {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  address     String
+  phone       String
+  email       String
+  website     String
+  logo        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

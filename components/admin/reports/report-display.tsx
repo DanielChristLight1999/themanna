@@ -22,6 +22,7 @@ import { ReportSummary } from "./report-summary"
 import { ReportExport } from "./report-export"
 import { getReportsData } from "@/actions/admin/reports-actions"
 import { type ReportData } from "@/lib/mock-data/reports-data"
+import { extractorderId } from "@/lib/utils"
 
 interface ReportConfig {
   templateId: string
@@ -81,8 +82,8 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
 
     try {
       // Simulate API call delay
-      const mockData = await getReportsData()
-      const processedData = processReportData(mockData, reportConfig)
+      const reportData = await getReportsData()
+      const processedData = processReportData(reportData, reportConfig)
 
       const generatedReport: GeneratedReport = {
         id: `report_${Date.now()}`,
@@ -109,17 +110,17 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
     }
   }
 
-  const processReportData = (mockData: ReportData, config: ReportConfig): any[] => {
+  const processReportData = (reportData: ReportData, config: ReportConfig): any[] => {
     let data: any[] = []
 
     // Select data source based on template
     switch (config.templateId) {
       case "sales-summary":
-        data = mockData.orders.map((order) => {
-          const payment = mockData.payments.find((p) => p.orderId === order.id)
-          const customer = mockData.users.find((u) => u.id === order.customerId)
+        data = reportData.orders.map((order) => {
+          const payment = reportData.payments.find((p) => p.orderId === order.id)
+          const customer = reportData.users.find((u) => u.id === order.customerId)
           return {
-            id: order.id,
+            id: `#ORD-${extractorderId(order.id)?.toUpperCase()}`,
             placedAt: order.placedAt,
             totalAmount: order.totalAmount,
             status: order.status,
@@ -135,16 +136,16 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
         })
         break
       case "product-performance":
-        data = mockData.products.map((product) => {
-          const category = mockData.categories.find((c) => c.id === product.categoryId)
-          const inventory = mockData.inventory.find((i) => i.productId === product.id)
+        data = reportData.products.map((product) => {
+          // const category = reportData.categories.find((c) => c.id === product.categoryId)
+          const inventory = reportData.inventory.find((i) => i.productId === product.id)
           return {
             id: product.id,
             name: product.name,
             price: product.price,
             costPrice: product.costPrice,
-            categoryId: product.categoryId,
-            categoryName: category?.name || "Uncategorized",
+            category: product.category,
+            // categoryName: category?.name || "Uncategorized",
             isActive: product.isActive,
             sku: product.sku,
             currentStock: inventory?.quantity || 0,
@@ -155,10 +156,10 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
         })
         break
       case "customer-insights":
-        data = mockData.users
+        data = reportData.users
           .filter((user) => user.role === "CUSTOMER")
           .map((customer) => {
-            const customerOrders = mockData.orders.filter((order) => order.customerId === customer.id)
+            const customerOrders = reportData.orders.filter((order) => order.customerId === customer.id)
             const totalSpent = customerOrders.reduce((sum, order) => sum + order.totalAmount, 0)
             return {
               id: customer.id,
@@ -175,9 +176,9 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
           })
         break
       case "inventory-status":
-        data = mockData.inventory.map((item) => {
-          const product = mockData.products.find((p) => p.id === item.productId)
-          const category = mockData.categories.find((c) => c.id === product?.categoryId)
+        data = reportData.inventory.map((item) => {
+          const product = reportData.products.find((p) => p.id === item.productId)
+          const category = reportData.categories.find((c) => c.id === product?.categoryId)
           return {
             id: item.id,
             productId: item.productId,
@@ -194,9 +195,9 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
         })
         break
       case "affiliate-performance":
-        data = mockData.affiliates.map((affiliate) => {
-          const user = mockData.users.find((u) => u.id === affiliate.userId)
-          const commissions = mockData.commissions.filter((c) => c.affiliateId === affiliate.userId)
+        data = reportData.affiliates.map((affiliate) => {
+          const user = reportData.users.find((u) => u.id === affiliate.userId)
+          const commissions = reportData.commissions.filter((c) => c.affiliateId === affiliate.userId)
           const totalCommissions = commissions.reduce((sum, c) => sum + c.amount, 0)
           return {
             id: affiliate.userId,
@@ -216,8 +217,8 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
         })
         break
       case "pos-sessions":
-        data = mockData.posSessions.map((session) => {
-          const staff = mockData.users.find((u) => u.id === session.staffId)
+        data = reportData.posSessions.map((session) => {
+          const staff = reportData.users.find((u) => u.id === session.staffId)
           return {
             id: session.id,
             staffId: session.staffId,

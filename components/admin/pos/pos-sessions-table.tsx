@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { EyeIcon, MoreHorizontalIcon } from "lucide-react"
 import { PosSessionDetailsDialog } from "./pos-session-details-dialog"
+import { format } from "date-fns"
 
 // Mock data - would be replaced with actual data from API
 const sessions = [
@@ -83,7 +84,7 @@ const sessions = [
   },
 ]
 
-export function PosSessionsTable() {
+export function PosSessionsTable( {sessions}: {sessions: any[]} ) {
   const [selectedSession, setSelectedSession] = useState<any | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
 
@@ -114,10 +115,10 @@ export function PosSessionsTable() {
                 <TableRow key={session.id}>
                   <TableCell className="font-medium">{session.id}</TableCell>
                   <TableCell>{session.cashier}</TableCell>
-                  <TableCell>{session.startTime}</TableCell>
-                  <TableCell>{session.endTime || "In Progress"}</TableCell>
+                  <TableCell>{format(new Date(session.startTime), "HH:mm")}</TableCell>
+                  <TableCell>{session.endTime ? format(new Date(session.endTime), "HH:mm") : "In Progress"}</TableCell>
                   <TableCell>
-                    <Badge variant={session.status === "ACTIVE" ? "success" : "secondary"}>{session.status}</Badge>
+                    <Badge variant={session.status === "ACTIVE" ? "default" : "secondary"}>{session.status}</Badge>
                   </TableCell>
                   <TableCell>{session.totalOrders}</TableCell>
                   <TableCell className="text-right">₦{session.totalSales.toLocaleString()}</TableCell>

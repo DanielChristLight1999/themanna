@@ -184,6 +184,35 @@ import { PrismaClient, Role, OrderStatus, OrderType, PaymentStatus, PaymentMetho
 import { hashPassword } from "@/lib/utils"
 
 const prisma = new PrismaClient().$extends(withAccelerate())
+const defaultPermissions = {
+  ADMIN: {
+    orders: { view: true, create: true, update: true, delete: true },
+    products: { view: true, create: true, update: true, delete: true },
+    customers: { view: true, create: true, update: true, delete: true },
+    affiliates: { view: true, create: true, update: true, delete: true },
+    reports: { view: true, create: true, export: true },
+    settings: { view: true, update: true },
+    users: { view: true, create: true, update: true, delete: true },
+  },
+  MANAGER: {
+    orders: { view: true, create: true, update: true, delete: false },
+    products: { view: true, create: true, update: true, delete: false },
+    customers: { view: true, create: true, update: true, delete: false },
+    affiliates: { view: true, create: false, update: false, delete: false },
+    reports: { view: true, create: true, export: true },
+    settings: { view: true, update: false },
+    users: { view: true, create: false, update: false, delete: false },
+  },
+  CASHIER: {
+    orders: { view: true, create: true, update: false, delete: false },
+    products: { view: true, create: false, update: false, delete: false },
+    customers: { view: true, create: true, update: false, delete: false },
+    affiliates: { view: false, create: false, update: false, delete: false },
+    reports: { view: false, create: false, export: false },
+    settings: { view: false, update: false },
+    users: { view: false, create: false, update: false, delete: false },
+  },
+}
 
 const seedData = [
   {
@@ -196,7 +225,8 @@ const seedData = [
         image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
         description:
           "Chicken Tikka is a popular Indian dish made with marinated chicken pieces cooked in a tandoor oven.",
-        stock: 100
+        stock: 100,
+        costPrice: 5000,
       },
       {
         name: "Mango Lassi",
@@ -204,7 +234,8 @@ const seedData = [
         price: 4250,
         image: "https://images.unsplash.com/photo-1525385133512-2f3bdd039054",
         description: "Mango Lassi is a refreshing Indian yogurt drink blended with ripe mangoes.",
-        stock: 50
+        stock: 50,
+        costPrice: 2000,
       },
       {
         name: "Margherita Pizza",
@@ -212,7 +243,8 @@ const seedData = [
         price: 12000,
         image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38",
         description: "Classic Italian pizza with mozzarella cheese and fresh basil.",
-        stock: 60
+        stock: 60,
+        costPrice: 6000,
       },
       {
         name: "French Fries",
@@ -220,7 +252,8 @@ const seedData = [
         price: 5000,
         image: "https://images.unsplash.com/photo-1630431341973-02e1b662ec35",
         description: "Crispy golden French fries, lightly salted.",
-        stock: 50
+        stock: 50,
+        costPrice: 4000,
       },
       {
         name: "Chocolate Lava Cake",
@@ -228,7 +261,8 @@ const seedData = [
         price: 6000,
         image: "https://images.unsplash.com/photo-1665556387816-cba60197beec",
         description: "Warm chocolate cake with a molten center.",
-        stock: 60
+        stock: 60,
+        costPrice: 5000,
       }
     ]
   },
@@ -241,7 +275,8 @@ const seedData = [
         price: 200,
         image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97",
         description: "Chilled 500ml Coca Cola bottle",
-        stock: 100
+        stock: 100,
+        costPrice: 1000,
       },
       {
         name: "Pepsi",
@@ -249,7 +284,8 @@ const seedData = [
         price: 190,
         image: "https://images.unsplash.com/photo-1553456558-aff63285bdd1",
         description: "Refreshing 500ml Pepsi drink",
-        stock: 90
+        stock: 90,
+        costPrice: 500,
       }
     ]
   },
@@ -262,7 +298,8 @@ const seedData = [
         price: 250,
         image: "https://images.unsplash.com/photo-1530610476181-d83430b64dcd",
         description: "Flaky pastry filled with chocolate",
-        stock: 50
+        stock: 50,
+        costPrice: 150,
       },
       {
         name: "Cinnamon Roll",
@@ -270,7 +307,8 @@ const seedData = [
         price: 300,
         image: "https://images.unsplash.com/photo-1530610476181-d83430b64dcd",
         description: "Soft and sweet cinnamon roll",
-        stock: 60
+        stock: 60,
+        costPrice: 200,
       }
     ]
   },
@@ -283,7 +321,8 @@ const seedData = [
         price: 15000,
         image: "https://images.unsplash.com/photo-1630369160812-26c7604cbd8c",
         description: "750ml bottle of premium red wine",
-        stock: 30
+        stock: 30,
+        costPrice: 1000,
       },
       {
         name: "White Wine",
@@ -291,7 +330,8 @@ const seedData = [
         price: 14500,
         image: "https://images.unsplash.com/photo-1630369160812-26c7604cbd8c",
         description: "750ml bottle of crisp white wine",
-        stock: 25
+        stock: 25,
+        costPrice: 500,
       }
     ]
   }
@@ -324,6 +364,56 @@ export async function main() {
     console.log("✅ Admin user created")
   }
 
+ for (const [role, settings] of Object.entries(defaultPermissions)) {
+    const roleEnum = role as Role
+
+    const existing = await prisma.permission.findUnique({ where: { role: roleEnum } })
+    if (!existing) {
+      await prisma.permission.create({
+        data: {
+          role: roleEnum,
+          settings: settings as any,
+        },
+      })
+      console.log(`✅ Created permissions for role: ${roleEnum}`)
+    } else {
+      console.log(`⚠️ Permissions already exist for role: ${roleEnum}`)
+    }
+  }
+
+
+  await prisma.deliverySetting.create({
+    data: {
+      enableDelivery: true,
+      enablePickup: true,
+      defaultDeliveryFee: 350,
+      minimumOrderAmount: 1000,
+      estimatedDeliveryTime: 45,
+      deliveryRadius: 10,
+      zones: {
+        create: [
+          { name: "Ikeja", fee: 350 },
+          { name: "Lekki", fee: 500 },
+          { name: "Victoria Island", fee: 500 },
+          { name: "Yaba", fee: 400 },
+        ],
+      },
+    },
+  })
+
+  await prisma.restaurantInfo.create({
+    data: {
+      name: "The Mana Restaurant",
+      description: "Authentic Nigerian cuisine with a modern twist.",
+      address: "123 Lagos Street, Ikeja, Lagos",
+      phone: "+234 812 345 6789",
+      email: "info@themanarestaurant.com",
+      website: "https://themanarestaurant.com",
+      logo: "/images/themanalogo.svg",
+    },
+  })
+
+
   for (const category of seedData) {
     await prisma.category.create({
       data: {
@@ -333,6 +423,7 @@ export async function main() {
             name: item.name,
             sku: item.sku,
             price: item.price,
+            costPrice: item.costPrice,
             description: item.description,
             isActive: true,
             images: {

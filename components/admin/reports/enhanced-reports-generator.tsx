@@ -46,6 +46,7 @@ const reportTemplates: ReportTemplate[] = [
     entity: "orders",
     fields: [
       { key: "id", label: "Order ID", type: "string" },
+      { key: "customerName", label: "Customer Name", type: "string" },
       { key: "placedAt", label: "Order Date", type: "date" },
       { key: "totalAmount", label: "Total Amount", type: "number" },
       {
@@ -67,7 +68,7 @@ const reportTemplates: ReportTemplate[] = [
       { key: "name", label: "Product Name", type: "string" },
       { key: "price", label: "Price", type: "number" },
       { key: "costPrice", label: "Cost Price", type: "number" },
-      { key: "categoryId", label: "Category", type: "number" },
+      { key: "category", label: "Category", type: "string" },
       { key: "isActive", label: "Active Status", type: "enum", enumValues: ["true", "false"] },
       { key: "sku", label: "SKU", type: "string" },
     ],
@@ -90,6 +91,7 @@ const reportTemplates: ReportTemplate[] = [
     description: "Current stock levels, low stock alerts, and reorder recommendations",
     entity: "inventory",
     fields: [
+      {key: "productName", label: "Product Name", type: "string"},
       { key: "quantity", label: "Current Stock", type: "number" },
       { key: "lowStockAlert", label: "Low Stock Threshold", type: "number" },
       { key: "updatedAt", label: "Last Updated", type: "date" },
@@ -101,6 +103,8 @@ const reportTemplates: ReportTemplate[] = [
     description: "Affiliate referrals, commissions, and performance metrics",
     entity: "affiliates",
     fields: [
+      { key: "affiliateName", label: "Affiliate Name", type: "string" },
+      { key: "affiliateEmail", label: "Affiliate Email", type: "string" },
       { key: "referralCode", label: "Referral Code", type: "string" },
       { key: "totalEarnings", label: "Total Earnings", type: "number" },
       { key: "approved", label: "Approval Status", type: "enum", enumValues: ["true", "false"] },
@@ -367,7 +371,7 @@ export function EnhancedReportsGenerator() {
                       { id: "export", label: "Export", icon: DownloadIcon },
                     ].map((format) => (
                       <div key={format.id}>
-                        <input
+                        <Input
                           type="radio"
                           id={format.id}
                           name="format"

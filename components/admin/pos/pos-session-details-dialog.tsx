@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { format } from "date-fns"
 import { ClockIcon, PrinterIcon, UserIcon } from "lucide-react"
 
 interface PosSessionDetailsDialogProps {
@@ -68,7 +69,7 @@ export function PosSessionDetailsDialog({ session, open, onOpenChange }: PosSess
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>POS Session {session.id}</span>
-            <Badge variant={session.status === "ACTIVE" ? "success" : "secondary"}>{session.status}</Badge>
+            <Badge variant={session.status === "ACTIVE" ? "default" : "secondary"}>{session.status}</Badge>
           </DialogTitle>
           <DialogDescription>View details for this POS session</DialogDescription>
         </DialogHeader>
@@ -83,12 +84,12 @@ export function PosSessionDetailsDialog({ session, open, onOpenChange }: PosSess
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                <span>Start Time: {session.startTime}</span>
+                <span>Start Time: {format(new Date(session.startTime), "HH:mm")}</span>
               </div>
               {session.endTime && (
                 <div className="flex items-center gap-2 text-sm">
                   <ClockIcon className="h-4 w-4 text-muted-foreground" />
-                  <span>End Time: {session.endTime}</span>
+                  <span>End Time: {format(new Date(session.endTime), "HH:mm")}</span>
                 </div>
               )}
             </div>
