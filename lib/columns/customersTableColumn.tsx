@@ -40,7 +40,7 @@ export const customersTableColumn: ColumnDef<Customer>[] =[
         accessorKey: "phone",
         header: "Phone",
         cell: ({ row }) => {
-            return <span className="text-sm">{row.original.phone}</span>;
+            return <span className="text-sm">{row.original.phone || "N/A"}</span>;
         }
     },
     {

@@ -49,15 +49,16 @@ enum DeliveryType {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  passwordHash String
-  name         String?
-  phone        String?
-  role         Role     @default(CUSTOMER)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  isActive     Boolean  @default(true)
+  id            String   @id @default(uuid())
+  email         String   @unique
+  emailVerified Boolean?
+  passwordHash  String
+  name          String?
+  phone         String?
+  role          Role     @default(CUSTOMER)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  isActive      Boolean  @default(true)
 
   orders      Order[]      @relation("CustomerOrders")
   addresses   Address[]

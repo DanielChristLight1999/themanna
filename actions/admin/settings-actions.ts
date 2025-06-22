@@ -3,13 +3,20 @@
 import { auth } from "@/auth";
 import prisma from "@/db";
 import { RestaurantInfo, Role } from "@/lib/generated/prisma";
+import { canAccess } from "@/lib/permissions/check-permissions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export async function updateRestaurantInfo(data: RestaurantInfo) {
     try {
         const session = await auth();
-        if (!session) return { error: true, message: 'Unauthorized' }
+        if (!session?.user?.id) return { error: true, message: 'Unauthorized' }
+        const canUpdate = await canAccess({
+            userId: session.user.id,
+            module: "settings",
+            action: "update",
+        })
+        if (!canUpdate) return { error: true, message: 'Unauthorized' }
         const { id, name, description, address, phone, email, website, logo } = data
 
         await prisma.restaurantInfo.update({
@@ -77,6 +84,14 @@ const deliverySettingsSchema = z.object({
 export type DeliverySettingsInput = z.infer<typeof deliverySettingsSchema>
 
 export async function updateDeliverySettings(input: DeliverySettingsInput) {
+    const session = await auth()
+    if (!session?.user?.id) return { error: true, message: 'Unauthorized' }
+    const canUpdate = await canAccess({
+        userId: session.user.id,
+        module: "settings",
+        action: "update",
+    })
+    if (!canUpdate) return { error: true, message: 'Unauthorized' }
     const validated = deliverySettingsSchema.safeParse(input)
     if (!validated.success) {
         return { error: true, message: "Invalid input data" }
@@ -152,8 +167,13 @@ export type PaymentSettingsType = {
 
 export async function updatePaymentSettings(settings: PaymentSettingsType) {
     const session = await auth();
-    if (!session) return { error: true, message: 'Unauthorized' }
-
+    if (!session?.user?.id) return { error: true, message: 'Unauthorized' }
+    const canUpdate = await canAccess({
+        userId: session.user.id,
+        module: "settings",
+        action: "update",
+    })
+    if (!canUpdate) return { error: true, message: 'Unauthorized' }
     try {
         await prisma.setting.upsert({
             where: { key: "payment_settings" },
@@ -174,22 +194,22 @@ export async function updatePaymentSettings(settings: PaymentSettingsType) {
     }
 }
 export async function getRolePermissions(role: Role) {
-  const record = await prisma.permission.findUnique({ where: { role } })
-  return record ? (record.settings as any) : null
+    const record = await prisma.permission.findUnique({ where: { role } })
+    return record ? (record.settings as any) : null
 }
 
 export async function saveRolePermissions(role: Role, settings: Record<string, Record<string, boolean>>) {
-  try {
-    await prisma.permission.upsert({
-      where: { role },
-      update: { settings },
-      create: { role, settings },
-    })
+    try {
+        await prisma.permission.upsert({
+            where: { role },
+            update: { settings },
+            create: { role, settings },
+        })
 
-    revalidatePath("/settings") // optional
-    return { success: true, message: "Permissions saved successfully" }
-  } catch (err) {
-    console.error(err)
-    return { error: true, message: "Failed to save permissions" }
-  }
+        revalidatePath("/settings") // optional
+        return { success: true, message: "Permissions saved successfully" }
+    } catch (err) {
+        console.error(err)
+        return { error: true, message: "Failed to save permissions" }
+    }
 }

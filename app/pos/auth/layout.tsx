@@ -1,6 +1,6 @@
 import React from 'react'
 import "@/app/globals.css";
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from 'sonner';
 const Layout = (
     { children } : Readonly<{children: React.ReactNode}>
 ) => {
@@ -8,7 +8,7 @@ const Layout = (
     <html lang='en'>
       <body className='h-screen relative'>
           {children}
-          <Toaster richColors position="top-left" />
+          <Toaster richColors />
       </body>
     </html>
   )

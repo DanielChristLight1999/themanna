@@ -43,6 +43,8 @@ export function NewOrderContent({ products, availableCategories, resumeId }: New
   const updateQuantity = usePOSStore((state) => state.updateQuantity)
   const removeFromCart = usePOSStore((state) => state.removeFromCart)
   const completeOrder = usePOSStore((state) => state.completeOrder)
+  const settingsData = usePOSStore((state) => state.settingsData)
+  const taxRate = settingsData?.paymentSettings?.taxRate || 0
   const [lastCompletedOrder, setLastCompletedOrder] = useState<ReceiptProps["order"] | null>(null)
 
   // const completeOrder = usePOSStore((state) => state.completeOrder)
@@ -54,7 +56,7 @@ export function NewOrderContent({ products, availableCategories, resumeId }: New
   const [loading, setLoading] = useState(false)
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const tax = subtotal * 0.08 // 8% tax
+  const tax = subtotal * (taxRate / 100)
   const total = subtotal + tax
 
 
@@ -243,7 +245,7 @@ export function NewOrderContent({ products, availableCategories, resumeId }: New
                   <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Tax (8%):</span>
+                  <span>Tax ({taxRate}%):</span>
                   <span>{formatPrice(tax)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-lg border-t pt-2">

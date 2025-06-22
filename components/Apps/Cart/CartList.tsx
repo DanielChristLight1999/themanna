@@ -1,11 +1,11 @@
-import prisma from '@/db'
+"use client"
 import React from 'react'
 import CartItemCard from './CartItemCard'
-import { getCart } from '@/lib/getData'
 import Link from 'next/link'
+import useCartStore from '@/stores/cartstore'
 
-const CartList = async ({ userid }: { userid: string }) => {
-    const cart = await getCart(userid)
+const CartList = () => {
+    const cart = useCartStore((state) => state.cart)
     if (cart.length === 0) {
         return (
             <div className="text-center py-12">

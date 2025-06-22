@@ -49,7 +49,7 @@ async function uploadImages(files: (File | FileLike)[]) {
 }
 
 
-export function ProductDialog({ categories }: { categories: { id: number, name: string, count: number }[] }) {
+export function ProductDialog({ categories, canEditProduct, canCreateProduct }: { categories: { id: number, name: string, count: number }[], canEditProduct: boolean, canCreateProduct: boolean }) {
   const open = useUIStore((state) => state.isMenuItemDialogOpen)
   const onOpenChange = useUIStore((state) => state.setIsMenuItemDialogOpen)
   const product = useUIStore((state) => state.selectedMenuItem)
@@ -58,10 +58,12 @@ export function ProductDialog({ categories }: { categories: { id: number, name: 
   const router = useRouter()
 
   const onSubmit = async (values: z.infer<typeof productFormSchema>) => {
+    if (!canEditProduct && !canCreateProduct) return
     console.log("Submitting product form with values:", values)
     const newFiles = values.images.filter(
       (item) => typeof item === "object"
     ) as (File | FileLike)[];
+    // Upload new images
     const uploadedUrls = await uploadImages(newFiles)
 
     const existingUrls = values.images.filter(

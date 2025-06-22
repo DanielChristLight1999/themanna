@@ -1,12 +1,11 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
 import { hashPassword } from "./lib/utils";
 import bcrypt from "bcryptjs";
 import prisma from "./db";
 
 export const { handlers, signIn, signOut, auth} = NextAuth({
-  providers: [Google, Credentials({
+  providers: [ Credentials({
     name: "Credentials",
     credentials: {
         firstName: {label: "First Name", type: "text"},
@@ -49,7 +48,6 @@ export const { handlers, signIn, signOut, auth} = NextAuth({
   }), ],
   pages: {
     signIn: "/auth/login",
-    signOut: "/auth/login",
   },
   callbacks: {
     jwt: async ({token, user}) => {

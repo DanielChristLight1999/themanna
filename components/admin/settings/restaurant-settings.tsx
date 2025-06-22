@@ -17,6 +17,7 @@ import { upload } from "@vercel/blob/client"
 import { updateRestaurantInfo } from "@/actions/admin/settings-actions"
 import { toast } from "sonner"
 import AuthButton from "@/components/Apps/common/AuthButton"
+import { RolePermissionSettings } from "@/lib/permissions/types"
 
 export const restaurantInfoSchema = z.object({
   name: z.string().min(1),
@@ -46,11 +47,12 @@ async function uploadImage(file: (File)) {
     handleUploadUrl: "/api/imageupload",
 
   });
-
+  console.log("response", response)
   return response.url;
 }
 
-export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo }) {
+export function RestaurantSettings({ restaurant, permissions }: { restaurant: RestaurantInfo, permissions: RolePermissionSettings }) {
+  const canUpdateSettings = permissions?.settings?.update ?? false
   const [previewLogo, setPreviewLogo] = useState<string | null>(restaurant.logo || null)
 
   const form = useForm<z.infer<typeof restaurantInfoSchema>>({
@@ -80,9 +82,7 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
     }
   }, [form])
   const onSubmit = async (data: z.infer<typeof restaurantInfoSchema>) => {
-    console.log("data", data)
-    // In a real app, this would call an API to save the settings
-    console.log("Saving restaurant settings:", data)
+    if (!canUpdateSettings) return
     const updateData = {
       ...restaurant,
       name: data.name,
@@ -97,7 +97,7 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
       updateData.logo = imageurl
     }
     const response = await updateRestaurantInfo(updateData)
-    if(response.error){
+    if (response.error) {
       toast.error(response.message)
       return
     }
@@ -119,7 +119,7 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
                   <FormItem className="space-y-2">
                     <FormLabel>Restaurant Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input disabled={!canUpdateSettings} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -129,7 +129,7 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
                   <FormItem className="space-y-2">
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input disabled={!canUpdateSettings} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -141,7 +141,7 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
                   <FormItem className="space-y-2">
                     <FormLabel>Email Address</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input disabled={!canUpdateSettings} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -150,7 +150,7 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
                   <FormItem className="space-y-2">
                     <FormLabel>Website</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input disabled={!canUpdateSettings} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -160,7 +160,7 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
                 <FormItem className="space-y-2">
                   <FormLabel>Address</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input disabled={!canUpdateSettings} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -169,7 +169,7 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
                 <FormItem className="space-y-2">
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea rows={3} {...field} />
+                    <Textarea disabled={!canUpdateSettings} rows={3} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -207,9 +207,10 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
                           className="hidden"
                           onChange={handleLogoChange}
                           ref={field.ref}
+                          disabled={!canUpdateSettings}
                         />
                         <Label htmlFor="logo-upload">
-                          <Button variant="outline" className="gap-2" asChild>
+                          <Button disabled={!canUpdateSettings} variant="outline" className="gap-2" asChild>
                             <div>
                               <UploadIcon className="h-4 w-4" />
                               Upload Logo
@@ -222,7 +223,7 @@ export function RestaurantSettings({ restaurant }: { restaurant: RestaurantInfo 
                   </FormItem>
                 )}
               />
-              <AuthButton buttonText="Save Changes" loading={form.formState.isSubmitting} />
+              <AuthButton disabled={!canUpdateSettings} buttonText="Save Changes" loading={form.formState.isSubmitting} />
             </form>
           </Form>
         </CardContent>

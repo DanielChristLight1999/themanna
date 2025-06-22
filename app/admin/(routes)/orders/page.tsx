@@ -1,6 +1,9 @@
 import type { Metadata } from "next"
 import { OrdersTable } from "@/components/admin/orders/orders-table"
 import { getAllOrders } from "@/actions/admin/order-actions"
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
+import { getUserPermissions } from "@/lib/permissions/check-permissions"
 
 export const metadata: Metadata = {
   title: "Orders | The Mana Restaurant Admin",
@@ -8,9 +11,14 @@ export const metadata: Metadata = {
 }
 
 export default async function OrdersPage() {
+  const session = await auth()
+  if (!session?.user) return redirect("/auth/login")
+  const access = await getUserPermissions()
+  const canViewOrders = access?.permissions?.orders?.view ?? false
+  if (!canViewOrders) return redirect("/unauthorized")
   const orders = await getAllOrders()
   return (
-    <div className="flex flex-col p-6 h-full pt-12 space-y-6">
+    <div className="flex flex-col pb-20 p-6 h-full pt-12 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
       </div>

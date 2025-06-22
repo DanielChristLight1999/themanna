@@ -10,7 +10,7 @@ const page = async () => {
         redirect("/auth/login")
     }
   return (
-    <div className='h-screen'>
+    <div className='h-screen py-8 w-full md:max-w-2/3'>
         <OrdersHeader />
         <OrdersTabs userId={session.user.id as string} />
     </div>

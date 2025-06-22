@@ -24,15 +24,12 @@ const paymentSchema = z.object({
   }),
 })
 
-export default function PaymentMethodStep() {
+export default function PaymentMethodStep({total, tax, deliveryFee}: {total: number, tax: number, deliveryFee: number}) {
   const [isProcessing, setIsProcessing] = useState(false)
   const prevStep = useCheckoutStore((state) => state.prevStep)
   const setPaymentMethod = useCheckoutStore((state) => state.setPaymentMethod)
   const selectedAddressId = useCheckoutStore((state) => state.selectedAddressId)
-  const subtotal = useCartStore((state) => state.getSubtotal())
-  const total = useCheckoutStore((state) => state.getTotal(subtotal))
   const orderNote = useCheckoutStore((state) => state.orderNote)
-  const deliveryFee = useCheckoutStore((state) => state.getDeliveryFee())
   const router = useRouter()
 
 
@@ -56,6 +53,7 @@ export default function PaymentMethodStep() {
             paymentMethod: data.paymentMethod,
             orderNote: orderNote,
             deliveryFee: deliveryFee,
+            taxAmount: tax
         }
         const payment = await initializePayment(orderData);
         if (payment.error){
@@ -140,11 +138,11 @@ export default function PaymentMethodStep() {
                 </Alert>
               )}
             </CardContent>
-            <CardFooter className="flex lg:flex-row flex-col gap-4 mt-4 w-full  lg:justify-between">
+            <CardFooter className="flex  flex-col gap-4 mt-4 w-full  lg:justify-between">
               <Button className="w-full h-12" variant="outline" type="button" onClick={prevStep} disabled={isProcessing}>
                 Back
               </Button>
-              <Button className="w-full h-12" type="submit" disabled={isProcessing}>
+              <Button className="w-full  h-12" type="submit" disabled={isProcessing}>
                 {isProcessing ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

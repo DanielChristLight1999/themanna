@@ -5,8 +5,9 @@ import { ColumnDef } from "@tanstack/react-table"
 import Image from "next/image";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
-import { EditIcon, Eye, MoreHorizontalIcon, TrashIcon } from "lucide-react";
+import { EditIcon, MoreHorizontalIcon, TrashIcon } from "lucide-react";
 import useUIStore from "@/stores/uistore";
+import { useCanAccess } from "../permissions/use-can-access";
 
 export interface MenuItem {
     id: number;
@@ -76,13 +77,15 @@ export const productsTableColumn: ColumnDef<MenuItem>[] = [
                     {status}
                 </span>
             )
-        }
+        },
     },
     {
         id: "actions",
         header: "Actions",
         cell: ({ row }) => {
             const product = row.original;
+            const canEditProduct = useCanAccess("products", "update")
+            const canDeleteProduct = useCanAccess("products", "delete")
             const setselectedMenuItem = useUIStore((state) => state.setSelectedMenuItem)
             const setIsMenuItemDialogOpen = useUIStore((state) => state.setIsMenuItemDialogOpen)
             const setSelectedMenuItem = useUIStore((state) => state.setSelectedMenuItem)
@@ -105,11 +108,11 @@ export const productsTableColumn: ColumnDef<MenuItem>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleEditProduct(product)}>
+                        <DropdownMenuItem disabled={!canEditProduct} onClick={() => handleEditProduct(product)} className="text-primary">
                             <EditIcon className="mr-2 h-4 w-4" />
                             Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleDeleteProduct(product)} className="text-destructive">
+                        <DropdownMenuItem disabled={!canDeleteProduct} onClick={() => handleDeleteProduct(product)} className="text-destructive">
                             <TrashIcon className="mr-2 h-4 w-4" />
                             Delete
                         </DropdownMenuItem>

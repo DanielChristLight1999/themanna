@@ -16,7 +16,7 @@ const FoodMenuCarousel = ({ foodsbycategory }: { foodsbycategory: FoodItem[] }) 
 
     return (
         <Carousel>
-            <CarouselContent className="gap-4 ml-4 py-6 px-2 md:px-4">
+            <CarouselContent className="md:hidden gap-4 ml-4 py-6 px-2 md:px-4">
                 {foodsbycategory.map((food, index) => (
                     <CarouselItem
                         onClick={() => handleCarouselItemClick(food)}

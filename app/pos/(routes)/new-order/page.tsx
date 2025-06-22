@@ -3,7 +3,7 @@ import { NewOrderContent } from "./new-order-content"
 import { redirect } from "next/navigation"
 import { POSHydrator } from "./pos-hydrator"
 import { CartItem } from "@/stores/usePOSStore"
-import { PosSession } from "@/lib/generated/prisma"
+import { getRestaurantSettingsNoAdmin } from "@/lib/getsettingsData"
 
 export default async function Page({
   searchParams,
@@ -11,6 +11,7 @@ export default async function Page({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const resumeId = (await searchParams).resume as string
+  const settingsData = await getRestaurantSettingsNoAdmin()
   let cartItems: CartItem[] = []
   let sessiondata = {
     id: "",
@@ -43,7 +44,7 @@ export default async function Page({
   const categories = await getCategories()
   return (
     <>
-      <POSHydrator sessiondata={sessiondata} cart={cartItems} />
+      <POSHydrator settingsData={settingsData} sessiondata={sessiondata} cart={cartItems} />
       <NewOrderContent resumeId={resumeId} products={products} availableCategories={categories} />
     </>
   )

@@ -4,6 +4,7 @@
 import { useEffect } from "react"
 import { usePOSStore } from "@/stores/usePOSStore"
 import { CartItem } from "@/stores/usePOSStore"
+import { RestaurantSettingsData } from "@/lib/getsettingsData"
 
 type Props = {
   cart: CartItem[],
@@ -12,10 +13,11 @@ type Props = {
     staffId: string,
     openedAt: Date,
     cashierName: string,
-  }
+  },
+  settingsData: RestaurantSettingsData
 }
 
-export function POSHydrator({ cart, sessiondata }: Props) {
+export function POSHydrator({ cart, sessiondata, settingsData }: Props) {
   const rehydrate = usePOSStore((state) => state.rehydrateSession)
 
   useEffect(() => {
@@ -25,6 +27,7 @@ export function POSHydrator({ cart, sessiondata }: Props) {
         cashierId: sessiondata.staffId,
         cashierName: sessiondata.cashierName,
         startTime: new Date(sessiondata.openedAt),
+        settingsData: settingsData,
         cart: cart,
         isActive: true,
       })

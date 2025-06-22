@@ -1,6 +1,9 @@
 import prisma from "@/db";
 import { Customer } from "./columns/customersTableColumn";
 import { isAfter, startOfDay, startOfMonth, startOfWeek } from "date-fns";
+import { PaymentMethod } from "./generated/prisma";
+import { auth } from "@/auth";
+
 
 
 export async function getProducts() {
@@ -42,6 +45,42 @@ export async function getCategories() {
     }))
     return categories
 }
+
+export async function loadCart() {
+  const session = await auth()
+
+  if (!session) {
+    throw new Error("Not authenticated")
+  }
+
+  const userId = session.user?.id
+  const data = await prisma.cartItem.findMany({
+    where: {
+      userId
+    },
+    select: {
+      quantity: true,
+      productId: true,
+      product: {
+        select: {
+          price: true,
+          name: true,
+          images: true,
+
+        }
+      }
+    }
+  })
+  const cartItems = data.map((item) => ({
+    quantity: item.quantity,
+    productId: item.productId.toString(),
+    price: item.product.price,
+    image: item.product.images?.[0]?.url,
+    name: item.product.name
+  }))
+  return cartItems
+}
+
 
 export async function getCart(userId: string) {
     const data = await prisma.cartItem.findMany({
@@ -234,73 +273,101 @@ export async function getSavedOrder(orderId: string) {
 
 
 export async function getSessionsData() {
-  const now = new Date()
-  const todayStart = startOfDay(now)
-  const weekStart = startOfWeek(now, { weekStartsOn: 1 })
-  const monthStart = startOfMonth(now)
+    const now = new Date()
+    const todayStart = startOfDay(now)
+    const weekStart = startOfWeek(now, { weekStartsOn: 1 })
+    const monthStart = startOfMonth(now)
 
-  const sessions = await prisma.posSession.findMany({
-    include: {
-      staff: { select: { id: true, name: true } },
-      orders: true,
-    },
-  })
+    const sessions = await prisma.posSession.findMany({
+        include: {
+            staff: { select: { id: true, name: true } },
+            orders: true,
+        },
+    })
 
-  // Helper: filter closed sessions based on closedAt
-  const closedSessionsSince = (date: Date) =>
-    sessions.filter((s) => s.closedAt && isAfter(s.closedAt, date))
+    // Helper: filter closed sessions based on closedAt
+    const closedSessionsSince = (date: Date) =>
+        sessions.filter((s) => s.closedAt && isAfter(s.closedAt, date))
 
-  // Helper: count active sessions based on openedAt
-  const activeSessionsSince = (date: Date) =>
-    sessions.filter((s) => !s.closedAt && isAfter(s.openedAt, date))
+    // Helper: count active sessions based on openedAt
+    const activeSessionsSince = (date: Date) =>
+        sessions.filter((s) => !s.closedAt && isAfter(s.openedAt, date))
 
-  const summarize = (targetSessions: typeof sessions) => {
-    const totalSessions = targetSessions.length
-    const totalRevenue = targetSessions.reduce((acc, s) => acc + (s.posRevenue || 0), 0)
-    const totalOrders = targetSessions.reduce((acc, s) => acc + s.orders.length, 0)
-    const averageTicket = totalOrders > 0 ? totalRevenue / totalOrders : 0
+    const summarize = (targetSessions: typeof sessions) => {
+        const totalSessions = targetSessions.length
+        const totalRevenue = targetSessions.reduce((acc, s) => acc + (s.posRevenue || 0), 0)
+        const totalOrders = targetSessions.reduce((acc, s) => acc + s.orders.length, 0)
+        const averageTicket = totalOrders > 0 ? totalRevenue / totalOrders : 0
 
-    return { totalSessions, totalRevenue, averageTicket }
-  }
+        return { totalSessions, totalRevenue, averageTicket }
+    }
 
-  return {
-    today: {
-      activeSessions: activeSessionsSince(todayStart).length,
-      ...summarize(closedSessionsSince(todayStart)),
-    },
-    week: {
-      activeSessions: activeSessionsSince(weekStart).length,
-      ...summarize(closedSessionsSince(weekStart)),
-    },
-    month: {
-      activeSessions: activeSessionsSince(monthStart).length,
-      ...summarize(closedSessionsSince(monthStart)),
-    },
-  }
+    return {
+        today: {
+            activeSessions: activeSessionsSince(todayStart).length,
+            ...summarize(closedSessionsSince(todayStart)),
+        },
+        week: {
+            activeSessions: activeSessionsSince(weekStart).length,
+            ...summarize(closedSessionsSince(weekStart)),
+        },
+        month: {
+            activeSessions: activeSessionsSince(monthStart).length,
+            ...summarize(closedSessionsSince(monthStart)),
+        },
+    }
 }
 
-export async function getAllPOSSessions() {
-  const data = await prisma.posSession.findMany({
-    include: {
-      staff: { select: { id: true, name: true } },
-      orders: true,
-    },
-    orderBy: { openedAt: "desc" },
-  })
-  const sessions = data.map((session) => ({
-    id: session.id,
-    cashier: session.staff.name,
-    startTime: session.openedAt,
-    endTime: session.closedAt,
-    status: session.closedAt ? "CLOSED" : "OPEN",
-    totalSales: session.totalSales,
-    totalOrders: session.orderCount,
+export type PosSessionWithOrdersAndStaff = {
+    id: string;
+    cashier: string | null;
+    startTime: Date;
+    endTime: Date | null;
+    status: string;
+    totalSales: number;
+    totalOrders: number;
     paymentMethods: {
-      CASH: session.cashAmount,
-      CARD: session.transferAmt,
-      TRANSFER: session.transferAmt,
-    },
-  }) )
+        CASH: number;
+        CARD: number;
+        TRANSFER: number;
+    };
+    orders: {
+        id: string;
+        date: Date;
+        paymentMethod?: PaymentMethod;
+        itemscount: number;
+        total: number;
+    }[];
+}
+export async function getAllPOSSessions(): Promise<PosSessionWithOrdersAndStaff[]> {
+    const data = await prisma.posSession.findMany({
+        include: {
+            staff: { select: { id: true, name: true } },
+            orders: { include: { items: {select: {id: true}}, payment: {select: {method: true}} } },
+        },
+        orderBy: { openedAt: "desc" },
+    })
+    const sessions = data.map((session) => ({
+        id: session.id,
+        cashier: session.staff.name,
+        startTime: session.openedAt,
+        endTime: session.closedAt,
+        status: session.closedAt ? "CLOSED" : "OPEN",
+        totalSales: session.totalSales,
+        totalOrders: session.orderCount,
+        paymentMethods: {
+            CASH: session.cashAmount,
+            CARD: session.transferAmt,
+            TRANSFER: session.transferAmt,
+        },
+        orders: session.orders.map(order => ({
+            id: order.id,
+            date: order.placedAt,
+            paymentMethod: order.payment?.method,
+            itemscount: order.items.length,
+            total: order.totalAmount,
+        }))
+    }))
 
-  return sessions
+    return sessions
 }

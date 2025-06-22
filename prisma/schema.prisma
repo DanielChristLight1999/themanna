@@ -51,6 +51,7 @@ enum DeliveryType {
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
+  emailVerified Boolean? 
   passwordHash String
   name         String?
   phone        String?

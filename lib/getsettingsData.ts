@@ -1,6 +1,7 @@
 import prisma from "@/db";
-import { DeliveryZone, Role } from "./generated/prisma";
+import { DeliveryZone, RestaurantInfo, Role, User } from "./generated/prisma";
 import { PaymentSettingsType } from "@/actions/admin/settings-actions";
+import { auth } from "@/auth";
 
 export interface DeliverySettingsType {
     enableDelivery: boolean,
@@ -36,6 +37,11 @@ export async function getPaymentSettings(): Promise<PaymentSettingsType | null> 
 //   return record?.settings ?? null
 // }
 
+export type RestaurantSettingsData = {
+    restaurantInfo: RestaurantInfo | null,
+    deliverySettings: DeliverySettingsType | null,
+    paymentSettings: PaymentSettingsType | null,
+}
 
 export async function getRestaurantSettings() {
     const restaurantInfo = await prisma.restaurantInfo.findFirst()
@@ -53,3 +59,46 @@ export async function getRestaurantSettings() {
     return {restaurantInfo, deliverySettings, paymentSettings, adminusers}
 }
 
+export async function getRestaurantSettingsNoAdmin():Promise<RestaurantSettingsData> {
+    const restaurantInfo = await prisma.restaurantInfo.findFirst()
+    const deliverySettings = await prisma.deliverySetting.findFirst({
+        include: {
+            zones: true
+        }
+    })
+    const paymentSettings = await getPaymentSettings()
+    return {restaurantInfo, deliverySettings, paymentSettings}
+}
+
+
+export async function getUser(id:string){
+    const user = await prisma.user.findUnique({
+        where: {
+            id
+        }
+    })
+    if(!user){
+        return null
+    }
+    return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        createdAt: user.createdAt,
+    }
+}
+
+export async function getUserAddresses() {
+    const session = await auth()
+    if (!session?.user?.id) {
+        throw new Error("Not authenticated")
+    }
+    const data = await prisma.address.findMany({
+        where: {
+            userId: session.user.id
+        }
+    })
+    return data
+}

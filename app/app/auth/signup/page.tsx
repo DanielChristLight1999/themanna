@@ -9,7 +9,7 @@ const page = async () => {
       redirect("/")
     }
   return (
-    <div className='h-full absolute w-full flex justify-center top-0'>
+    <div className='h-full w-full'>
         <SignupForm />
     </div>
   )

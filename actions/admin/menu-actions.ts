@@ -6,6 +6,7 @@ import { MenuItem } from "@/lib/columns/productsTableColumn"
 import { z } from "zod"
 import { del } from "@vercel/blob"
 import { auth } from "@/auth"
+import { getUserPermissions } from "@/lib/permissions/check-permissions"
 
 
 export async function getMenuItems(): Promise<MenuItem[]> {
@@ -201,6 +202,9 @@ export async function deleteMenuItem(id: number) {
   try {
     const session = await auth();
     if (!session) return { error: true, message: 'Unauthorized' }
+    const access = await getUserPermissions()
+    const permissions = access?.permissions
+    if (!permissions?.products?.delete) return { error: true, message: 'Unauthorized' }
     await prisma.product.update({
       where: { id },
       data: {deletedAt: new Date(), isActive: false}

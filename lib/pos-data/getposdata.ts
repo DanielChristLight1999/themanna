@@ -1,36 +1,5 @@
 import { auth } from "@/auth";
 import prisma from "@/db";
-import { Order, Payment, Role } from "../generated/prisma";
-
-
-export type HydrationProps = {
-  session: {
-    id: string
-    openedAt: Date
-    staffId: string
-    closedAt: Date | null
-    staff: {
-      name: string | null
-    }
-    orders: {
-      id: string
-      status: Order["status"]
-      orderType: Order["orderType"]
-      paymentStatus: Order["paymentStatus"]
-      placedAt: Date
-      items: {
-        product: {
-          id: number
-          name: string
-          price: number
-          images: { url: string }[]
-        }
-        quantity: number
-      }[]
-      payment: Payment | null
-    }[]
-  }
-}
 
 
 export async function getActivePOSSession(){

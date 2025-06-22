@@ -2,8 +2,6 @@
 
 import { auth } from "@/auth"
 import prisma from "@/db"
-import { z } from "zod"
-
 // const AddToCartSchema = z.object({
 //   productId: z.string().uuid(),
 // })
@@ -11,39 +9,143 @@ import { z } from "zod"
 export async function addToCart(productId: number) {
   const session = await auth()
   if (!session?.user?.id) {
-    throw new Error("Not authenticated")
+    return { error: true, message: "Not authenticated" }
   }
   if (!productId) {
-    throw new Error("Invalid product ID")
+    return { error: true, message: "Invalid product ID" }
   }
 
   const userId = session.user.id
+  try {
 
-
-  await prisma.cartItem.upsert({
-    where: {
-      userId_productId: {
+    await prisma.cartItem.upsert({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+      update: {
+        quantity: { increment: 1 },
+      },
+      create: {
         userId,
         productId,
+        quantity: 1,
       },
-    },
-    update: {
-      quantity: { increment: 1 },
-    },
-    create: {
-      userId,
-      productId,
-      quantity: 1,
-    },
-  })
+    })
 
-  return { error: false, message: "Successfully added to cart" }
+    return { error: false, message: "Successfully added to cart" }
+  } catch (error) {
+    console.error("Error adding to cart:", error)
+    return { error: true, message: "Error adding to cart" }
+  }
+
 }
 
-export async function loadCart(){
+
+export async function removeFromCart(productId: number) {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return { error: true, message: "Not authenticated" }
+  }
+
+  const userId = session.user.id
+  if (!productId) {
+    return { error: true, message: "Invalid product ID" }
+  }
+  try {
+
+    const existingItem = await prisma.cartItem.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    })
+
+    if (!existingItem) {
+      return { error: true, message: "Item not found in cart" }
+    }
+
+    if (existingItem.quantity <= 1) {
+      await prisma.cartItem.delete({
+        where: {
+          userId_productId: {
+            userId,
+            productId,
+          },
+        },
+      })
+    } else {
+      await prisma.cartItem.update({
+        where: {
+          userId_productId: {
+            userId,
+            productId,
+          },
+        },
+        data: {
+          quantity: { decrement: 1 },
+        },
+      })
+    }
+
+    return { error: false, message: "Successfully removed from cart" }
+
+  } catch (error) {
+    console.error(error)
+    return { error: true, message: "Error removing from cart" }
+  }
+}
+
+export async function deleteFromCart(productId: number) {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return { error: true, message: "Not authenticated" }
+  }
+
+  const userId = session.user.id
+  if (!productId) {
+    return { error: true, message: "Invalid product ID" }
+  }
+  try {
+
+    const existingItem = await prisma.cartItem.findUnique({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    })
+
+    if (!existingItem) {
+      return { error: true, message: "Item not found in cart" }
+    }
+
+    await prisma.cartItem.delete({
+      where: {
+        userId_productId: {
+          userId,
+          productId,
+        },
+      },
+    })
+
+    return { error: false, message: "Successfully removed from cart" }
+
+  } catch (error) {
+    console.error(error)
+    return { error: true, message: "Error removing from cart" }
+  }
+}
+
+export async function loadCart() {
   const session = await auth()
 
-  if(!session){
+  if (!session) {
     throw new Error("Not authenticated")
   }
 
@@ -76,10 +178,10 @@ export async function loadCart(){
 }
 
 
-export async function getCart(){
+export async function getCart() {
   const session = await auth()
 
-  if(!session){
+  if (!session) {
     throw new Error("Not authenticated")
   }
 
@@ -92,7 +194,7 @@ export async function getCart(){
       id: true,
       quantity: true,
       productId: true,
-      
+
     }
   })
   return cartItems

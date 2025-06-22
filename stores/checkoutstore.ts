@@ -1,6 +1,7 @@
 // checkoutStore.ts
 import { getUserAddresses } from '@/actions/authactions'
 import { Address } from '@/lib/generated/prisma'
+// import { RestaurantSettingsData } from '@/lib/getsettingsData'
 import { create } from 'zustand'
 
 // export type Address = {
@@ -33,7 +34,8 @@ type CheckoutState = {
     orderNumber: string | null
     estimatedDeliveryTime: string | null
     userAddresses: Address[]
-    cartItems: FoodItem[]
+    // cartItems: FoodItem[] | []
+    // settingsData: RestaurantSettingsData | null
     getuserAddresses: () => Promise<void>
     setSelectedAddressId: (id: string) => void
     setPaymentMethod: (method: PaymentMethod) => void
@@ -45,39 +47,6 @@ type CheckoutState = {
     getDeliveryFee: () => number
     getTotal: (subtotal: number) => number
 }
-
-// Mock data
-// const mockAddresses: Address[] = [
-//     {
-//         id: "addr1",
-//         name: "Home",
-//         address: "123 Main Street",
-//         apartment: "Apt 4B",
-//         city: "Lagos",
-//         state: "Lagos State",
-//         zipCode: "100001",
-//         isDefault: true,
-//     },
-//     {
-//         id: "addr2",
-//         name: "Work",
-//         address: "456 Office Plaza",
-//         city: "Lagos",
-//         state: "Lagos State",
-//         zipCode: "100002",
-//         isDefault: false,
-//     },
-//     {
-//         id: "addr3",
-//         name: "Friend's Place",
-//         address: "789 Park Avenue",
-//         apartment: "Suite 12",
-//         city: "Abuja",
-//         state: "FCT",
-//         zipCode: "900108",
-//         isDefault: false,
-//     },
-// ]
 
 const mockCartItems: FoodItem[] = [
     {
@@ -112,7 +81,8 @@ export const useCheckoutStore = create<CheckoutState>((set, get) => ({
     orderNumber: null,
     estimatedDeliveryTime: null,
     userAddresses: [],
-    cartItems: mockCartItems,
+    // cartItems: [],
+    // settingsData: null,
     getuserAddresses: async () => {
         const data = await getUserAddresses()
         set({ userAddresses: data })

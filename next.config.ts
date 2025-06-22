@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  allowedDevOrigins: ["mychristlightdev.loca.lt", "tender-mangos-bake.loca.lt" ,"largely-decent-mite.ngrok-free.app","christlight-pc.local", "192.168.0.131.nip.io", "app.192.168.0.131.nip.io"],
+  allowedDevOrigins: ["mychristlightdev.loca.lt" ,"largely-decent-mite.ngrok-free.app","christlight-pc.local", "192.168.0.131.nip.io", "app.192.168.0.131.nip.io"],
   images: {
     remotePatterns: [
       {

@@ -3,9 +3,40 @@
 
 import { useEffect } from "react"
 import { usePOSStore } from "@/stores/usePOSStore"
-import { HydrationProps } from "@/lib/pos-data/getposdata"
+import { Order, Payment } from "@/lib/generated/prisma"
+import { RestaurantSettingsData } from "@/lib/getsettingsData"
 
-export function POSHydrator({ session }: HydrationProps) {
+
+export type HydrationProps = {
+  session: {
+    id: string
+    openedAt: Date
+    staffId: string
+    closedAt: Date | null
+    staff: {
+      name: string | null
+    }
+    orders: {
+      id: string
+      status: Order["status"]
+      orderType: Order["orderType"]
+      paymentStatus: Order["paymentStatus"]
+      placedAt: Date
+      items: {
+        product: {
+          id: number
+          name: string
+          price: number
+          images: { url: string }[]
+        }
+        quantity: number
+      }[]
+      payment: Payment | null
+    }[]
+  },
+  settingsData: RestaurantSettingsData
+}
+export function POSHydrator({ session, settingsData }: HydrationProps) {
   const rehydrateSession = usePOSStore((state) => state.rehydrateSession)
 
   useEffect(() => {
@@ -14,6 +45,7 @@ export function POSHydrator({ session }: HydrationProps) {
       cashierId: session.staffId,
       cashierName: session.staff.name || "Unknown Cashier",
       startTime: new Date(session.openedAt),
+      settingsData: settingsData,
       orders: session.orders.map((order) => {
         const items = order.items.map((item) => ({
           id: String(item.product.id),

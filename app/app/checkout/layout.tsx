@@ -6,7 +6,7 @@ const Layout = (
 ) => {
   return (
     <html lang='en'>
-      <body className='h-screen border'>
+      <body className=''>
           {children}
           <Toaster richColors position="top-left" />
       </body>

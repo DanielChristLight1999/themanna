@@ -12,7 +12,7 @@ const FoodGrid = ({ foods }: { foods: FoodItem[] }) => {
         setIsFoodDialogOpen(true)
     }
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {foods.map((food) => (
                 <div onClick={() => handleItemClick(food)} key={food.id} className="border rounded-xl shadow hover:shadow-lg transition p-4 cursor-pointer bg-white">
                     <div className="w-full h-40 relative rounded-lg overflow-hidden mb-4">

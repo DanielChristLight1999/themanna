@@ -1,17 +1,22 @@
-"use client"
-import { LogOutOAuth } from '@/actions/authactions'
-import { Button } from '@/components/ui/button'
-import { Bell } from 'lucide-react'
-import Image from 'next/image'
+import { auth } from '@/auth'
+import { NavAvatarDropdown } from './NavAvatarDropDown'
+import TopNavLinks from './TopNavLinks'
 
-const TopNav = () => {
+export default async function TopNav() {
+  const session = await auth()
   return (
-    <div className='flex items-center justify-between w-full p-6'>
-        <Image className='w-32' src={"/images/themanalogo.svg"} width={200} height={200} alt="Themana Logo" />
-        <Bell size={32} />
-        <Button onClick={async () => await LogOutOAuth()}>Logout</Button>
-    </div>
+    <header className="items-center flex justify-between px-8 py-8 w-full md:max-w-2/3 bg-white border-b">
+      {/* Brand / Logo */}
+      <div className="flex items-center space-x-2">
+        <span className="text-2xl font-bold text-orange-600">🍽️ The Manna</span>
+      </div>
+      {/* Center Nav Links */}
+      <TopNavLinks />
+
+      {/* Right Side: Avatar or Auth UI */}
+      <div className="flex items-center space-x-3">
+        <NavAvatarDropdown email={session?.user?.email as string} name={session?.user?.name as string} />
+      </div>
+    </header>
   )
 }
-
-export default TopNav

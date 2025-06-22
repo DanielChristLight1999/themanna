@@ -13,6 +13,7 @@ import { useCheckoutStore } from "@/stores/checkoutstore"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import useUIStore from "@/stores/uistore"
+import { toast } from "sonner"
 
 const deliverySchema = z.object({
   addressId: z.string({
@@ -47,6 +48,10 @@ export default function DeliveryAddressStep() {
   }
 
   const onSubmit = (data: z.infer<typeof deliverySchema>) => {
+    if(!data.addressId){
+      toast.error("Please select a delivery address")
+      return
+    }
     setSelectedAddressId(data.addressId)
     setOrderNote(data.orderNote || "")
     nextStep()
@@ -71,7 +76,7 @@ export default function DeliveryAddressStep() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Select Address</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a delivery address" />

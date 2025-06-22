@@ -8,10 +8,11 @@ interface AuthButtonProps {
     loading: boolean,
     className?: string,
     variant?: ButtonVariant
+    disabled?: boolean
 }
-const AuthButton = ({buttonText, loading, className, variant} : AuthButtonProps) => {
+const AuthButton = ({buttonText, loading, className, variant, disabled} : AuthButtonProps) => {
   return (
-    <Button type="submit" className={className} variant={variant}>
+    <Button disabled={disabled} type="submit" className={className} variant={variant}>
         {loading ? <div className='animate-spin'>
             <LoaderCircle />
         </div> : buttonText}

@@ -4,6 +4,7 @@ import CartList from '../Cart/CartList'
 import CartSummary from '../Cart/CartSummary'
 import OrderList from './OrderList'
 import prisma from '@/db'
+import { getRestaurantSettingsNoAdmin } from '@/lib/getsettingsData'
 
 const OrdersTabs = async ({ userId }: { userId: string }) => {
     const ongoingOrders = await prisma.order.findMany({
@@ -55,6 +56,8 @@ const OrdersTabs = async ({ userId }: { userId: string }) => {
             }
         }
     })
+    const {paymentSettings} = await getRestaurantSettingsNoAdmin()
+    const taxRate = paymentSettings?.taxRate || 0
 
     return (
         <Tabs defaultValue='cart' className=' p-6'>
@@ -64,8 +67,8 @@ const OrdersTabs = async ({ userId }: { userId: string }) => {
                 <TabsTrigger value='completed'>Completed</TabsTrigger>
             </TabsList>
             <TabsContent className='flex flex-col gap-6' value='cart'>
-                <CartList userid={userId} />
-                <CartSummary />
+                <CartList />
+                <CartSummary taxRate={taxRate} />
             </TabsContent>
             <TabsContent value='ongoing'>
                 <OrderList orders={ongoingOrders} />

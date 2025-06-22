@@ -7,6 +7,9 @@ import { UserRolesSettings } from "@/components/admin/settings/user-roles-settin
 import { DeliverySettingsType, getRestaurantSettings } from "@/lib/getsettingsData"
 import { RestaurantInfo } from "@/lib/generated/prisma"
 import { PaymentSettingsType } from "@/actions/admin/settings-actions"
+import { auth } from "@/auth"
+import { getUserPermissions } from "@/lib/permissions/check-permissions"
+import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
   title: "Settings | The Mana Restaurant Admin",
@@ -14,6 +17,12 @@ export const metadata: Metadata = {
 }
 
 export default async function SettingsPage() {
+    const session = await auth()
+    if (!session?.user) return redirect("/auth/login")
+    const access = await getUserPermissions()
+    const canViewSettings = access?.permissions?.settings?.view
+    if (!canViewSettings) return redirect("/unauthorized")
+
   const {restaurantInfo, deliverySettings, paymentSettings, adminusers} = await getRestaurantSettings()
   return (
     <div className="flex flex-col p-6 space-y-6">
@@ -29,16 +38,16 @@ export default async function SettingsPage() {
           <TabsTrigger value="users">Users & Roles</TabsTrigger>
         </TabsList>
         <TabsContent value="restaurant" className="pt-6">
-          <RestaurantSettings restaurant={restaurantInfo as RestaurantInfo} />
+          <RestaurantSettings permissions={access?.permissions} restaurant={restaurantInfo as RestaurantInfo} />
         </TabsContent>
         <TabsContent value="delivery" className="pt-6">
-          <DeliverySettings deliverySettings={deliverySettings as DeliverySettingsType} />
+          <DeliverySettings permissions={access?.permissions} deliverySettings={deliverySettings as DeliverySettingsType} />
         </TabsContent>
         <TabsContent value="payment" className="pt-6">
-          <PaymentSettings initialSettings={paymentSettings as PaymentSettingsType} />
+          <PaymentSettings permissions={access?.permissions} initialSettings={paymentSettings as PaymentSettingsType} />
         </TabsContent>
         <TabsContent value="users" className="pt-6">
-          <UserRolesSettings adminusers={adminusers} />
+          <UserRolesSettings currentUserpermissions={access.permissions} adminusers={adminusers} />
         </TabsContent>
       </Tabs>
     </div>

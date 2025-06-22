@@ -2,6 +2,7 @@
 
 // stores/pos-store.ts
 import { OrderStatus, PaymentMethod, PaymentStatus } from "@/lib/generated/prisma"
+import { RestaurantSettingsData } from "@/lib/getsettingsData"
 import { create } from "zustand"
 
 export type CartItem = {
@@ -34,6 +35,7 @@ type POSState = {
   isActive: boolean
   cart: CartItem[]
   orders: Order[]
+  settingsData: RestaurantSettingsData | null
 }
 
 type POSActions = {
@@ -55,7 +57,7 @@ export const usePOSStore = create<POSState & POSActions>((set, get) => ({
   isActive: false,
   cart: [],
   orders: [],
-
+  settingsData: null,
   initSession: (cashierId, cashierName, sessionId, startTime) => {
     set({
       cashierId,

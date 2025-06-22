@@ -8,20 +8,20 @@ import { useMediaQuery } from 'usehooks-ts'
 
 interface FoodMenuProps {
     products: {
-    id: string;
-    name: string;
-    category: {
         id: string;
         name: string;
-    };
-    image: string;
-    price: number;
-    description: string | null;
-}[];
+        category: {
+            id: string;
+            name: string;
+        };
+        image: string;
+        price: number;
+        description: string | null;
+    }[];
     categories: {
-    id: string;
-    name: string;
-}[]
+        id: string;
+        name: string;
+    }[]
 }
 const FoodMenu = ({ products, categories }: FoodMenuProps) => {
 
@@ -48,7 +48,8 @@ const FoodMenu = ({ products, categories }: FoodMenuProps) => {
                 </TabsList>
 
                 <TabsContent value="all">
-                    <ResponsiveFoodLayout foods={products} />
+                    <FoodMenuCarousel foodsbycategory={products} />
+                    <FoodGrid foods={products} />
                 </TabsContent>
 
                 {categories.map((category) => {
@@ -57,7 +58,8 @@ const FoodMenu = ({ products, categories }: FoodMenuProps) => {
                     )
                     return (
                         <TabsContent key={category.id} value={category.id}>
-                            <ResponsiveFoodLayout foods={foodsbycategory} />
+                            <FoodMenuCarousel foodsbycategory={products} />
+                            <FoodGrid foods={products} />
                         </TabsContent>
                     )
                 })}
@@ -68,13 +70,3 @@ const FoodMenu = ({ products, categories }: FoodMenuProps) => {
 }
 
 export default FoodMenu
-
-// Inner component to decide layout
-const ResponsiveFoodLayout = ({ foods }: { foods: FoodItem[] }) => {
-    const isMobile = useMediaQuery('(max-width: 768px)')
-    return isMobile ? (
-        <FoodMenuCarousel foodsbycategory={foods} />
-    ) : (
-        <FoodGrid foods={foods} />
-    )
-}

@@ -6,7 +6,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Printer } from "lucide-react"
-import { formatPrice } from "@/lib/utils"
+import { extractorderId, formatPrice } from "@/lib/utils"
+import { usePOSStore } from "@/stores/usePOSStore"
 
 export interface ReceiptProps {
   isOpen: boolean
@@ -34,6 +35,10 @@ export interface ReceiptProps {
 }
 
 function ReceiptContent({ order }: { order: ReceiptProps["order"] }) {
+  const settingsData = usePOSStore((state) => state.settingsData)
+  const restaurantInfo = settingsData?.restaurantInfo
+  if (!restaurantInfo) return null
+  const {name, address, phone} = restaurantInfo
   const date = order.placedAt.toLocaleDateString("en-NG", {
     year: "numeric",
     month: "short",
@@ -48,10 +53,9 @@ function ReceiptContent({ order }: { order: ReceiptProps["order"] }) {
   return (
     <div className="receipt-content p-4 text-sm font-mono max-w-sm mx-auto text-black">
       <div className="text-center mb-4">
-        <h1 className="text-xl font-bold">THE MANNA RESTAURANT</h1>
-        <p className="text-xs">Lagos, Nigeria</p>
-        <p className="text-xs">+234 123 456 7890</p>
-        <p className="text-xs">info@themanna.com</p>
+        <h1 className="text-xl font-bold">{name}</h1>
+        <p className="text-xs">{address}</p>
+        <p className="text-xs">{phone}</p>
       </div>
 
       <Separator className="my-2" />
@@ -59,7 +63,7 @@ function ReceiptContent({ order }: { order: ReceiptProps["order"] }) {
       <div className="space-y-1 mb-4">
         <div className="flex justify-between">
           <span>Order ID:</span>
-          <span>{order.id}</span>
+          <span className="uppercase">ORD-{extractorderId(order.id)}</span>
         </div>
         <div className="flex justify-between">
           <span>Date:</span>

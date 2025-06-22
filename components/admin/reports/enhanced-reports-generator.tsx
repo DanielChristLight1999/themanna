@@ -442,7 +442,7 @@ export function EnhancedReportsGenerator() {
           <Separator />
 
           <div className="flex justify-between items-center">
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               <Button variant="outline" className="gap-2">
                 <FileTextIcon className="h-4 w-4" />
                 Save Template
@@ -451,7 +451,7 @@ export function EnhancedReportsGenerator() {
                 <FileTextIcon className="h-4 w-4" />
                 Preview
               </Button>
-            </div>
+            </div> */}
 
             <Button
               onClick={handleGenerateReport}

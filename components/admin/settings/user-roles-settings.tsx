@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import AuthButton from "@/components/Apps/common/AuthButton"
 import { createUser } from "@/actions/admin/user-actions"
 import { useRouter } from "next/navigation"
+import { RolePermissionSettings } from "@/lib/permissions/types"
 
 
 // Mock permissions data
@@ -62,10 +63,13 @@ export const adminformSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 })
 
-export function UserRolesSettings({ adminusers }: { adminusers: User[] }) {
+export function UserRolesSettings({ adminusers, currentUserpermissions }: { adminusers: User[], currentUserpermissions: RolePermissionSettings }) {
   const [selectedRole, setSelectedRole] = useState<Role>("ADMIN")
   const [permissions, setPermissions] = useState<Record<string, any>>({})
   const [isPending, startTransition] = useTransition()
+  const canCreateUser = currentUserpermissions?.users?.create ?? false
+  const canUpdateUser = currentUserpermissions?.users?.update ?? false
+  const canUpdateSettings = currentUserpermissions?.settings?.update ?? false
 
   const router = useRouter()
 
@@ -114,7 +118,7 @@ export function UserRolesSettings({ adminusers }: { adminusers: User[] }) {
 
   const onSubmit = async (data: z.infer<typeof adminformSchema>) => {
     const response = await createUser(data);
-    if (response.error){
+    if (response.error) {
       toast.error(response.message);
       return;
     }
@@ -135,7 +139,9 @@ export function UserRolesSettings({ adminusers }: { adminusers: User[] }) {
           <Tabs defaultValue="users" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="users">Users</TabsTrigger>
-              <TabsTrigger value="add">Add User</TabsTrigger>
+              {canCreateUser && (
+                <TabsTrigger value="add">Add User</TabsTrigger>
+              )}
             </TabsList>
             <TabsContent value="users" className="pt-4">
               <Table>
@@ -156,9 +162,11 @@ export function UserRolesSettings({ adminusers }: { adminusers: User[] }) {
                       <TableCell>{user.role}</TableCell>
                       <TableCell>{user.isActive ? "Active" : "Inactive"}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
-                          Edit
-                        </Button>
+                        {canUpdateUser && (
+                          <Button variant="ghost" size="sm">
+                            Edit
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -166,61 +174,64 @@ export function UserRolesSettings({ adminusers }: { adminusers: User[] }) {
               </Table>
             </TabsContent>
             <TabsContent value="add" className="pt-4">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <FormField control={form.control} name="name" render={({ field }) => (
-                      <FormItem className="space-y-2">
-                        <FormLabel>FullName</FormLabel>
-                        <FormControl>
-                          <Input type="text" placeholder="John Doe" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-                    <FormField control={form.control} name="email" render={({ field }) => (
-                      <FormItem className="space-y-2">
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input type="email" placeholder="johndoe@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <FormField control={form.control} name="role" render={({ field }) => (
-                      <FormItem className="space-y-2">
-                        <FormLabel>Role</FormLabel>
-                        <FormControl>
-                          <Select value={field.value} onValueChange={field.onChange}>
-                            <SelectTrigger >
-                              <SelectValue placeholder="Select role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="ADMIN">Admin</SelectItem>
-                              <SelectItem value="MANAGER">Manager</SelectItem>
-                              <SelectItem value="CASHIER">Cashier</SelectItem>
-                              <SelectItem value="AFFILIATE">Affiliate</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-                   <FormField control={form.control} name="password" render={({field}) => (
-                      <FormItem className="space-y-2">
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-                  </div>
-                  <AuthButton buttonText="Add User" loading={form.formState.isSubmitting} />
-                </form>
-              </Form>
+              {canCreateUser ? (
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <FormField control={form.control} name="name" render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>FullName</FormLabel>
+                          <FormControl>
+                            <Input type="text" placeholder="John Doe" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                      <FormField control={form.control} name="email" render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="johndoe@example.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <FormField control={form.control} name="role" render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>Role</FormLabel>
+                          <FormControl>
+                            <Select value={field.value} onValueChange={field.onChange}>
+                              <SelectTrigger >
+                                <SelectValue placeholder="Select role" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="ADMIN">Admin</SelectItem>
+                                <SelectItem value="MANAGER">Manager</SelectItem>
+                                <SelectItem value="CASHIER">Cashier</SelectItem>
+                                <SelectItem value="AFFILIATE">Affiliate</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                      <FormField control={form.control} name="password" render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input type="password" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                    </div>
+                    <AuthButton buttonText="Add User" loading={form.formState.isSubmitting} />
+                  </form>
+                </Form>
+              ) : (<p className="text-muted-foreground text-sm">You do not have permission to create users</p>)
+              }
             </TabsContent>
           </Tabs>
         </CardContent>
@@ -325,6 +336,7 @@ export function UserRolesSettings({ adminusers }: { adminusers: User[] }) {
                     {Object.entries(actions).map(([action, allowed]) => (
                       <TableCell key={action}>
                         <Checkbox
+                          disabled={!canUpdateSettings}
                           checked={allowed as boolean}
                           onCheckedChange={(val) =>
                             handleChange(module, action, val as boolean)
@@ -341,7 +353,7 @@ export function UserRolesSettings({ adminusers }: { adminusers: User[] }) {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={handleSave} disabled={isPending}>
+          <Button onClick={handleSave} disabled={isPending || !canUpdateSettings}>
             {isPending ? "Saving..." : "Save Permissions"}
           </Button>
         </CardFooter>

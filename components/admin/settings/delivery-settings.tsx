@@ -3,13 +3,12 @@
 import AuthButton from "@/components/Apps/common/AuthButton"
 import { Button } from "@/components/ui/button"
 import {
-  Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
+  Card, CardContent, CardDescription, CardHeader, CardTitle
 } from "@/components/ui/card"
 import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DeliverySettingsType } from "@/lib/getsettingsData"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useFieldArray } from "react-hook-form"
@@ -17,6 +16,7 @@ import { z } from "zod"
 import { toast } from "sonner"
 import { PlusCircleIcon, Trash2 } from "lucide-react"
 import { updateDeliverySettings } from "@/actions/admin/settings-actions"
+import { RolePermissionSettings } from "@/lib/permissions/types"
 
 const formSchema = z.object({
   defaultDeliveryFee: z.coerce.number().min(1),
@@ -32,7 +32,8 @@ const deliveryZonesSchema = z.object({
   }))
 })
 
-export function DeliverySettings({ deliverySettings }: { deliverySettings: DeliverySettingsType }) {
+export function DeliverySettings({ deliverySettings, permissions }: { deliverySettings: DeliverySettingsType, permissions: RolePermissionSettings }) {
+  const canUpdateSettings = permissions?.settings?.update ?? false
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -104,14 +105,14 @@ export function DeliverySettings({ deliverySettings }: { deliverySettings: Deliv
                 <FormField name="defaultDeliveryFee" control={form.control} render={({ field }) => (
                   <FormItem>
                     <FormLabel>Default Delivery Fee (₦)</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
+                    <FormControl><Input disabled={!canUpdateSettings} {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
                 <FormField name="minimumOrderAmount" control={form.control} render={({ field }) => (
                   <FormItem>
                     <FormLabel>Minimum Order Amount (₦)</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
+                    <FormControl><Input disabled={!canUpdateSettings} {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -120,19 +121,19 @@ export function DeliverySettings({ deliverySettings }: { deliverySettings: Deliv
                 <FormField name="estimatedDeliveryTime" control={form.control} render={({ field }) => (
                   <FormItem>
                     <FormLabel>Estimated Delivery Time (min)</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
+                    <FormControl><Input disabled={!canUpdateSettings} {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
                 <FormField name="deliveryRadius" control={form.control} render={({ field }) => (
                   <FormItem>
                     <FormLabel>Delivery Radius (km)</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
+                    <FormControl><Input disabled={!canUpdateSettings} {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
               </div>
-              <AuthButton loading={form.formState.isSubmitting} buttonText="Save Settings" />
+              <AuthButton disabled={!canUpdateSettings} loading={form.formState.isSubmitting} buttonText="Save Settings" />
             </form>
           </Form>
         </CardContent>
@@ -152,18 +153,19 @@ export function DeliverySettings({ deliverySettings }: { deliverySettings: Deliv
                   <FormField name={`zones.${index}.name`} control={deliveryZonesForm.control} render={({ field }) => (
                     <FormItem>
                       <FormLabel>Zone Name</FormLabel>
-                      <FormControl><Input {...field} /></FormControl>
+                      <FormControl><Input disabled={!canUpdateSettings} {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField name={`zones.${index}.fee`} control={deliveryZonesForm.control} render={({ field }) => (
                     <FormItem>
                       <FormLabel>Fee (₦)</FormLabel>
-                      <FormControl><Input type="number" {...field} /></FormControl>
+                      <FormControl><Input disabled={!canUpdateSettings} type="number" {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <Button
+                    disabled={!canUpdateSettings}
                     variant="destructive"
                     type="button"
                     size={"icon"}
@@ -175,10 +177,11 @@ export function DeliverySettings({ deliverySettings }: { deliverySettings: Deliv
                 </div>
               ))}
               <div className="flex flex-col gap-2 items-start">
-                <Button type="button" onClick={() => append({ name: "", fee: 0 })}>
+                <Button disabled={!canUpdateSettings} type="button" onClick={() => append({ name: "", fee: 0 })}>
                   <PlusCircleIcon />
                 </Button>
                 <AuthButton
+                  disabled={!canUpdateSettings}
                   loading={deliveryZonesForm.formState.isSubmitting}
                   buttonText="Save Zones"
                 />

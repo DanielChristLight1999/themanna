@@ -121,6 +121,7 @@ export function MenuTable({products}: { products: MenuItem[] }) {
   const selectedProduct = useUIStore((state) => state.selectedMenuItem);
   const setSelectedProduct = useUIStore((state) => state.setSelectedMenuItem);
   const setIsConfirmDeleteDialogOpen = useUIStore((state) => state.setIsConfirmDeleteDialogOpen);
+  const selectedCategory = useUIStore((state) => state.selectedCategory)
   const [loading, setLoading] = useState(false);
   const router =  useRouter()
   const onCancelDelete = () => {
@@ -141,9 +142,10 @@ export function MenuTable({products}: { products: MenuItem[] }) {
     setLoading(false);
     router.refresh();
   }
+  const filteredProducts = selectedCategory ?  products.filter((product) => product.category.id.toString() === selectedCategory) : products
   return (
     <div className="w-full">
-      <DataTable data={products} columns={productsTableColumn} />
+      <DataTable data={filteredProducts} columns={productsTableColumn} />
       <ConfirmDeleteDialog loading={loading} onCancel={onCancelDelete} onConfirm={onConfirmDelete} />
     </div>
   )

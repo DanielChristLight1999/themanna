@@ -48,7 +48,7 @@ export const ordersTableColumn: ColumnDef<Order>[] = [
                     <span className="text-xs text-muted-foreground">{row.original.phone || "N/A"}</span>
                 </div>
             )
-        }
+        },
     },
     {
         accessorKey: "date",
@@ -73,6 +73,9 @@ export const ordersTableColumn: ColumnDef<Order>[] = [
         header: "Type",
         cell: ({ row }) => {
             return row.original.type
+        },
+        meta: {
+            filterOptions: ["ONLINE", "POS"]
         }
     },
     {

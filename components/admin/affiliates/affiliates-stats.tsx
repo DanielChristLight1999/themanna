@@ -92,7 +92,7 @@ export function AffiliatesStats() {
             <TabsTrigger value="month">This Month</TabsTrigger>
             <TabsTrigger value="year">This Year</TabsTrigger>
           </TabsList>
-          <TabsContent value="week" className="pt-4 space-y-6">
+          <TabsContent value="week" className="pt-4 w-full space-y-6">
             <StatsCards stats={getStatsData("week")} />
             <AffiliateChart data={getChartData("week")} />
           </TabsContent>
@@ -175,7 +175,7 @@ function AffiliateChart({ data }: { data: any[] }) {
             color: "hsl(var(--chart-2))",
           },
         }}
-        className="h-[300px]"
+        className="h-[300px] w-full"
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>

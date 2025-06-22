@@ -9,9 +9,12 @@ import useUIStore from "@/stores/uistore"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 
-const CartSummary = () => {
+const CartSummary = ({taxRate}: {taxRate: number}) => {
   const cart = useCartStore((state) => state.cart)
-  const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  const tax = subtotal * (taxRate / 100);
+  const totalPrice = subtotal + tax;
   const loading = useUIStore((state) => state.isLoading)
   const setIsLoading = useUIStore((state) => state.setIsLoading)
   const router = useRouter()
@@ -31,7 +34,11 @@ const CartSummary = () => {
       <CardContent className="space-y-4 p-0">
         <div className="flex justify-between">
           <span className="text-muted-foreground">Subtotal</span>
-          <span>{formatPrice(totalPrice)}</span>
+          <span>{formatPrice(subtotal)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Tax ({taxRate}%)</span>
+          <span>{formatPrice(tax)}</span>
         </div>
         <Separator />
         <div className="flex justify-between font-medium">

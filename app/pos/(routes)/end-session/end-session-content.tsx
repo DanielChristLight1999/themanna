@@ -8,6 +8,7 @@ import { Clock, DollarSign, Loader2, ShoppingCart, TrendingUp } from "lucide-rea
 import { usePOSStore } from "@/stores/usePOSStore"
 import { endPOSSession } from "@/actions/pos/session-actions"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 export function EndSessionContent() {
   const orders = usePOSStore((state) => state.orders)
@@ -18,6 +19,7 @@ export function EndSessionContent() {
   const [loading, setLoading] = useState(false)
   const endSession = usePOSStore((state) => state.endSession)
   const [showSummary, setShowSummary] = useState(false)
+  const router = useRouter()
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-NG", {
@@ -90,6 +92,7 @@ export function EndSessionContent() {
     endSession()
     setLoading(false)
     setShowSummary(false)
+    router.push("/start-session")
   }
 
   return (

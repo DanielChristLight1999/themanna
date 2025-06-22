@@ -11,6 +11,7 @@ interface OrderData {
     paymentMethod: string
     orderNote: string
     deliveryFee: number
+    taxAmount: number
 }
 
 interface PaystackResponse {
@@ -68,6 +69,7 @@ export async function initializePayment(orderdata: OrderData) {
             totalAmount: amount,
             deliveryFee: deliveryFee,
             orderNotes: orderNote,
+            taxAmount: orderdata.taxAmount,
             items: {
                 create: cart.map((item) => {
                     return {

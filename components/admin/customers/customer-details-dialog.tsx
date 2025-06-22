@@ -56,18 +56,20 @@ export function CustomerDetailsDialog({ customer }: CustomerDetailsDialogProps) 
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <PhoneIcon className="h-4 w-4 text-muted-foreground" />
-                    <span>{customer.phone}</span>
+                    <span>{customer.phone || "N/A"}</span>
                   </div>
                   <div className="flex items-start gap-2 text-sm">
                     <MapPinIcon className="h-4 w-4 text-muted-foreground mt-0.5" />
                     <div className="flex flex-col gap-4">
-                      {customer.addresses.length > 0 ? customer.addresses.map((address) => (
-                        <div className="border-b-2 flex flex-col gap-2" key={address.id}>
-                          <span>{address.label}</span>
-                          <span>{address.street}</span>
-                          <span>{address.city}</span>
-                          <span>{address.state}</span>
-                          <span>{address.postalCode}</span>
+                      {customer.addresses.length > 0 ? customer.addresses.map((address, index) => (
+                        <div
+                          key={address.id}
+                          className="bg-muted p-3 rounded-md shadow-sm space-y-1"
+                        >
+                          <div className="text-sm font-medium">{address.label}</div>
+                          <div className="text-sm text-muted-foreground">{address.street}</div>
+                          <div className="text-sm text-muted-foreground">{address.city}, {address.state} {address.postalCode}</div>
+                          {index !== customer.addresses.length - 1 && <Separator className="my-2" />}
                         </div>
                       )) : (
                         <span className="text-muted-foreground">No addresses available</span>

@@ -5,16 +5,11 @@ import Image from "next/image"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ShoppingBag } from "lucide-react"
-import { useCheckoutStore } from "@/stores/checkoutstore"
-import useCartStore from "@/stores/cartstore"
+import { CartItem } from "@/stores/cartstore"
 import { formatPrice } from "@/lib/utils"
 
-export default function OrderSummary() {
-    const cartItems = useCartStore((state) => state.cart)
-    const getSubtotal = useCartStore((state) => state.getSubtotal)
-    const getDeliveryFee = useCheckoutStore((state) => state.getDeliveryFee)
-    const getTotal = useCheckoutStore((state) => state.getTotal)
-
+export default function OrderSummary({cartItems, taxRate, tax, deliveryFee, total, subtotal}: {cartItems: CartItem[], taxRate: number, tax:number, deliveryFee: number, total: number, subtotal: number}) {
+   
   return (
     <Card className="sticky top-4">
       <CardHeader>
@@ -47,7 +42,7 @@ export default function OrderSummary() {
               <div className="flex-1">
                 <div className="flex justify-between">
                   <p className="text-sm font-medium">{item.name}</p>
-                  <p className="text-sm font-medium">₦{(item.price * item.quantity).toLocaleString()}</p>
+                  <p className="text-sm font-medium">{formatPrice(item.price * item.quantity)}</p>
                 </div>
                 <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                 {/* {item.options && item.options.length > 0 && (
@@ -64,19 +59,24 @@ export default function OrderSummary() {
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Subtotal</span>
-            <span>{formatPrice(getSubtotal())}</span>
+            <span>{formatPrice(subtotal)}</span>
+          </div>
+
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Tax ({taxRate}%)</span>
+            <span>{formatPrice(tax)}</span>
           </div>
 
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Delivery Fee</span>
-            <span>{formatPrice(getDeliveryFee())}</span>
+            <span>{formatPrice(deliveryFee)}</span>
           </div>
 
           <Separator className="my-2" />
 
           <div className="flex justify-between font-medium">
             <span>Total</span>
-            <span>{formatPrice(getTotal(getSubtotal()))}</span>
+            <span>{formatPrice(total)}</span>
           </div>
         </div>
       </CardContent>

@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import { ReportsOverview } from "@/components/admin/reports/reports-overview"
-import { getOrdersReportData, getProductCategorySalesPercentages, getSalesReportChartData } from "@/lib/getDashboardData"
 import { EnhancedReportsGenerator } from "@/components/admin/reports/enhanced-reports-generator"
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
+import { getUserPermissions } from "@/lib/permissions/check-permissions"
 
 export const metadata: Metadata = {
   title: "Reports & Analytics | The Mana Restaurant Admin",
@@ -9,9 +11,11 @@ export const metadata: Metadata = {
 }
 
 export default async function ReportsPage() {
-  const salesData = await getSalesReportChartData()
-  const productCategoryData = await getProductCategorySalesPercentages()
-  const ordersData = await getOrdersReportData()
+  const session = await auth()
+  if (!session) return redirect("/auth/login")
+  const access = await getUserPermissions()
+  const canViewReports = access?.permissions?.reports?.view ?? false
+  if (!canViewReports) return redirect("/unauthorized")
   return (
     <div className="flex flex-col p-6 space-y-6">
       <div className="flex items-center justify-between">

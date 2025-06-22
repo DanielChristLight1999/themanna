@@ -9,6 +9,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { EyeIcon, MoreHorizontalIcon } from "lucide-react"
 import { PosSessionDetailsDialog } from "./pos-session-details-dialog"
 import { format } from "date-fns"
+import { PosSessionWithOrdersAndStaff } from "@/lib/getData"
+import { extractorderId } from "@/lib/utils"
 
 // Mock data - would be replaced with actual data from API
 const sessions = [
@@ -84,7 +86,7 @@ const sessions = [
   },
 ]
 
-export function PosSessionsTable( {sessions}: {sessions: any[]} ) {
+export function PosSessionsTable( {sessions}: {sessions: PosSessionWithOrdersAndStaff[]} ) {
   const [selectedSession, setSelectedSession] = useState<any | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
 
@@ -113,7 +115,7 @@ export function PosSessionsTable( {sessions}: {sessions: any[]} ) {
             <TableBody>
               {sessions.map((session) => (
                 <TableRow key={session.id}>
-                  <TableCell className="font-medium">{session.id}</TableCell>
+                  <TableCell className="font-medium">#{extractorderId(session.id)}</TableCell>
                   <TableCell>{session.cashier}</TableCell>
                   <TableCell>{format(new Date(session.startTime), "HH:mm")}</TableCell>
                   <TableCell>{session.endTime ? format(new Date(session.endTime), "HH:mm") : "In Progress"}</TableCell>

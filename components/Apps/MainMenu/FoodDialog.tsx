@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog"
 import {
   Drawer,
@@ -20,7 +23,6 @@ import { formatPrice } from "@/lib/utils"
 import { addToCart } from "@/actions/cartactions"
 import { toast } from "sonner"
 import useCartStore from "@/stores/cartstore"
-import { useRouter } from "next/navigation"
 
 const FoodDialog = () => {
   const open = useUIStore((state) => state.isFoodDialogOpen)
@@ -29,55 +31,114 @@ const FoodDialog = () => {
   const isloading = useUIStore((state) => state.isLoading)
   const setIsLoading = useUIStore((state) => state.setIsLoading)
   const cartItem = useCartStore((state) => state.getItem(currentFoodItem?.id))
+  const increment = useCartStore((state) => state.increment)
+  const decrement = useCartStore((state) => state.decrement)
   const isDesktop = useMediaQuery("(min-width: 768px)")
+
+  
+  const handleIncrement = () => {
+    const data = {
+      productId: currentFoodItem?.id,
+      name: currentFoodItem?.name,
+      image: currentFoodItem?.image,
+      price: currentFoodItem?.price,
+    }
+    increment(data)
+  }
 
   if (!currentFoodItem) return null
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden">
-          <FoodDisplay fooditem={currentFoodItem} />
+
+        <DialogContent className="max-w-2xl p-0 overflow-hidden">
+          <DialogHeader hidden className="p-0">
+            <DialogTitle >Food Item Details</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            <div className="relative w-full h-full min-h-[300px]">
+              <Image
+                src={currentFoodItem.image || "/images/defaultfoodimage.png"}
+                alt={currentFoodItem.name}
+                fill
+                className="object-cover h-full w-full"
+              />
+            </div>
+
+            <div className="p-6 flex flex-col justify-between">
+              <div>
+                <h1 className="text-2xl font-bold mb-1">{currentFoodItem.name}</h1>
+                {currentFoodItem.description && (
+                  <p className="text-gray-600 mb-4">{currentFoodItem.description}</p>
+                )}
+                <p className="text-xl font-semibold text-green-600 mb-4">
+                  {formatPrice(currentFoodItem.price)}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between mt-6">
+                {cartItem ? (
+                  <div className="flex items-center gap-2">
+                    <Button onClick={() => decrement(cartItem.productId)} disabled={isloading} size="icon">
+                      <Minus />
+                    </Button>
+                    {isloading ? (
+                      <LoaderCircleIcon className="animate-spin" />
+                    ) : (
+                      <span className="text-lg font-semibold">{cartItem.quantity}</span>
+                    )}
+                    <Button disabled={isloading} size="icon" onClick={handleIncrement}>
+                      <Plus />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={handleIncrement}
+                    disabled={isloading}
+                    className="h-12 px-6 bg-pink-500 hover:bg-pink-600"
+                  >
+                    {isloading ? (
+                      <LoaderCircleIcon className="animate-spin" />
+                    ) : (
+                      `Add to Cart`
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
         </DialogContent>
+
+        {/* <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden">
+          <FoodDisplay fooditem={currentFoodItem} />
+        </DialogContent> */}
       </Dialog>
     )
-  }
-  const handleAddToCart = async () => {
-    setIsLoading(true)
-    const response = await addToCart(parseInt(currentFoodItem.id));
-    if (response.error) {
-      toast.error(response.message)
-    } else {
-      toast.success(response.message)
-      useCartStore.setState((state) => ({
-        cart: [...state.cart.filter((item) => item.productId !== currentFoodItem.id), ...[{ image:currentFoodItem.image, name: currentFoodItem.name, productId: currentFoodItem.id, quantity: (cartItem?.quantity ?? 0) + 1, price: currentFoodItem.price }]]
-      }))
-    }
-    setIsLoading(false)
   }
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerContent className="pb-4">
         <DrawerHeader>
-            <DrawerTitle hidden>Add to Cart</DrawerTitle>
+          <DrawerTitle hidden>Add to Cart</DrawerTitle>
         </DrawerHeader>
         <FoodDisplay fooditem={currentFoodItem} isMobile />
         <DrawerFooter className="pt-2">
-            {cartItem ? (
-              <div className="flex ml-4 items-center gap-2">
-                <Button disabled={isloading} size={"icon"}>
-                  <Minus/>
-                </Button>
-                {isloading ? <LoaderCircleIcon className="animate-spin" /> : <span className="text-lg font-semibold">{cartItem.quantity}</span>}
-                <Button disabled={isloading} size={"icon"} onClick={handleAddToCart}>
-                  <Plus />
-                </Button>
-              </div>
-            ) : (
-              <Button disabled={isloading} className="h-12 bg-pink-500" onClick={handleAddToCart}>
-                {isloading ? <LoaderCircleIcon className="animate-spin" /> : "Add to Cart"}
+          {cartItem ? (
+            <div className="flex ml-4 items-center gap-2">
+              <Button onClick={() => decrement(cartItem.productId)} disabled={isloading} size={"icon"}>
+                <Minus />
               </Button>
-            )}
+              {isloading ? <LoaderCircleIcon className="animate-spin" /> : <span className="text-lg font-semibold">{cartItem.quantity}</span>}
+              <Button disabled={isloading} size={"icon"} onClick={handleIncrement}>
+                <Plus />
+              </Button>
+            </div>
+          ) : (
+            <Button disabled={isloading} className="h-12 bg-pink-500" onClick={handleIncrement}>
+              {isloading ? <LoaderCircleIcon className="animate-spin" /> : "Add to Cart"}
+            </Button>
+          )}
           <DrawerClose asChild>
             <Button className="h-12" variant="ghost">Cancel</Button>
           </DrawerClose>

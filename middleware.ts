@@ -35,7 +35,9 @@ export default auth(async (req) => {
                 if (!isLoggedin && isProtectedPath) {
                     return NextResponse.redirect(new URL(`/auth/login`, req.url));
                 }
-                return NextResponse.rewrite(new URL(`/app${req.nextUrl.pathname}`, req.url));
+                const url = req.nextUrl.clone();
+                url.pathname = `/app${req.nextUrl.pathname}`;
+                return NextResponse.rewrite(url);
 
             }
         case "admin":
@@ -46,7 +48,9 @@ export default auth(async (req) => {
                 if (!isLoggedin && isProtectedPath) {
                     return NextResponse.redirect(new URL(`/auth/login`, req.url));
                 }
-                return NextResponse.rewrite(new URL(`/admin${req.nextUrl.pathname}`, req.url));
+                const url = req.nextUrl.clone();
+                url.pathname = `/admin${req.nextUrl.pathname}`;
+                return NextResponse.rewrite(url);
              }
         case "pos":
             {
@@ -58,6 +62,18 @@ export default auth(async (req) => {
                 }
                 const url = req.nextUrl.clone();
                 url.pathname = `/pos${req.nextUrl.pathname}`;
+                return NextResponse.rewrite(url);
+            }
+        case "affiliate":
+            {
+                const PROTECTED_PATHS = ["/", "/active-orders", "/new-order", "/past-orders", "end-session"]; // Add all your exact protected paths here
+                const isProtectedPath = PROTECTED_PATHS.includes(pathname);
+                const isLoggedin = req.auth
+                if (!isLoggedin && isProtectedPath) {
+                    return NextResponse.redirect(new URL(`/auth/login`, req.url));
+                }
+                const url = req.nextUrl.clone();
+                url.pathname = `/affiliate${req.nextUrl.pathname}`;
                 return NextResponse.rewrite(url);
             }
         default:

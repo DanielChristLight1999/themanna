@@ -7,24 +7,14 @@ import { Input } from "@/components/ui/input"
 import { PlusIcon } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import { Category } from "@/lib/generated/prisma"
 import { toast } from "sonner"
 import { createCategory } from "@/actions/admin/menu-actions"
 import { useRouter } from "next/navigation"
-
-// // Mock data - would be replaced with actual data from API
-// const categories = [
-//   { id: "cat-1", name: "All Products", count: 35 },
-//   { id: "cat-2", name: "Main Dishes", count: 12 },
-//   { id: "cat-3", name: "Appetizers", count: 5 },
-//   { id: "cat-4", name: "Soups", count: 4 },
-//   { id: "cat-5", name: "Sides", count: 6 },
-//   { id: "cat-6", name: "Desserts", count: 3 },
-//   { id: "cat-7", name: "Beverages", count: 5 },
-// ]
+import useUIStore from "@/stores/uistore"
 
 export function MenuCategories({categories}: { categories: { id: number, name: string, count: number }[] }) {
-  const [selectedCategory, setSelectedCategory] = useState("")
+  const setSelectedCategory = useUIStore((state) => state.setSelectedCategory)
+  const selectedCategory = useUIStore((state) => state.selectedCategory)
   const [isAddingCategory, setIsAddingCategory] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState("")
   const router = useRouter()
@@ -72,6 +62,14 @@ export function MenuCategories({categories}: { categories: { id: number, name: s
 
         <ScrollArea className="h-[calc(100vh-300px)]">
           <div className="space-y-1">
+            <Button
+                variant="ghost"
+                className={cn("w-full justify-start", selectedCategory === "" && "bg-muted font-medium")}
+                onClick={() => setSelectedCategory("")}
+              >
+                <span className="truncate">All</span>
+                <span className="ml-auto text-xs text-muted-foreground">{categories.reduce((acc, curr) => acc + curr.count, 0)}</span>
+              </Button>
             {categories.map((category) => (
               <Button
                 key={category.id}

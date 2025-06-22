@@ -29,6 +29,8 @@ interface UIStore {
     setIsCustomerDialogOpen: (isCustomerDialogOpen: boolean) => void;
     selectedCustomer: Customer | null;
     setSelectedCustomer: (selectedCustomer: Customer | null) => void;
+    selectedCategory: string | null
+    setSelectedCategory: (selectedCategory: string) => void;
 }
 
 export interface FoodItem {
@@ -74,6 +76,8 @@ const useUIStore = create<UIStore>((set) => ({
     setIsCustomerDialogOpen: (isCustomerDialogOpen) => set({ isCustomerDialogOpen: isCustomerDialogOpen }),
     selectedCustomer: null,
     setSelectedCustomer: (selectedCustomer) => set({ selectedCustomer: selectedCustomer }),
+    selectedCategory: "",
+    setSelectedCategory: (selectedCategory) => set({ selectedCategory: selectedCategory }),
 }))
 
 export default useUIStore

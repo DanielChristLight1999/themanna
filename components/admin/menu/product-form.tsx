@@ -30,6 +30,7 @@ interface ProductFormProps {
     onSubmit: (values: z.infer<typeof productFormSchema>) => void;
     onCancel: () => void;
     isEditing: boolean;
+  
 }
 
 export const productFormSchema = z.object({

@@ -1,11 +1,9 @@
-import PosFormLogin from '@/components/pos/Auth/PosFormLogin'
 import React from 'react'
+import { POSLoginContent } from './pos-login-content'
 const page = async () => {
 
   return (
-    <div className='h-full w-full'>
-        <PosFormLogin />
-    </div>
+    <POSLoginContent/>
   )
 }
 
