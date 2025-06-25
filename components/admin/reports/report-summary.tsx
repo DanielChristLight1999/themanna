@@ -72,7 +72,7 @@ export function ReportSummary({ data, config, metadata }: ReportSummaryProps) {
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">{metric.label}</p>
                   <p className="text-2xl font-bold">{metric.value}</p>
-                  {metric.change && (
+                  {/* {metric.change && (
                     <div
                       className={`flex items-center gap-1 text-sm ${
                         metric.change.type === "positive"
@@ -86,7 +86,7 @@ export function ReportSummary({ data, config, metadata }: ReportSummaryProps) {
                       {metric.change.type === "negative" && <TrendingDownIcon className="h-4 w-4" />}
                       {metric.change.value}
                     </div>
-                  )}
+                  )} */}
                 </div>
                 <div className="p-3 bg-primary/10 rounded-full">{metric.icon}</div>
               </div>
@@ -98,7 +98,7 @@ export function ReportSummary({ data, config, metadata }: ReportSummaryProps) {
       {/* Insights Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Performers */}
-        {insights.topPerformers && (
+        {/* {insights.topPerformers && (
           <Card>
             <CardHeader>
               <CardTitle>Top Performers</CardTitle>
@@ -126,10 +126,10 @@ export function ReportSummary({ data, config, metadata }: ReportSummaryProps) {
               </div>
             </CardContent>
           </Card>
-        )}
+        )} */}
 
         {/* Alerts & Issues */}
-        {insights.alerts && insights.alerts.length > 0 && (
+        {/* {insights.alerts && insights.alerts.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -155,10 +155,10 @@ export function ReportSummary({ data, config, metadata }: ReportSummaryProps) {
               </div>
             </CardContent>
           </Card>
-        )}
+        )} */}
 
         {/* Trends */}
-        {insights.trends && (
+        {/* {insights.trends && (
           <Card>
             <CardHeader>
               <CardTitle>Key Trends</CardTitle>
@@ -190,7 +190,7 @@ export function ReportSummary({ data, config, metadata }: ReportSummaryProps) {
               </div>
             </CardContent>
           </Card>
-        )}
+        )} */}
 
         {/* Report Metadata */}
         <Card>
