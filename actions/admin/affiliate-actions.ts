@@ -68,7 +68,7 @@ export async function approveAffiliate(id: string){
         }
         const canUpdate = await canAccess({
             userId: session.user.id,
-            module: "affiliates",
+            mod: "affiliates",
             action: "update"
         })
         if (!canUpdate) return { error: true, message: "Unauthorized" }
@@ -93,7 +93,7 @@ export async function rejectAffiliate(id: string) {
         if (!session) return { error: true, message: "Unauthorized" }
         const canUpdate = await canAccess({
             userId: session.user.id,
-            module: "affiliates",
+            mod: "affiliates",
             action: "update"
         })
         if (!canUpdate) return { error: true, message: "Unauthorized" }

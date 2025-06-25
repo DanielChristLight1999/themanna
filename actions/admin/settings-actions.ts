@@ -13,7 +13,7 @@ export async function updateRestaurantInfo(data: RestaurantInfo) {
         if (!session?.user?.id) return { error: true, message: 'Unauthorized' }
         const canUpdate = await canAccess({
             userId: session.user.id,
-            module: "settings",
+            mod: "settings",
             action: "update",
         })
         if (!canUpdate) return { error: true, message: 'Unauthorized' }
@@ -88,7 +88,7 @@ export async function updateDeliverySettings(input: DeliverySettingsInput) {
     if (!session?.user?.id) return { error: true, message: 'Unauthorized' }
     const canUpdate = await canAccess({
         userId: session.user.id,
-        module: "settings",
+        mod: "settings",
         action: "update",
     })
     if (!canUpdate) return { error: true, message: 'Unauthorized' }
@@ -170,7 +170,7 @@ export async function updatePaymentSettings(settings: PaymentSettingsType) {
     if (!session?.user?.id) return { error: true, message: 'Unauthorized' }
     const canUpdate = await canAccess({
         userId: session.user.id,
-        module: "settings",
+        mod: "settings",
         action: "update",
     })
     if (!canUpdate) return { error: true, message: 'Unauthorized' }
