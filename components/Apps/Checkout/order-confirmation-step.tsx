@@ -61,13 +61,11 @@ export default function OrderConfirmationStep() {
             <div className="flex items-start gap-3">
               <MapPin className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-medium">{selectedAddress.name}</p>
-                <p className="text-sm text-muted-foreground">{selectedAddress.address}</p>
-                {selectedAddress.apartment && (
-                  <p className="text-sm text-muted-foreground">{selectedAddress.apartment}</p>
-                )}
+                <p className="font-medium">{selectedAddress.label}</p>
+                <p className="text-sm text-muted-foreground">{selectedAddress.street}</p>
+                
                 <p className="text-sm text-muted-foreground">
-                  {selectedAddress.city}, {selectedAddress.state} {selectedAddress.zipCode}
+                  {selectedAddress.city}, {selectedAddress.state} {selectedAddress.postalCode}
                 </p>
               </div>
             </div>
