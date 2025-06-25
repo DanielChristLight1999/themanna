@@ -1,11 +1,8 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Order, Payment } from "@/lib/generated/prisma"
-import { HydrationProps } from "@/lib/pos-data/getposdata"
 import { usePOSStore } from "@/stores/usePOSStore"
 import { DollarSign, ShoppingCart, TrendingUp, Clock } from "lucide-react"
-import { useEffect } from "react"
 
 
 export function DashboardContent() {
