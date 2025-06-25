@@ -197,7 +197,7 @@ export function ReportExport({ report, expanded = false }: ReportExportProps) {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {exportFormats.map((format) => (
                 <div key={format.id}>
-                  <input
+                  <Input
                     type="radio"
                     id={format.id}
                     name="exportFormat"
@@ -239,19 +239,19 @@ export function ReportExport({ report, expanded = false }: ReportExportProps) {
             <Label>Export Options</Label>
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
-                <Checkbox id="includeCharts" checked={includeCharts} onCheckedChange={setIncludeCharts} />
+                <Checkbox id="includeCharts" checked={includeCharts} onCheckedChange={(checked) => setIncludeCharts(checked as boolean)} />
                 <Label htmlFor="includeCharts" className="cursor-pointer">
                   Include charts and visualizations
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="includeSummary" checked={includeSummary} onCheckedChange={setIncludeSummary} />
+                <Checkbox id="includeSummary" checked={includeSummary} onCheckedChange={(checked) => setIncludeSummary(checked as boolean)} />
                 <Label htmlFor="includeSummary" className="cursor-pointer">
                   Include summary and insights
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="includeMetadata" checked={includeMetadata} onCheckedChange={setIncludeMetadata} />
+                <Checkbox id="includeMetadata" checked={includeMetadata} onCheckedChange={(checked) => setIncludeMetadata(checked as boolean)} />
                 <Label htmlFor="includeMetadata" className="cursor-pointer">
                   Include report metadata
                 </Label>
