@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import prisma from "@/db";
 import { RolePermissionSettings } from "./types";
 
-type Modules = "orders" | "products" | "customers" | "settings"
+type Modules = "orders" | "reports" | "products" | "customers" | "settings" | "affiliates" | "users"
 type Actions = "view" | "create" | "update" | "delete"
 
 type RolePermissions = {
@@ -13,27 +13,64 @@ type RolePermissions = {
   }
 }
 
+// export async function canAccess({
+//   userId,
+//   module,
+//   action,
+// }: {
+//   userId: string
+//   module: Modules
+//   action: Actions
+// }): Promise<boolean> {
+//   // 1. Check if the user has an explicit override
+//   const userPerm = await prisma.userPermission.findFirst({
+//     where: {
+//       userId,
+//       module,
+//       action,
+//     },
+//   })
+
+//   if (userPerm) return true
+
+//   // 2. Get the user's role
+//   const user = await prisma.user.findUnique({
+//     where: { id: userId },
+//     select: { role: true },
+//   })
+
+//   if (!user) return false
+
+//   // 3. Fetch role-based permissions
+//   const rolePerm = await prisma.permission.findUnique({
+//     where: { role: user.role },
+//   })
+
+//   const settings = rolePerm?.settings as RolePermissions | undefined
+
+//   // 4. Return final access rule
+//   return settings?.[module]?.[action] ?? false
+// }
+
 export async function canAccess({
   userId,
-  module,
+  mod, // renamed from module
   action,
 }: {
   userId: string
-  module: Modules
+  mod: Modules
   action: Actions
 }): Promise<boolean> {
-  // 1. Check if the user has an explicit override
   const userPerm = await prisma.userPermission.findFirst({
     where: {
       userId,
-      module,
+      module: mod,
       action,
     },
   })
 
   if (userPerm) return true
 
-  // 2. Get the user's role
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { role: true },
@@ -41,28 +78,27 @@ export async function canAccess({
 
   if (!user) return false
 
-  // 3. Fetch role-based permissions
   const rolePerm = await prisma.permission.findUnique({
     where: { role: user.role },
   })
 
   const settings = rolePerm?.settings as RolePermissions | undefined
 
-  // 4. Return final access rule
-  return settings?.[module]?.[action] ?? false
+  return settings?.[mod]?.[action] ?? false
 }
+
 
 
 export async function assertCanAccess({
   userId,
-  module,
+  mod,
   action,
 }: {
   userId: string
-  module: Modules
+  mod: Modules
   action: Actions
 }) {
-  const allowed = await canAccess({ userId, module, action });
+  const allowed = await canAccess({ userId, mod, action });
   if (!allowed) throw new Error("Unauthorized: Insufficient permission");
 }
 
@@ -95,10 +131,10 @@ export async function getUserPermissions() {
   // Merge role and overrides
   const merged: RolePermissionSettings = {}
 
-  for (const module in roleSettings) {
-    merged[module] = {
-      ...(roleSettings[module] || {}),
-      ...(userOverrides[module] || {}),
+  for (const mod in roleSettings) {
+    merged[mod] = {
+      ...(roleSettings[mod] || {}),
+      ...(userOverrides[mod] || {}),
     }
   }
 

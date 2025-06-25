@@ -134,7 +134,7 @@ export async function getReportsData() {
             totalEarnings: true,
             createdAt: true,
             referralCode: true,
-            approved: true,
+            status: true,
         }
     })
     const orders = await prisma.order.findMany()

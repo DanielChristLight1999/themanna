@@ -32,7 +32,7 @@ export function POSHydrator({ cart, sessiondata, settingsData }: Props) {
         isActive: true,
       })
     }
-  }, [cart, rehydrate])
+  }, [cart, rehydrate, sessiondata.id, sessiondata.staffId, sessiondata.cashierName, sessiondata.openedAt, settingsData])
 
   return null
 }

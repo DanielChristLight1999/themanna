@@ -6,6 +6,7 @@ import { useCheckoutStore } from "@/stores/checkoutstore"
 import DeliveryAddressStep from "./delivery-address-step"
 import { CartItem } from "@/stores/cartstore"
 import { RestaurantSettingsData } from "@/lib/getsettingsData"
+import Link from "next/link"
 export default function CheckoutProcess({ cartItems, settingsData }: { cartItems: CartItem[], settingsData: RestaurantSettingsData }) {
   const currentStep = useCheckoutStore((state) => state.currentStep)
   // const cartItems = useCartStore((state) => state.cart)
@@ -25,9 +26,9 @@ export default function CheckoutProcess({ cartItems, settingsData }: { cartItems
         <p className="text-muted-foreground mb-6">
           Add some delicious meals to your cart before proceeding to checkout.
         </p>
-        <a href="/" className="text-primary hover:underline">
+        <Link href="/" className="text-primary hover:underline">
           Browse our menu
-        </a>
+        </Link>
       </div>
     )
   }

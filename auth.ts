@@ -1,8 +1,22 @@
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { hashPassword } from "./lib/utils";
 import bcrypt from "bcryptjs";
 import prisma from "./db";
+import { cookies } from "next/headers";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      role: string;
+    } & DefaultSession["user"];
+  }
+  interface User {
+    id: string;
+    role: string;
+  }
+}
 
 export const { handlers, signIn, signOut, auth} = NextAuth({
   providers: [ Credentials({
@@ -35,6 +49,22 @@ export const { handlers, signIn, signOut, auth} = NextAuth({
                   phone: phone,
                 }
             })
+            const referralCode = (await cookies()).get("referral")?.value
+            if (referralCode) {
+                const affiliate = await prisma.affiliate.findUnique({
+                    where: {
+                        referralCode: referralCode
+                    }
+                })
+                if (affiliate) {
+                  prisma.referral.create({
+                    data: {
+                      affiliateId: affiliate.userId,
+                      referredUser: user.id,
+                    }
+                  })
+                }
+              }
         } else {
             console.log("is existing user")
             const isMatch = await bcrypt.compare(password, user.passwordHash as string);
@@ -53,11 +83,13 @@ export const { handlers, signIn, signOut, auth} = NextAuth({
     jwt: async ({token, user}) => {
       if (user) {
         token.id = user.id
+        token.role = user.role
       }
       return token
     },
     session: async ({session, token}) => {
       session.user.id = token.id as string
+      session.user.role = token.role as string
       return session
     },
     authorized({ auth }) {

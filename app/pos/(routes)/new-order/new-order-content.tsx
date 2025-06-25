@@ -102,7 +102,7 @@ export function NewOrderContent({ products, availableCategories, resumeId }: New
     removeFromCart(id)
   }
 
-  const handleCompleteOrder = async (paymentMethod: "CASH" | "TRANSFER" | "PAYSTACK", paidAmount: number, sessionId: string, changeGiven?: number) => {
+  const handleCompleteOrder = async (paymentMethod: "CASH" | "TRANSFER" | "CARD", paidAmount: number, sessionId: string, changeGiven?: number) => {
     const response = await CompleteOrder(cart, sessionId, paymentMethod, paidAmount, resumeId);
 
     if (response.error || !response.order) {
@@ -137,35 +137,7 @@ export function NewOrderContent({ products, availableCategories, resumeId }: New
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
-      {/* Products Section */}
-      {/* <div className="lg:col-span-2">
-        <Card className="h-full">
-          <CardHeader>
-            <CardTitle>Products</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="foods">Foods</TabsTrigger>
-                <TabsTrigger value="beverages">Beverages</TabsTrigger>
-                <TabsTrigger value="pastries">Pastries</TabsTrigger>
-                <TabsTrigger value="wines">Wines</TabsTrigger>
-              </TabsList>
-
-              {Object.entries(products).map(([category, products]) => (
-                <TabsContent key={category} value={category} className="mt-6">
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {products.map((product) => (
-                      <ProductCard key={product.id} {...product} onAddToCart={() => handleAddToCart(product)} />
-                    ))}
-                  </div>
-                </TabsContent>
-              ))}
-            </Tabs>
-          </CardContent>
-        </Card>
-      </div> */}
-
+      
       <div className="lg:col-span-2">
         <Card className="h-full">
           <CardHeader>

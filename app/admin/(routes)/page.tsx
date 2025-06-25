@@ -21,17 +21,7 @@ export default async function DashboardPage() {
     <div className="flex flex-col p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <div className="flex items-center gap-4">
-          <div className="hidden md:block">
-            <DateRangePicker />
-          </div>
-          <div className="md:hidden">
-            <Button variant="outline" size="sm">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              Date Range
-            </Button>
-          </div>
-        </div>
+       
       </div>
 
       <Tabs defaultValue="all">
@@ -39,7 +29,6 @@ export default async function DashboardPage() {
           <TabsTrigger value="all">All Orders</TabsTrigger>
           <TabsTrigger value="online">Online</TabsTrigger>
           <TabsTrigger value="pos">POS</TabsTrigger>
-          <TabsTrigger value="pickup">Pickup</TabsTrigger>
         </TabsList>
         <TabsContent value="all" className="space-y-6 ">
           <DashboardMetrics />

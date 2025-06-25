@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import { Trash, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,8 @@ interface ImageUploaderProps {
 
 export function ImageUploader({ name }: ImageUploaderProps) {
   const { control, setValue, watch } = useFormContext();
-  const images = watch(name) || [];
+  const rawImages = watch(name);
+  const images = useMemo(() => rawImages || [], [rawImages]);
 
   // const onDrop = useCallback(
   //   (acceptedFiles: File[]) => {

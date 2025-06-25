@@ -72,7 +72,7 @@ export function PastOrdersContent({orders}: {orders: OrderWithItems[]}) {
                 <SelectItem value="all">All Payment Methods</SelectItem>
                 <SelectItem value="CASH">Cash</SelectItem>
                 <SelectItem value="TRANSFER">Transfer</SelectItem>
-                <SelectItem value="PAYSTACK">Card</SelectItem>
+                <SelectItem value="CARD">Card</SelectItem>
               </SelectContent>
             </Select>
 

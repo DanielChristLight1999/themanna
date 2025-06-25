@@ -26,11 +26,7 @@ export default function VerifyEmailPage({ email }: { email: string }) {
     const [successMessage, setSuccessMessage] = useState("")
     const [resendCooldown, setResendCooldown] = useState(0)
     const [hasCodeBeenSent, setHasCodeBeenSent] = useState(false)
-    const isClient = typeof window !== 'undefined'
-    const [resendCooldownExpires, setResendCooldownExpires, removeCooldownExpires] = isClient
-        ? useLocalStorage<number>('resendCooldownExpires', 0)
-        : [0, () => { }, () => { }]
-
+    const [resendCooldownExpires, setResendCooldownExpires, removeCooldownExpires] = useLocalStorage<number>('resendCooldownExpires', 0)
     // Initialize from localStorage on mount
     useEffect(() => {
         const now = Date.now()
@@ -50,7 +46,7 @@ export default function VerifyEmailPage({ email }: { email: string }) {
         } else {
             removeCooldownExpires()
         }
-    }, [resendCooldown])
+    }, [resendCooldown, removeCooldownExpires])
 
     const form = useForm<EmailVerificationFormData>({
         resolver: zodResolver(emailVerificationSchema),
@@ -221,7 +217,7 @@ export default function VerifyEmailPage({ email }: { email: string }) {
                                         </div>
                                         <h3 className="font-semibold text-gray-900">Ready to verify?</h3>
                                         <p className="text-sm text-gray-600">
-                                            Click the button below to send a verification code to your email address. We'll check that this
+                                            Click the button below to send a verification code to your email address. We&#39;ll check that this
                                             email belongs to a registered account.
                                         </p>
                                     </div>
@@ -295,7 +291,7 @@ export default function VerifyEmailPage({ email }: { email: string }) {
 
                                     {/* Resend Code Section */}
                                     <div className="text-center space-y-4">
-                                        <p className="text-sm text-gray-600">Didn't receive the code?</p>
+                                        <p className="text-sm text-gray-600">Didn&#39;t receive the code?</p>
 
                                         {resendCooldown > 0 ? (
                                             <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
@@ -328,8 +324,8 @@ export default function VerifyEmailPage({ email }: { email: string }) {
 
                             {/* Help Text */}
                             <div className="text-center text-xs text-gray-500 space-y-1">
-                                <p>We'll only send codes to registered email addresses.</p>
-                                <p>Check your spam folder if you don't see the email.</p>
+                                <p>We&#39;ll only send codes to registered email addresses.</p>
+                                <p>Check your spam folder if you don&#39;t see the email.</p>
                                 {hasCodeBeenSent && <p>The verification code expires in 10 minutes.</p>}
                             </div>
 

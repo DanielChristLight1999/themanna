@@ -3,7 +3,6 @@ import { ColumnDef } from "@tanstack/react-table"
 import { OrderStatus, PaymentMethod } from "../generated/prisma"
 import { format } from "date-fns"
 import { extractorderId, formatPrice } from "../utils"
-import { Button } from "@/components/ui/button"
 import { EyeIcon } from "lucide-react"
 import useUIStore from "@/stores/uistore"
 
@@ -95,7 +94,7 @@ export const ordersTableColumn: ColumnDef<Order>[] = [
     {
         accessorKey: "actions",
         header: "Actions",
-        cell: ({ row }) => {
+        cell: function CellComponent({ row }) {
             const order = row.original
             const setSelectedOrder = useUIStore((state) => state.setSelectedOrder)
             const setIsDetailsOpen = useUIStore((state) => state.setIsOrderDetailsDialogOpen)

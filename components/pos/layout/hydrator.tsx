@@ -74,7 +74,7 @@ export function POSHydrator({ session, settingsData }: HydrationProps) {
         }
       }),
     })
-  }, [rehydrateSession, session])
+  }, [rehydrateSession, session, settingsData])
 
   return null // it's just for hydration
 }

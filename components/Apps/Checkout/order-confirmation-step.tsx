@@ -83,7 +83,7 @@ export default function OrderConfirmationStep() {
 
         <div className="space-y-2">
           <h3 className="font-medium">Payment Method</h3>
-          <p className="text-sm">{paymentMethod === "paystack" ? "Paid with Paystack" : "Bank Transfer"}</p>
+          <p className="text-sm">{paymentMethod === "card" ? "Paid with Paystack" : "Bank Transfer"}</p>
         </div>
 
         <Separator />

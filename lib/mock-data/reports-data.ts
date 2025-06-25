@@ -102,7 +102,7 @@ export const generateMockReportData = (): ReportData => {
   const affiliates = [
     {
       userId: "usr_006",
-      approved: true,
+      status: "APPROVED",
       referralCode: "SARAH2024",
       totalEarnings: 45000,
       createdAt: "2024-01-20T00:00:00Z",

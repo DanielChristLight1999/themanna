@@ -1,10 +1,8 @@
 import type { Metadata } from "next"
-import { AffiliatesStats } from "@/components/admin/affiliates/affiliates-stats"
-import { AffiliatesTable } from "@/components/admin/affiliates/affiliates-table"
-import { AffiliateApplications } from "@/components/admin/affiliates/affiliate-applications"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { getUserPermissions } from "@/lib/permissions/check-permissions"
+import AffiliateSectionTabs from "@/components/admin/affiliates/affiliate-section-tabs"
 
 export const metadata: Metadata = {
   title: "Affiliates | The Mana Restaurant Admin",
@@ -22,16 +20,7 @@ export default async function AffiliatesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Affiliates</h1>
       </div>
-
-      <AffiliatesStats />
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="md:col-span-1">
-          <AffiliateApplications />
-        </div>
-        <div className="md:col-span-2">
-          <AffiliatesTable />
-        </div>
-      </div>
+      <AffiliateSectionTabs />
     </div>
   )
 }

@@ -272,7 +272,7 @@ export default function LoginForm() {
             <CardFooter className="pt-6">
               <div className="text-center w-full">
                 <p className="text-sm text-gray-600">
-                  Don't have an account?{" "}
+                  Don&#39;t have an account?{" "}
                   <Link
                     href="/auth/signup"
                     className="font-semibold text-pink-600 hover:text-pink-700 transition-colors hover:underline focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 rounded"

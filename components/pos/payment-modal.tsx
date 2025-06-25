@@ -12,18 +12,17 @@ import { CreditCard, Banknote, Smartphone } from "lucide-react"
 import { formatPrice } from "@/lib/utils"
 import PriceInput from "../Apps/common/PriceInput"
 import { usePOSStore } from "@/stores/usePOSStore"
-import { CompleteOrder } from "@/actions/pos/session-actions"
 import { toast } from "sonner"
 
 interface PaymentModalProps {
   isOpen: boolean
   onClose: () => void
   total: number,
-  onPaymentComplete: (paymentMethod: "CASH" | "TRANSFER" | "PAYSTACK", paidAmount: number, sessionId: string, changeGiven?: number) => void,
+  onPaymentComplete: (paymentMethod: "CASH" | "TRANSFER" | "CARD", paidAmount: number, sessionId: string, changeGiven?: number) => void,
 }
 
 export function PaymentModal({ isOpen, onClose, total, onPaymentComplete }: PaymentModalProps) {
-  const [selectedMethod, setSelectedMethod] = useState<"CASH" | "TRANSFER" | "PAYSTACK" | null>(null)
+  const [selectedMethod, setSelectedMethod] = useState<"CASH" | "TRANSFER" | "CARD" | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const sessionId = usePOSStore((state) => state.sessionId)
   const [discount, setDiscount] = useState(0)
@@ -37,7 +36,7 @@ export function PaymentModal({ isOpen, onClose, total, onPaymentComplete }: Paym
     if (amountPaid > netTotal) {
       setAmountPaid(netTotal)
     }
-  }, [discount, total])
+  }, [discount, total, amountPaid])
 
   useEffect(() => {
     if (selectedMethod === "CASH" && amountPaid) {
@@ -83,10 +82,10 @@ export function PaymentModal({ isOpen, onClose, total, onPaymentComplete }: Paym
       description: "Direct transfer to account",
     },
     {
-      id: "PAYSTACK" as const,
-      name: "Card (Paystack)",
+      id: "CARD" as const,
+      name: "Card",
       icon: Smartphone,
-      description: "Pay with card or USSD",
+      description: "Pay with card",
     },
   ]
 
@@ -118,7 +117,10 @@ export function PaymentModal({ isOpen, onClose, total, onPaymentComplete }: Paym
 
           {/* Amount Paid Input */}
 
-          <PriceInput value={amountPaid} onChange={(e) => setAmountPaid(e || 0)} label="Amount Paid (₦)" placeholder="₦0.00" />
+         <div>
+           <PriceInput value={amountPaid} onChange={(e) => setAmountPaid(e || 0)} label="Amount Paid (₦)" placeholder="₦0.00" />
+           <Button className="m-0 text-indigo-900 underline p-0" onClick={() => setAmountPaid(total)} variant={"link"}>Max</Button>
+         </div>
           {/* Balance/Change */}
           <div className="flex justify-between text-sm pt-2 border-t">
             <span>Balance/Change:</span>

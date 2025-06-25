@@ -33,6 +33,7 @@ export default function VerificationCodeEmail({
         <tbody>
           <tr>
             <td align="center" style={{ padding: "20px 0" }}>
+              
               <img
                 src={companyLogo}
                 alt={`${companyName} logo`}

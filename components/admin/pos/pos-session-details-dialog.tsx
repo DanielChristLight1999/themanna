@@ -26,13 +26,11 @@ interface PosSessionDetailsDialogProps {
 }
 
 export function PosSessionDetailsDialog({ session, open, onOpenChange }: PosSessionDetailsDialogProps) {
-  if (!session) return null
 
   // Mock data for orders in this session
   const contentRef = useRef<HTMLDivElement>(null)
   const reactToPrintFn = useReactToPrint({contentRef})
-
-
+  if (!session) return null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

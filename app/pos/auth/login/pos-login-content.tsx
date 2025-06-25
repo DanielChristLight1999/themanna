@@ -186,7 +186,7 @@ export function POSLoginContent() {
                 {/* Footer */}
                 <div className="text-center mt-8 text-sm text-gray-500">
                     <p>The Mana Restaurant POS System</p>
-                    <p className="mt-1">© 2024 All rights reserved</p>
+                    <p className="mt-1">© 2025 All rights reserved</p>
                 </div>
             </div>
 

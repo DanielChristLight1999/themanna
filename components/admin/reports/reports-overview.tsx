@@ -18,7 +18,7 @@ export async function ReportsOverview() {
   const deliveredOrders = reportData.orders.filter((order) => order.status === "DELIVERED").length
   const activeCustomers = reportData.users.filter((user) => user.role === "CUSTOMER").length
   const lowStockItems = inventoryAlerts.length
-  const activeAffiliates = reportData.affiliates.filter((affiliate) => affiliate.approved).length
+  const activeAffiliates = reportData.affiliates.filter((affiliate) => affiliate.status == "APPROVED").length
   const activePOSSessions = reportData.posSessions.filter((session) => !session.closedAt).length
 
   const stats = [

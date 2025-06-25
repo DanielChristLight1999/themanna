@@ -147,6 +147,51 @@ export async function LoginAdmin(email: string, password: string) {
     }
 }
 
+export async function LoginAffiliate(email: string, password: string) {
+    try {
+        const existinguser = await prisma.user.findUnique({
+            where: { email: email },
+            include: {affiliate: true}
+        })
+
+        const allowedRoles = new Set<Role>([Role.AFFILIATE]);
+
+        if (!existinguser || !allowedRoles.has(existinguser.role)) {
+            return { error: true, message: "Invalid email or password" };
+        }
+        if(!existinguser.isActive){
+            return { error: true, message: "Account is not active" }
+        }
+        if(!existinguser.affiliate){
+            return { error: true, message: "Affiliate not found" }
+        }
+        if(existinguser.affiliate.status !== "APPROVED"){
+            return { error: true, message: "Affiliate not approved yet" }
+        }
+        const isMatch = await bcrypt.compare(password, existinguser.passwordHash as string);
+        if (!isMatch) {
+            return { error: true, message: "Invalid email or password" }
+        }
+        const url = await signIn("credentials", {
+            email: email,
+            password: password,
+            redirect: false
+        });
+        console.log("url", url)
+        return { error: false, message: "Successfully signed in" }
+    } catch (error) {
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case "CredentialsSignin":
+                    return { error: true, message: "Invalid email or password" }
+                default: return { error: true, message: "Something went wrong" }
+            }
+        }
+        console.log("error", error)
+        return { error: true, message: "Something went wrong" }
+    }
+}
+
 export async function Signin() {
     await signIn()
 }

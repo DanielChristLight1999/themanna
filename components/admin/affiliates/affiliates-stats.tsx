@@ -7,36 +7,10 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { CalendarIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { AffiliateStatsType, PeriodData } from "@/lib/admin-data/affiliates/get-admin-affiliate-data"
+import { formatPrice } from "@/lib/utils"
 
 // Mock data - would be replaced with actual data from API
-const getStatsData = (period: string) => {
-  if (period === "week") {
-    return {
-      totalAffiliates: 12,
-      activeAffiliates: 8,
-      totalCommissions: 45000,
-      pendingCommissions: 12500,
-      referrals: 28,
-    }
-  } else if (period === "month") {
-    return {
-      totalAffiliates: 12,
-      activeAffiliates: 10,
-      totalCommissions: 120000,
-      pendingCommissions: 35000,
-      referrals: 75,
-    }
-  } else {
-    return {
-      totalAffiliates: 12,
-      activeAffiliates: 11,
-      totalCommissions: 580000,
-      pendingCommissions: 85000,
-      referrals: 320,
-    }
-  }
-}
-
 // Mock chart data
 const getChartData = (period: string) => {
   if (period === "week") {
@@ -69,7 +43,14 @@ const getChartData = (period: string) => {
   }
 }
 
-export function AffiliatesStats() {
+type AffiliateChartDataType = {
+  weekly: PeriodData;
+  monthly: PeriodData;
+  yearly: PeriodData;
+}
+
+export function AffiliatesStats({stats, chartData}: {stats: AffiliateStatsType, chartData: AffiliateChartDataType}) {
+
   return (
     <Card>
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
@@ -77,32 +58,30 @@ export function AffiliatesStats() {
           <CardTitle>Affiliate Program Overview</CardTitle>
           <CardDescription>Track affiliate performance and commissions</CardDescription>
         </div>
-        <div className="hidden sm:block">
-          <DateRangePicker />
-        </div>
-        <Button variant="outline" className="sm:hidden">
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          Date Range
-        </Button>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="week" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="today" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="week">This Week</TabsTrigger>
             <TabsTrigger value="month">This Month</TabsTrigger>
             <TabsTrigger value="year">This Year</TabsTrigger>
           </TabsList>
+          <TabsContent value="today" className="pt-4 w-full space-y-6">
+            <StatsCards stats={stats.today} />
+            <AffiliateChart data={chartData.weekly} />
+          </TabsContent>
           <TabsContent value="week" className="pt-4 w-full space-y-6">
-            <StatsCards stats={getStatsData("week")} />
-            <AffiliateChart data={getChartData("week")} />
+            <StatsCards stats={stats.week} />
+            <AffiliateChart data={chartData.weekly} />
           </TabsContent>
           <TabsContent value="month" className="pt-4 space-y-6">
-            <StatsCards stats={getStatsData("month")} />
-            <AffiliateChart data={getChartData("month")} />
+            <StatsCards stats={stats.month} />
+            <AffiliateChart data={chartData.monthly} />
           </TabsContent>
           <TabsContent value="year" className="pt-4 space-y-6">
-            <StatsCards stats={getStatsData("year")} />
-            <AffiliateChart data={getChartData("year")} />
+            <StatsCards stats={stats.year} />
+            <AffiliateChart data={chartData.yearly} />
           </TabsContent>
         </Tabs>
       </CardContent>
@@ -134,7 +113,7 @@ function StatsCards({ stats }: { stats: any }) {
           <CardDescription>Total Commissions</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">₦{stats.totalCommissions.toLocaleString()}</div>
+          <div className="text-2xl font-bold">{formatPrice(stats.totalCommissions)}</div>
         </CardContent>
       </Card>
       <Card>
@@ -142,7 +121,7 @@ function StatsCards({ stats }: { stats: any }) {
           <CardDescription>Pending Commissions</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">₦{stats.pendingCommissions.toLocaleString()}</div>
+          <div className="text-2xl font-bold">{formatPrice(stats.pendingCommissions)}</div>
         </CardContent>
       </Card>
       <Card>

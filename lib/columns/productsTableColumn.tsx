@@ -82,7 +82,7 @@ export const productsTableColumn: ColumnDef<MenuItem>[] = [
     {
         id: "actions",
         header: "Actions",
-        cell: ({ row }) => {
+        cell: function CellComponent ({ row })  {
             const product = row.original;
             const canEditProduct = useCanAccess("products", "update")
             const canDeleteProduct = useCanAccess("products", "delete")

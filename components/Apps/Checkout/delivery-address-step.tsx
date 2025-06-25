@@ -33,7 +33,7 @@ export default function DeliveryAddressStep() {
     const setIsNewAddressDialogOpen = useUIStore((state) => state.setIsNewAddressDialogOpen)
     const router = useRouter()
 
-  useEffect(() => { getselectedAddresses() }, [])
+  useEffect(() => { getselectedAddresses() }, [getselectedAddresses])
 
   const form = useForm<z.infer<typeof deliverySchema>>({
     resolver: zodResolver(deliverySchema),

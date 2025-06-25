@@ -96,7 +96,7 @@ export function DeliverySettings({ deliverySettings, permissions }: { deliverySe
       <Card>
         <CardHeader>
           <CardTitle>Delivery Options</CardTitle>
-          <CardDescription>Configure your restaurant's delivery settings</CardDescription>
+          <CardDescription>Configure your restaurant&#39;s delivery settings</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>

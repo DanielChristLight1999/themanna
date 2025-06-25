@@ -1,6 +1,7 @@
 // checkoutStore.ts
 import { getUserAddresses } from '@/actions/authactions'
 import { Address } from '@/lib/generated/prisma'
+import { useCallback } from 'react'
 // import { RestaurantSettingsData } from '@/lib/getsettingsData'
 import { create } from 'zustand'
 
@@ -24,7 +25,7 @@ export type FoodItem = {
     options?: string[]
 }
 
-export type PaymentMethod = "paystack" | "bank-transfer"
+export type PaymentMethod = "card" | "bank_transfer"
 
 type CheckoutState = {
     currentStep: number
@@ -48,31 +49,6 @@ type CheckoutState = {
     getTotal: (subtotal: number) => number
 }
 
-const mockCartItems: FoodItem[] = [
-    {
-        id: "item1",
-        name: "Jollof Rice with Chicken",
-        price: 2500,
-        quantity: 2,
-        image: "/placeholder.svg?height=80&width=80",
-        options: ["Extra Spicy", "Extra Chicken"],
-    },
-    {
-        id: "item2",
-        name: "Suya Platter",
-        price: 3000,
-        quantity: 1,
-        image: "/placeholder.svg?height=80&width=80",
-    },
-    {
-        id: "item3",
-        name: "Chapman Drink",
-        price: 800,
-        quantity: 3,
-        image: "/placeholder.svg?height=80&width=80",
-    },
-]
-
 export const useCheckoutStore = create<CheckoutState>((set, get) => ({
     currentStep: 1,
     selectedAddressId: "",
@@ -83,10 +59,10 @@ export const useCheckoutStore = create<CheckoutState>((set, get) => ({
     userAddresses: [],
     // cartItems: [],
     // settingsData: null,
-    getuserAddresses: async () => {
+    getuserAddresses: useCallback(async () => {
         const data = await getUserAddresses()
         set({ userAddresses: data })
-    },
+    }, []),
     setSelectedAddressId: (id) => set({ selectedAddressId: id }),
     setPaymentMethod: (method) => set({ paymentMethod: method }),
     setOrderNote: (note) => set({ orderNote: note }),

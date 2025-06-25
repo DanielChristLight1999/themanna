@@ -10,6 +10,15 @@ generator client {
   output   = "../lib/generated/prisma"
 }
 
+enum AffiliateApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  DELETED
+  SUSPENDED
+  INACTIVE
+}
+
 enum Role {
   ADMIN
   MANAGER
@@ -38,7 +47,7 @@ enum PaymentStatus {
 }
 
 enum PaymentMethod {
-  PAYSTACK
+  CARD
   CASH
   TRANSFER
 }
@@ -60,12 +69,12 @@ model User {
   updatedAt     DateTime @updatedAt
   isActive      Boolean  @default(true)
 
-  orders      Order[]      @relation("CustomerOrders")
+  orders      Order[]          @relation("CustomerOrders")
   addresses   Address[]
-  affiliate   Affiliate?   @relation("UserAffiliate")
-  posSessions PosSession[] @relation("StaffSessions")
+  affiliate   Affiliate?       @relation("UserAffiliate")
+  posSessions PosSession[]     @relation("StaffSessions")
   cartItems   CartItem[]
-
+  referrals   Referral[]
   permissions UserPermission[]
 }
 
@@ -89,15 +98,30 @@ model UserPermission {
 }
 
 model Affiliate {
-  userId        String   @id
-  approved      Boolean  @default(false)
-  referralCode  String   @unique
-  totalEarnings Float    @default(0)
-  createdAt     DateTime @default(now())
+  userId        String                  @id
+  status        AffiliateApprovalStatus @default(PENDING)
+  referralCode  String                  @unique
+  totalEarnings Float                   @default(0)
+  createdAt     DateTime                @default(now())
+  // payoutAccountId Int
 
-  user        User         @relation("UserAffiliate", fields: [userId], references: [id])
+  user        User                    @relation("UserAffiliate", fields: [userId], references: [id])
+  bankAccount AffiliatePayoutAccount? @relation("AffiliateAccount")
   referrals   Referral[]
   commissions Commission[]
+  payoutLogs  CommissionPayoutLog[]
+}
+
+model AffiliatePayoutAccount {
+  id            Int      @id @default(autoincrement())
+  affiliateId   String   @unique
+  bankName      String
+  accountNumber String
+  accountName   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  affiliate Affiliate @relation("AffiliateAccount", fields: [affiliateId], references: [userId])
 }
 
 model Referral {
@@ -107,6 +131,7 @@ model Referral {
   referredAt   DateTime @default(now())
 
   affiliate Affiliate @relation(fields: [affiliateId], references: [userId])
+  user      User      @relation(fields: [referredUser], references: [id])
 }
 
 model Address {
@@ -133,9 +158,25 @@ model Commission {
   amount      Float
   paid        Boolean  @default(false)
   createdAt   DateTime @default(now())
+  payoutLogId Int?
 
-  affiliate Affiliate @relation(fields: [affiliateId], references: [userId])
-  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  affiliate Affiliate            @relation(fields: [affiliateId], references: [userId])
+  order     Order                @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  payoutLog CommissionPayoutLog? @relation(fields: [payoutLogId], references: [id])
+}
+
+model CommissionPayoutLog {
+  id            Int      @id @default(autoincrement())
+  affiliateId   String
+  totalAmount   Float
+  note          String?
+  accountName   String
+  bankName      String
+  accountNumber String
+  paidAt        DateTime @default(now())
+
+  affiliate   Affiliate    @relation(fields: [affiliateId], references: [userId])
+  commissions Commission[]
 }
 
 model Category {
@@ -237,7 +278,7 @@ model OrderItem {
 model Payment {
   id            String        @id @default(uuid())
   orderId       String        @unique
-  method        PaymentMethod @default(PAYSTACK) // e.g. PAYSTACK, FLUTTERWAVE, CASH
+  method        PaymentMethod @default(CARD) // e.g. PAYSTACK, FLUTTERWAVE, CASH
   amount        Float
   status        PaymentStatus @default(PENDING) // PENDING, SUCCESS, FAILED
   transactionId String?

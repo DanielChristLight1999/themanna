@@ -12,7 +12,7 @@ import useUIStore from "@/stores/uistore"
 import { z } from "zod"
 import { createMenuItem, updateMenuItem } from "@/actions/admin/menu-actions"
 import { toast } from "sonner"
-
+import imageCompression from 'browser-image-compression'
 import { upload } from '@vercel/blob/client'
 import { useRouter } from "next/navigation"
 type FileLike = {
@@ -21,28 +21,90 @@ type FileLike = {
   preview: string;
 };
 
+async function compressImage(file: File | FileLike): Promise<File> {
+  const options = {
+    maxSizeMB: 0.5, // Maximum file size in MB (adjust as needed)
+    maxWidthOrHeight: 1024, // Maximum width or height
+    useWebWorker: true,
+    fileType: 'image/jpeg' // You can adjust this based on your needs
+  };
+
+  try {
+    let fileToCompress: File;
+    
+    if (file instanceof File) {
+      fileToCompress = file;
+    } else {
+      const response = await fetch(file.preview);
+      const blob = await response.blob();
+      fileToCompress = new File([blob], file.name, { type: blob.type });
+    }
+
+    // Skip compression if not an image
+    if (!fileToCompress.type.match(/^image\//)) {
+      return fileToCompress;
+    }
+
+    const compressedFile = await imageCompression(fileToCompress, options);
+    return compressedFile;
+  } catch (error) {
+    console.error('Error compressing image:', error);
+    throw error;
+  }
+}
+
+
+// async function uploadImages(files: (File | FileLike)[]) {
+//   const uploadedUrls: string[] = [];
+
+//   for (const file of files) {
+//     let fileName: string;
+//     let blob: Blob;
+
+//     if (file instanceof File) {
+//       fileName = file.name;
+//       blob = file;
+//     } else {
+//       fileName = file.name;
+//       blob = await fetch(file.preview).then(res => res.blob());
+//     }
+
+//     const response = await upload(`images/products/${fileName}`, blob, {
+//       access: 'public',
+//       handleUploadUrl: "/api/imageupload",
+      
+//     });
+
+//     uploadedUrls.push(response.url);
+//   }
+
+//   return uploadedUrls;
+// }
+
 async function uploadImages(files: (File | FileLike)[]) {
   const uploadedUrls: string[] = [];
 
   for (const file of files) {
-    let fileName: string;
-    let blob: Blob;
+    try {
+      let fileName: string;
+      let blob: Blob;
 
-    if (file instanceof File) {
-      fileName = file.name;
-      blob = file;
-    } else {
-      fileName = file.name;
-      blob = await fetch(file.preview).then(res => res.blob());
+      // Compress the image first
+      const compressedFile = await compressImage(file);
+      fileName = compressedFile.name;
+      blob = compressedFile;
+
+      const response = await upload(`images/products/${fileName}`, blob, {
+        access: 'public',
+        handleUploadUrl: "/api/imageupload",
+      });
+
+      uploadedUrls.push(response.url);
+    } catch (error) {
+      console.error('Error uploading file:', file.name, error);
+      // You might want to handle this error differently
+      throw error;
     }
-
-    const response = await upload(`images/products/${fileName}`, blob, {
-      access: 'public',
-      handleUploadUrl: "/api/imageupload",
-      
-    });
-
-    uploadedUrls.push(response.url);
   }
 
   return uploadedUrls;

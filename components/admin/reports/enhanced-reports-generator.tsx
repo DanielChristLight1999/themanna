@@ -107,7 +107,7 @@ const reportTemplates: ReportTemplate[] = [
       { key: "affiliateEmail", label: "Affiliate Email", type: "string" },
       { key: "referralCode", label: "Referral Code", type: "string" },
       { key: "totalEarnings", label: "Total Earnings", type: "number" },
-      { key: "approved", label: "Approval Status", type: "enum", enumValues: ["true", "false"] },
+      { key: "status", label: "Approval Status", type: "enum", enumValues: ["APPROVED", "PENDING", "REJECTED"] },
       { key: "createdAt", label: "Join Date", type: "date" },
     ],
   },
@@ -177,7 +177,7 @@ export function EnhancedReportsGenerator() {
             <BarChart3Icon className="h-5 w-5" />
             Advanced Report Generator
           </CardTitle>
-          <CardDescription>Create comprehensive reports based on your restaurant's data schema</CardDescription>
+          <CardDescription>Create comprehensive reports based on your restaurant&#39;s data schema</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-6">

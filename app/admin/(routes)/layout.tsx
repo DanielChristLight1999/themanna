@@ -4,9 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import "@/app/globals.css";
 import AdminSidebar from "@/components/admin/sidebar";
 import { PrintProvider } from "@/lib/usecontext.tsx/print-context";
-import { auth } from "@/auth";
-import { canAccess, getUserPermissions } from "@/lib/permissions/check-permissions";
-import { redirect } from "next/navigation";
+import { getUserPermissions } from "@/lib/permissions/check-permissions";
 import { RBACProvider } from "@/lib/permissions/rbac-context";
 
 export const metadata = {

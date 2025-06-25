@@ -29,13 +29,25 @@ export default auth(async (req) => {
     switch (subdomain) {
         case "app":
             {
+                const url = req.nextUrl.clone();
+
+
                 const PROTECTED_PATHS = ["/", "/profile", "/settings", "/checkout", "/orders"]; // Add all your exact protected paths here
                 const isProtectedPath = PROTECTED_PATHS.includes(pathname);
                 const isLoggedin = req.auth
+
+                const referralCode = req.nextUrl.searchParams.get("ref")
+                const response = NextResponse.next()
+                if (referralCode) {
+                    response.cookies.set("referral", referralCode, {
+                        maxAge: 60 * 60 * 24 * 30, // 30 days
+                        path: "/",
+                    })
+                }
+
                 if (!isLoggedin && isProtectedPath) {
                     return NextResponse.redirect(new URL(`/auth/login`, req.url));
                 }
-                const url = req.nextUrl.clone();
                 url.pathname = `/app${req.nextUrl.pathname}`;
                 return NextResponse.rewrite(url);
 
@@ -51,7 +63,7 @@ export default auth(async (req) => {
                 const url = req.nextUrl.clone();
                 url.pathname = `/admin${req.nextUrl.pathname}`;
                 return NextResponse.rewrite(url);
-             }
+            }
         case "pos":
             {
                 const PROTECTED_PATHS = ["/", "/active-orders", "/new-order", "/past-orders", "end-session"]; // Add all your exact protected paths here
@@ -59,6 +71,10 @@ export default auth(async (req) => {
                 const isLoggedin = req.auth
                 if (!isLoggedin && isProtectedPath) {
                     return NextResponse.redirect(new URL(`/auth/login`, req.url));
+                }
+                const role = isLoggedin?.user.role as string
+                if (isProtectedPath && !["ADMIN", "MANAGER", "CASHIER"].includes(role)) {
+                    return NextResponse.redirect(new URL("/unauthorized", req.url))
                 }
                 const url = req.nextUrl.clone();
                 url.pathname = `/pos${req.nextUrl.pathname}`;

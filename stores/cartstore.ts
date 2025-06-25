@@ -1,6 +1,7 @@
 
 
 import { addToCart, deleteFromCart, loadCart, removeFromCart } from "@/actions/cartactions";
+import { useCallback } from "react";
 import { create } from "zustand";
 
 export interface CartItem {
@@ -35,10 +36,10 @@ const useCartStore = create<CartStore>((set, get) => ({
   getSubtotal: () =>
     get().cart.reduce((total, item) => total + item.price * item.quantity, 0),
 
-  loadCart: async () => {
+  loadCart: useCallback(async () => {
     const cartData = await loadCart()
     set({ cart: cartData })
-  },
+  }, []),
 
   increment: async (item) => {
     const { cart } = get()

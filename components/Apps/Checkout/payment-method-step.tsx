@@ -14,17 +14,16 @@ import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useCheckoutStore } from "@/stores/checkoutstore"
 import { initializePayment } from "@/actions/paymentactions"
-import useCartStore from "@/stores/cartstore"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
 const paymentSchema = z.object({
-  paymentMethod: z.enum(["paystack", "bank-transfer"], {
+  paymentMethod: z.enum(["card", "bank_transfer"], {
     required_error: "Please select a payment method",
   }),
 })
 
-export default function PaymentMethodStep({total, tax, deliveryFee}: {total: number, tax: number, deliveryFee: number}) {
+export default function PaymentMethodStep({ total, tax, deliveryFee }: { total: number, tax: number, deliveryFee: number }) {
   const [isProcessing, setIsProcessing] = useState(false)
   const prevStep = useCheckoutStore((state) => state.prevStep)
   const setPaymentMethod = useCheckoutStore((state) => state.setPaymentMethod)
@@ -36,7 +35,7 @@ export default function PaymentMethodStep({total, tax, deliveryFee}: {total: num
   const form = useForm<z.infer<typeof paymentSchema>>({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
-      paymentMethod: "paystack",
+      paymentMethod: "card",
     },
   })
 
@@ -46,24 +45,23 @@ export default function PaymentMethodStep({total, tax, deliveryFee}: {total: num
 
     try {
       // For Paystack, we would normally initialize the payment here
-      if (data.paymentMethod === "paystack") {
-        const orderData = {
-            amount: total,
-            selectedAddressId: selectedAddressId,
-            paymentMethod: data.paymentMethod,
-            orderNote: orderNote,
-            deliveryFee: deliveryFee,
-            taxAmount: tax
-        }
-        const payment = await initializePayment(orderData);
-        if (payment.error){
-            toast.error(payment.message)
-            return
-        }
-        toast.success(payment.message)
-        router.replace(payment.url)
-
+      const orderData = {
+        amount: total,
+        selectedAddressId: selectedAddressId,
+        paymentMethod: data.paymentMethod,
+        orderNote: orderNote,
+        deliveryFee: deliveryFee,
+        taxAmount: tax
       }
+      const payment = await initializePayment(orderData);
+      if (payment.error) {
+        toast.error(payment.message)
+        return
+      }
+      toast.success(payment.message)
+      router.replace(payment.url)
+
+
 
     } catch (error) {
       console.error("Payment error:", error)
@@ -90,10 +88,10 @@ export default function PaymentMethodStep({total, tax, deliveryFee}: {total: num
                     <FormControl>
                       <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="space-y-3">
                         <div className="flex items-center space-x-2 border rounded-md p-4">
-                          <RadioGroupItem value="paystack" id="paystack" />
+                          <RadioGroupItem value="card" id="card" />
                           <div className="grid gap-1 flex-1">
-                            <Label htmlFor="paystack" className="font-medium">
-                              Pay with Paystack
+                            <Label htmlFor="card" className="font-medium">
+                              Pay with Card
                             </Label>
                             <p className="text-sm text-muted-foreground">Pay securely with your credit/debit card</p>
                           </div>
@@ -101,9 +99,9 @@ export default function PaymentMethodStep({total, tax, deliveryFee}: {total: num
                         </div>
 
                         <div className="flex items-center space-x-2 border rounded-md p-4">
-                          <RadioGroupItem value="bank-transfer" id="bank-transfer" />
+                          <RadioGroupItem value="bank_transfer" id="bank-transfer" />
                           <div className="grid gap-1 flex-1">
-                            <Label htmlFor="bank-transfer" className="font-medium">
+                            <Label htmlFor="bank_transfer" className="font-medium">
                               Bank Transfer
                             </Label>
                             <p className="text-sm text-muted-foreground">Make a transfer to our bank account</p>
@@ -117,7 +115,7 @@ export default function PaymentMethodStep({total, tax, deliveryFee}: {total: num
                 )}
               />
 
-              {form.watch("paymentMethod") === "bank-transfer" && (
+              {/* {form.watch("paymentMethod") === "bank_transfer" && (
                 <Alert>
                   <AlertDescription>
                     <div className="space-y-2">
@@ -136,7 +134,7 @@ export default function PaymentMethodStep({total, tax, deliveryFee}: {total: num
                     </div>
                   </AlertDescription>
                 </Alert>
-              )}
+              )} */}
             </CardContent>
             <CardFooter className="flex  flex-col gap-4 mt-4 w-full  lg:justify-between">
               <Button className="w-full h-12" variant="outline" type="button" onClick={prevStep} disabled={isProcessing}>
@@ -148,7 +146,7 @@ export default function PaymentMethodStep({total, tax, deliveryFee}: {total: num
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Processing...
                   </>
-                ) : form.watch("paymentMethod") === "paystack" ? (
+                ) : form.watch("paymentMethod") === "card" ? (
                   "Pay Now"
                 ) : (
                   "Complete Order"

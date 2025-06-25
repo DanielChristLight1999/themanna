@@ -1,5 +1,4 @@
 import prisma from "@/db"
-import type { NextApiRequest } from "next"
 import { format } from "date-fns"
 import { NextRequest, NextResponse } from "next/server"
 import { PaymentStatus } from "@/lib/generated/prisma";
@@ -62,10 +61,55 @@ export  async function GET(req: NextRequest) {
         }
       })
 
-      await prisma.order.update({
+      const order = await prisma.order.update({
         where: { id: payment.order.id },
-        data: { paymentStatus: PaymentStatus.SUCCESS}
+        data: { paymentStatus: PaymentStatus.SUCCESS},
+        include: {
+          items: true
+        }
       })
+      await prisma.inventory.updateMany({
+        where: {
+          productId: {
+            in: order.items.map((item) => item.productId)
+          }
+        },
+        data: {
+          quantity: {
+            decrement: order.items.reduce((sum, item) => sum + item.quantity, 0)
+          }
+        }
+      })
+      
+      if(order.affiliateCode){
+        const affiliate = await prisma.affiliate.findUnique({
+          where: {referralCode: order.affiliateCode}
+        })
+        if(affiliate){
+
+          const commisionAmount = order.totalAmount * 0.05 // 5% commission
+
+          await prisma.commission.create({
+            data: {
+              affiliateId: affiliate.userId,
+              orderId: order.id,
+              amount: commisionAmount,
+              paid: false
+            }
+          })
+
+          await prisma.affiliate.update({
+            where: {userId: affiliate.userId},
+            data: {
+              totalEarnings: {
+                increment: commisionAmount
+              }
+            }
+          })
+        }
+      }
+
+
     }
     await prisma.cartItem.deleteMany({
       where: {

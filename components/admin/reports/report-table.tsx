@@ -311,7 +311,7 @@ export function ReportTable({ data, config }: ReportTableProps) {
     }
 
     return filtered
-  }, [data, searchTerm, columnFilters, sortField, sortDirection])
+  }, [data, searchTerm, columnFilters, sortField, sortDirection, columns])
 
   // Pagination
   const totalPages = Math.ceil(processedData.length / pageSize)

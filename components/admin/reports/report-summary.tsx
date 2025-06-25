@@ -421,7 +421,7 @@ function generateInventoryInsights(data: any[]) {
 
 function generateAffiliateInsights(data: any[]) {
   const totalAffiliates = data.length
-  const approvedAffiliates = data.filter((a) => a.approved).length
+  const approvedAffiliates = data.filter((a) => a.status == "APPROVED").length
   const totalEarnings = data.reduce((sum, a) => sum + (a.totalEarnings || 0), 0)
   const avgConversion = data.reduce((sum, a) => sum + (a.conversionRate || 0), 0) / data.length
 

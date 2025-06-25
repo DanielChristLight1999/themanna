@@ -109,7 +109,7 @@ export function RestaurantSettings({ restaurant, permissions }: { restaurant: Re
       <Card>
         <CardHeader>
           <CardTitle>Restaurant Information</CardTitle>
-          <CardDescription>Update your restaurant's basic information</CardDescription>
+          <CardDescription>Update your restaurant&#39;s basic information</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <Form {...form}>

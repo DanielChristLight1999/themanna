@@ -51,7 +51,7 @@ export async function createPOSSession() {
 }
 
 
-export async function endPOSSession(sessionId: string, summaryData:{
+export async function endPOSSession(sessionId: string, summaryData: {
   totalRevenue: number,
   totalOrders: number,
   totalSales: number,
@@ -63,7 +63,7 @@ export async function endPOSSession(sessionId: string, summaryData:{
 }) {
   const session = await auth()
   if (!session?.user?.id) return { error: true, message: "Unauthorized" }
-  
+
   try {
     await prisma.posSession.update({
       where: { id: sessionId },
@@ -149,7 +149,7 @@ export async function updateSavedOrder(orderId: string, cart: CartItem[]) {
     const order = await prisma.order.update({
       where: { id: orderId },
       data: {
-       totalAmount: cart.reduce((sum, item) => sum + item.price * item.quantity * 1.08, 0),
+        totalAmount: cart.reduce((sum, item) => sum + item.price * item.quantity * 1.08, 0),
         taxAmount: cart.reduce((sum, item) => sum + item.price * item.quantity * 0.08, 0),
         items: {
           create: cart.map((item) => ({
@@ -174,10 +174,10 @@ export async function CompleteOrder(cart: CartItem[], sessionId: string, payment
   if (!session?.user?.id) return { error: true, message: "Unauthorized" }
 
   try {
-    if(resumeId) {
+    if (resumeId) {
       await prisma.orderItem.deleteMany({
         where: { orderId: resumeId },
-        })
+      })
       const order = await prisma.order.update({
         where: { id: resumeId },
         data: {
@@ -194,6 +194,22 @@ export async function CompleteOrder(cart: CartItem[], sessionId: string, payment
               unitPrice: item.price,
             }))
           }
+        },
+        include: {
+          items: true
+        }
+      })
+
+      await prisma.inventory.updateMany({
+        where: {
+          productId: {
+            in: order.items.map((item) => item.productId)
+          }
+        },
+        data: {
+          quantity: {
+            decrement: order.items.reduce((sum, item) => sum + item.quantity, 0)
+          }
         }
       })
 
@@ -207,42 +223,42 @@ export async function CompleteOrder(cart: CartItem[], sessionId: string, payment
         }
       })
 
-      return { error: false, message: "Order completed successfully", order: order}
+      return { error: false, message: "Order completed successfully", order: order }
     }
     const order = await prisma.order.create({
-    data: {
-      customerId: session.user.id,
-      sessionId: sessionId,
-      status: "DELIVERED",
-      orderType: "POS",
-      paymentStatus: "SUCCESS",
-      totalAmount: cart.reduce((sum, item) => sum + item.price * item.quantity * 1.08, 0),
-      taxAmount: cart.reduce((sum, item) => sum + item.price * item.quantity * 0.08, 0),
-      placedAt: new Date(),
-      items: {
-        create: cart.map((item) => ({
-          product: { connect: { id: parseInt(item.id) } },
-          quantity: item.quantity,
-          unitPrice: item.price,
-        }))
+      data: {
+        customerId: session.user.id,
+        sessionId: sessionId,
+        status: "DELIVERED",
+        orderType: "POS",
+        paymentStatus: "SUCCESS",
+        totalAmount: cart.reduce((sum, item) => sum + item.price * item.quantity * 1.08, 0),
+        taxAmount: cart.reduce((sum, item) => sum + item.price * item.quantity * 0.08, 0),
+        placedAt: new Date(),
+        items: {
+          create: cart.map((item) => ({
+            product: { connect: { id: parseInt(item.id) } },
+            quantity: item.quantity,
+            unitPrice: item.price,
+          }))
+        }
       }
-    }
-  })
-  
-   await prisma.payment.create({
-    data: {
-      orderId: order.id,
-      method: paymentMethod,
-      amount: paymentAmount,
-      status: "SUCCESS",
-      paidAt: new Date(),
-    }
-  })
+    })
 
-  return { error: false, message: "Order completed successfully", order: order }
+    await prisma.payment.create({
+      data: {
+        orderId: order.id,
+        method: paymentMethod,
+        amount: paymentAmount,
+        status: "SUCCESS",
+        paidAt: new Date(),
+      }
+    })
+
+    return { error: false, message: "Order completed successfully", order: order }
   } catch (error) {
     console.error(error)
     return { error: true, message: "Could not complete order" }
   }
-  
+
 }

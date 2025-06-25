@@ -61,6 +61,13 @@ export async function initializePayment(orderdata: OrderData) {
         await prisma.order.delete({where: {id: existingorder.id}})
     }
 
+    const referred = await prisma.referral.findUnique({
+        where: {referredUser: userId}
+    })
+    const afflicateCode = referred ? (await prisma.affiliate.findUnique({
+        where: {userId: referred.affiliateId}
+    }))?.referralCode : undefined
+
     const order = await prisma.order.create({
         data: {
             customerId: userId,
@@ -69,6 +76,7 @@ export async function initializePayment(orderdata: OrderData) {
             totalAmount: amount,
             deliveryFee: deliveryFee,
             orderNotes: orderNote,
+            affiliateCode: afflicateCode,
             taxAmount: orderdata.taxAmount,
             items: {
                 create: cart.map((item) => {
@@ -82,10 +90,11 @@ export async function initializePayment(orderdata: OrderData) {
 
         }
     })
+    const method = paymentMethod === "card" ? PaymentMethod.CARD : PaymentMethod.TRANSFER
     const payment = await prisma.payment.create({
         data: {
             orderId: order.id,
-            method: PaymentMethod.PAYSTACK,
+            method: method,
             status: PaymentStatus.PENDING,
             amount: amount,
         }
@@ -102,8 +111,8 @@ export async function initializePayment(orderdata: OrderData) {
             email: session.user.email as string,
             amount: payment.amount * 100,
             reference: reference,
-            channels: ["card", "bank", "ussd", "bank_transfer"],
-            callback: `https://largely-decent-mite.ngrok-free.app/checkout/confirm`,
+            channels: [paymentMethod],
+            callback: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/confirm`,
 
         })
     })

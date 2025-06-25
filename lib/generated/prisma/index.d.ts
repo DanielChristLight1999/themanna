@@ -34,6 +34,11 @@ export type UserPermission = $Result.DefaultSelection<Prisma.$UserPermissionPayl
  */
 export type Affiliate = $Result.DefaultSelection<Prisma.$AffiliatePayload>
 /**
+ * Model AffiliatePayoutAccount
+ * 
+ */
+export type AffiliatePayoutAccount = $Result.DefaultSelection<Prisma.$AffiliatePayoutAccountPayload>
+/**
  * Model Referral
  * 
  */
@@ -48,6 +53,11 @@ export type Address = $Result.DefaultSelection<Prisma.$AddressPayload>
  * 
  */
 export type Commission = $Result.DefaultSelection<Prisma.$CommissionPayload>
+/**
+ * Model CommissionPayoutLog
+ * 
+ */
+export type CommissionPayoutLog = $Result.DefaultSelection<Prisma.$CommissionPayoutLogPayload>
 /**
  * Model Category
  * 
@@ -128,7 +138,19 @@ export type RestaurantInfo = $Result.DefaultSelection<Prisma.$RestaurantInfoPayl
  * Enums
  */
 export namespace $Enums {
-  export const Role: {
+  export const AffiliateApprovalStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  DELETED: 'DELETED',
+  SUSPENDED: 'SUSPENDED',
+  INACTIVE: 'INACTIVE'
+};
+
+export type AffiliateApprovalStatus = (typeof AffiliateApprovalStatus)[keyof typeof AffiliateApprovalStatus]
+
+
+export const Role: {
   ADMIN: 'ADMIN',
   MANAGER: 'MANAGER',
   CASHIER: 'CASHIER',
@@ -168,7 +190,7 @@ export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 
 export const PaymentMethod: {
-  PAYSTACK: 'PAYSTACK',
+  CARD: 'CARD',
   CASH: 'CASH',
   TRANSFER: 'TRANSFER'
 };
@@ -184,6 +206,10 @@ export const DeliveryType: {
 export type DeliveryType = (typeof DeliveryType)[keyof typeof DeliveryType]
 
 }
+
+export type AffiliateApprovalStatus = $Enums.AffiliateApprovalStatus
+
+export const AffiliateApprovalStatus: typeof $Enums.AffiliateApprovalStatus
 
 export type Role = $Enums.Role
 
@@ -375,6 +401,16 @@ export class PrismaClient<
   get affiliate(): Prisma.AffiliateDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.affiliatePayoutAccount`: Exposes CRUD operations for the **AffiliatePayoutAccount** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AffiliatePayoutAccounts
+    * const affiliatePayoutAccounts = await prisma.affiliatePayoutAccount.findMany()
+    * ```
+    */
+  get affiliatePayoutAccount(): Prisma.AffiliatePayoutAccountDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.referral`: Exposes CRUD operations for the **Referral** model.
     * Example usage:
     * ```ts
@@ -403,6 +439,16 @@ export class PrismaClient<
     * ```
     */
   get commission(): Prisma.CommissionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.commissionPayoutLog`: Exposes CRUD operations for the **CommissionPayoutLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CommissionPayoutLogs
+    * const commissionPayoutLogs = await prisma.commissionPayoutLog.findMany()
+    * ```
+    */
+  get commissionPayoutLog(): Prisma.CommissionPayoutLogDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.category`: Exposes CRUD operations for the **Category** model.
@@ -997,9 +1043,11 @@ export namespace Prisma {
     Permission: 'Permission',
     UserPermission: 'UserPermission',
     Affiliate: 'Affiliate',
+    AffiliatePayoutAccount: 'AffiliatePayoutAccount',
     Referral: 'Referral',
     Address: 'Address',
     Commission: 'Commission',
+    CommissionPayoutLog: 'CommissionPayoutLog',
     Category: 'Category',
     Product: 'Product',
     ProductImage: 'ProductImage',
@@ -1033,7 +1081,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "userPermission" | "affiliate" | "referral" | "address" | "commission" | "category" | "product" | "productImage" | "inventory" | "inventoryTransaction" | "order" | "orderItem" | "payment" | "posSession" | "posItem" | "cartItem" | "setting" | "deliverySetting" | "deliveryZone" | "restaurantInfo"
+      modelProps: "user" | "permission" | "userPermission" | "affiliate" | "affiliatePayoutAccount" | "referral" | "address" | "commission" | "commissionPayoutLog" | "category" | "product" | "productImage" | "inventory" | "inventoryTransaction" | "order" | "orderItem" | "payment" | "posSession" | "posItem" | "cartItem" | "setting" | "deliverySetting" | "deliveryZone" | "restaurantInfo"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1333,6 +1381,80 @@ export namespace Prisma {
           }
         }
       }
+      AffiliatePayoutAccount: {
+        payload: Prisma.$AffiliatePayoutAccountPayload<ExtArgs>
+        fields: Prisma.AffiliatePayoutAccountFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AffiliatePayoutAccountFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AffiliatePayoutAccountFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload>
+          }
+          findFirst: {
+            args: Prisma.AffiliatePayoutAccountFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AffiliatePayoutAccountFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload>
+          }
+          findMany: {
+            args: Prisma.AffiliatePayoutAccountFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload>[]
+          }
+          create: {
+            args: Prisma.AffiliatePayoutAccountCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload>
+          }
+          createMany: {
+            args: Prisma.AffiliatePayoutAccountCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AffiliatePayoutAccountCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload>[]
+          }
+          delete: {
+            args: Prisma.AffiliatePayoutAccountDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload>
+          }
+          update: {
+            args: Prisma.AffiliatePayoutAccountUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload>
+          }
+          deleteMany: {
+            args: Prisma.AffiliatePayoutAccountDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AffiliatePayoutAccountUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AffiliatePayoutAccountUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload>[]
+          }
+          upsert: {
+            args: Prisma.AffiliatePayoutAccountUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliatePayoutAccountPayload>
+          }
+          aggregate: {
+            args: Prisma.AffiliatePayoutAccountAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAffiliatePayoutAccount>
+          }
+          groupBy: {
+            args: Prisma.AffiliatePayoutAccountGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AffiliatePayoutAccountGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AffiliatePayoutAccountCountArgs<ExtArgs>
+            result: $Utils.Optional<AffiliatePayoutAccountCountAggregateOutputType> | number
+          }
+        }
+      }
       Referral: {
         payload: Prisma.$ReferralPayload<ExtArgs>
         fields: Prisma.ReferralFieldRefs
@@ -1552,6 +1674,80 @@ export namespace Prisma {
           count: {
             args: Prisma.CommissionCountArgs<ExtArgs>
             result: $Utils.Optional<CommissionCountAggregateOutputType> | number
+          }
+        }
+      }
+      CommissionPayoutLog: {
+        payload: Prisma.$CommissionPayoutLogPayload<ExtArgs>
+        fields: Prisma.CommissionPayoutLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CommissionPayoutLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CommissionPayoutLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload>
+          }
+          findFirst: {
+            args: Prisma.CommissionPayoutLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CommissionPayoutLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload>
+          }
+          findMany: {
+            args: Prisma.CommissionPayoutLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload>[]
+          }
+          create: {
+            args: Prisma.CommissionPayoutLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload>
+          }
+          createMany: {
+            args: Prisma.CommissionPayoutLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CommissionPayoutLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload>[]
+          }
+          delete: {
+            args: Prisma.CommissionPayoutLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload>
+          }
+          update: {
+            args: Prisma.CommissionPayoutLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.CommissionPayoutLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CommissionPayoutLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CommissionPayoutLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.CommissionPayoutLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommissionPayoutLogPayload>
+          }
+          aggregate: {
+            args: Prisma.CommissionPayoutLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCommissionPayoutLog>
+          }
+          groupBy: {
+            args: Prisma.CommissionPayoutLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CommissionPayoutLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CommissionPayoutLogCountArgs<ExtArgs>
+            result: $Utils.Optional<CommissionPayoutLogCountAggregateOutputType> | number
           }
         }
       }
@@ -2753,9 +2949,11 @@ export namespace Prisma {
     permission?: PermissionOmit
     userPermission?: UserPermissionOmit
     affiliate?: AffiliateOmit
+    affiliatePayoutAccount?: AffiliatePayoutAccountOmit
     referral?: ReferralOmit
     address?: AddressOmit
     commission?: CommissionOmit
+    commissionPayoutLog?: CommissionPayoutLogOmit
     category?: CategoryOmit
     product?: ProductOmit
     productImage?: ProductImageOmit
@@ -2869,6 +3067,7 @@ export namespace Prisma {
     addresses: number
     posSessions: number
     cartItems: number
+    referrals: number
     permissions: number
   }
 
@@ -2877,6 +3076,7 @@ export namespace Prisma {
     addresses?: boolean | UserCountOutputTypeCountAddressesArgs
     posSessions?: boolean | UserCountOutputTypeCountPosSessionsArgs
     cartItems?: boolean | UserCountOutputTypeCountCartItemsArgs
+    referrals?: boolean | UserCountOutputTypeCountReferralsArgs
     permissions?: boolean | UserCountOutputTypeCountPermissionsArgs
   }
 
@@ -2922,6 +3122,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountReferralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferralWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountPermissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserPermissionWhereInput
   }
@@ -2934,11 +3141,13 @@ export namespace Prisma {
   export type AffiliateCountOutputType = {
     referrals: number
     commissions: number
+    payoutLogs: number
   }
 
   export type AffiliateCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     referrals?: boolean | AffiliateCountOutputTypeCountReferralsArgs
     commissions?: boolean | AffiliateCountOutputTypeCountCommissionsArgs
+    payoutLogs?: boolean | AffiliateCountOutputTypeCountPayoutLogsArgs
   }
 
   // Custom InputTypes
@@ -2964,6 +3173,13 @@ export namespace Prisma {
    */
   export type AffiliateCountOutputTypeCountCommissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CommissionWhereInput
+  }
+
+  /**
+   * AffiliateCountOutputType without action
+   */
+  export type AffiliateCountOutputTypeCountPayoutLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommissionPayoutLogWhereInput
   }
 
 
@@ -2995,6 +3211,37 @@ export namespace Prisma {
    */
   export type AddressCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+
+  /**
+   * Count Type CommissionPayoutLogCountOutputType
+   */
+
+  export type CommissionPayoutLogCountOutputType = {
+    commissions: number
+  }
+
+  export type CommissionPayoutLogCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    commissions?: boolean | CommissionPayoutLogCountOutputTypeCountCommissionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CommissionPayoutLogCountOutputType without action
+   */
+  export type CommissionPayoutLogCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLogCountOutputType
+     */
+    select?: CommissionPayoutLogCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CommissionPayoutLogCountOutputType without action
+   */
+  export type CommissionPayoutLogCountOutputTypeCountCommissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommissionWhereInput
   }
 
 
@@ -3433,6 +3680,7 @@ export namespace Prisma {
     affiliate?: boolean | User$affiliateArgs<ExtArgs>
     posSessions?: boolean | User$posSessionsArgs<ExtArgs>
     cartItems?: boolean | User$cartItemsArgs<ExtArgs>
+    referrals?: boolean | User$referralsArgs<ExtArgs>
     permissions?: boolean | User$permissionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -3483,6 +3731,7 @@ export namespace Prisma {
     affiliate?: boolean | User$affiliateArgs<ExtArgs>
     posSessions?: boolean | User$posSessionsArgs<ExtArgs>
     cartItems?: boolean | User$cartItemsArgs<ExtArgs>
+    referrals?: boolean | User$referralsArgs<ExtArgs>
     permissions?: boolean | User$permissionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3497,6 +3746,7 @@ export namespace Prisma {
       affiliate: Prisma.$AffiliatePayload<ExtArgs> | null
       posSessions: Prisma.$PosSessionPayload<ExtArgs>[]
       cartItems: Prisma.$CartItemPayload<ExtArgs>[]
+      referrals: Prisma.$ReferralPayload<ExtArgs>[]
       permissions: Prisma.$UserPermissionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3909,6 +4159,7 @@ export namespace Prisma {
     affiliate<T extends User$affiliateArgs<ExtArgs> = {}>(args?: Subset<T, User$affiliateArgs<ExtArgs>>): Prisma__AffiliateClient<$Result.GetResult<Prisma.$AffiliatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     posSessions<T extends User$posSessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$posSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PosSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cartItems<T extends User$cartItemsArgs<ExtArgs> = {}>(args?: Subset<T, User$cartItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    referrals<T extends User$referralsArgs<ExtArgs> = {}>(args?: Subset<T, User$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     permissions<T extends User$permissionsArgs<ExtArgs> = {}>(args?: Subset<T, User$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4449,6 +4700,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CartItemScalarFieldEnum | CartItemScalarFieldEnum[]
+  }
+
+  /**
+   * User.referrals
+   */
+  export type User$referralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    where?: ReferralWhereInput
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    cursor?: ReferralWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
   }
 
   /**
@@ -6620,7 +6895,7 @@ export namespace Prisma {
 
   export type AffiliateMinAggregateOutputType = {
     userId: string | null
-    approved: boolean | null
+    status: $Enums.AffiliateApprovalStatus | null
     referralCode: string | null
     totalEarnings: number | null
     createdAt: Date | null
@@ -6628,7 +6903,7 @@ export namespace Prisma {
 
   export type AffiliateMaxAggregateOutputType = {
     userId: string | null
-    approved: boolean | null
+    status: $Enums.AffiliateApprovalStatus | null
     referralCode: string | null
     totalEarnings: number | null
     createdAt: Date | null
@@ -6636,7 +6911,7 @@ export namespace Prisma {
 
   export type AffiliateCountAggregateOutputType = {
     userId: number
-    approved: number
+    status: number
     referralCode: number
     totalEarnings: number
     createdAt: number
@@ -6654,7 +6929,7 @@ export namespace Prisma {
 
   export type AffiliateMinAggregateInputType = {
     userId?: true
-    approved?: true
+    status?: true
     referralCode?: true
     totalEarnings?: true
     createdAt?: true
@@ -6662,7 +6937,7 @@ export namespace Prisma {
 
   export type AffiliateMaxAggregateInputType = {
     userId?: true
-    approved?: true
+    status?: true
     referralCode?: true
     totalEarnings?: true
     createdAt?: true
@@ -6670,7 +6945,7 @@ export namespace Prisma {
 
   export type AffiliateCountAggregateInputType = {
     userId?: true
-    approved?: true
+    status?: true
     referralCode?: true
     totalEarnings?: true
     createdAt?: true
@@ -6765,7 +7040,7 @@ export namespace Prisma {
 
   export type AffiliateGroupByOutputType = {
     userId: string
-    approved: boolean
+    status: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings: number
     createdAt: Date
@@ -6792,19 +7067,21 @@ export namespace Prisma {
 
   export type AffiliateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
-    approved?: boolean
+    status?: boolean
     referralCode?: boolean
     totalEarnings?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    bankAccount?: boolean | Affiliate$bankAccountArgs<ExtArgs>
     referrals?: boolean | Affiliate$referralsArgs<ExtArgs>
     commissions?: boolean | Affiliate$commissionsArgs<ExtArgs>
+    payoutLogs?: boolean | Affiliate$payoutLogsArgs<ExtArgs>
     _count?: boolean | AffiliateCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["affiliate"]>
 
   export type AffiliateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
-    approved?: boolean
+    status?: boolean
     referralCode?: boolean
     totalEarnings?: boolean
     createdAt?: boolean
@@ -6813,7 +7090,7 @@ export namespace Prisma {
 
   export type AffiliateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
-    approved?: boolean
+    status?: boolean
     referralCode?: boolean
     totalEarnings?: boolean
     createdAt?: boolean
@@ -6822,17 +7099,19 @@ export namespace Prisma {
 
   export type AffiliateSelectScalar = {
     userId?: boolean
-    approved?: boolean
+    status?: boolean
     referralCode?: boolean
     totalEarnings?: boolean
     createdAt?: boolean
   }
 
-  export type AffiliateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "approved" | "referralCode" | "totalEarnings" | "createdAt", ExtArgs["result"]["affiliate"]>
+  export type AffiliateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "status" | "referralCode" | "totalEarnings" | "createdAt", ExtArgs["result"]["affiliate"]>
   export type AffiliateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    bankAccount?: boolean | Affiliate$bankAccountArgs<ExtArgs>
     referrals?: boolean | Affiliate$referralsArgs<ExtArgs>
     commissions?: boolean | Affiliate$commissionsArgs<ExtArgs>
+    payoutLogs?: boolean | Affiliate$payoutLogsArgs<ExtArgs>
     _count?: boolean | AffiliateCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AffiliateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6846,12 +7125,14 @@ export namespace Prisma {
     name: "Affiliate"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      bankAccount: Prisma.$AffiliatePayoutAccountPayload<ExtArgs> | null
       referrals: Prisma.$ReferralPayload<ExtArgs>[]
       commissions: Prisma.$CommissionPayload<ExtArgs>[]
+      payoutLogs: Prisma.$CommissionPayoutLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       userId: string
-      approved: boolean
+      status: $Enums.AffiliateApprovalStatus
       referralCode: string
       totalEarnings: number
       createdAt: Date
@@ -7250,8 +7531,10 @@ export namespace Prisma {
   export interface Prisma__AffiliateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    bankAccount<T extends Affiliate$bankAccountArgs<ExtArgs> = {}>(args?: Subset<T, Affiliate$bankAccountArgs<ExtArgs>>): Prisma__AffiliatePayoutAccountClient<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     referrals<T extends Affiliate$referralsArgs<ExtArgs> = {}>(args?: Subset<T, Affiliate$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     commissions<T extends Affiliate$commissionsArgs<ExtArgs> = {}>(args?: Subset<T, Affiliate$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payoutLogs<T extends Affiliate$payoutLogsArgs<ExtArgs> = {}>(args?: Subset<T, Affiliate$payoutLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7282,7 +7565,7 @@ export namespace Prisma {
    */
   interface AffiliateFieldRefs {
     readonly userId: FieldRef<"Affiliate", 'String'>
-    readonly approved: FieldRef<"Affiliate", 'Boolean'>
+    readonly status: FieldRef<"Affiliate", 'AffiliateApprovalStatus'>
     readonly referralCode: FieldRef<"Affiliate", 'String'>
     readonly totalEarnings: FieldRef<"Affiliate", 'Float'>
     readonly createdAt: FieldRef<"Affiliate", 'DateTime'>
@@ -7682,6 +7965,25 @@ export namespace Prisma {
   }
 
   /**
+   * Affiliate.bankAccount
+   */
+  export type Affiliate$bankAccountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    where?: AffiliatePayoutAccountWhereInput
+  }
+
+  /**
    * Affiliate.referrals
    */
   export type Affiliate$referralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7730,6 +8032,30 @@ export namespace Prisma {
   }
 
   /**
+   * Affiliate.payoutLogs
+   */
+  export type Affiliate$payoutLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    where?: CommissionPayoutLogWhereInput
+    orderBy?: CommissionPayoutLogOrderByWithRelationInput | CommissionPayoutLogOrderByWithRelationInput[]
+    cursor?: CommissionPayoutLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CommissionPayoutLogScalarFieldEnum | CommissionPayoutLogScalarFieldEnum[]
+  }
+
+  /**
    * Affiliate without action
    */
   export type AffiliateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7745,6 +8071,1124 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: AffiliateInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AffiliatePayoutAccount
+   */
+
+  export type AggregateAffiliatePayoutAccount = {
+    _count: AffiliatePayoutAccountCountAggregateOutputType | null
+    _avg: AffiliatePayoutAccountAvgAggregateOutputType | null
+    _sum: AffiliatePayoutAccountSumAggregateOutputType | null
+    _min: AffiliatePayoutAccountMinAggregateOutputType | null
+    _max: AffiliatePayoutAccountMaxAggregateOutputType | null
+  }
+
+  export type AffiliatePayoutAccountAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type AffiliatePayoutAccountSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type AffiliatePayoutAccountMinAggregateOutputType = {
+    id: number | null
+    affiliateId: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountName: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AffiliatePayoutAccountMaxAggregateOutputType = {
+    id: number | null
+    affiliateId: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountName: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AffiliatePayoutAccountCountAggregateOutputType = {
+    id: number
+    affiliateId: number
+    bankName: number
+    accountNumber: number
+    accountName: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AffiliatePayoutAccountAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type AffiliatePayoutAccountSumAggregateInputType = {
+    id?: true
+  }
+
+  export type AffiliatePayoutAccountMinAggregateInputType = {
+    id?: true
+    affiliateId?: true
+    bankName?: true
+    accountNumber?: true
+    accountName?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AffiliatePayoutAccountMaxAggregateInputType = {
+    id?: true
+    affiliateId?: true
+    bankName?: true
+    accountNumber?: true
+    accountName?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AffiliatePayoutAccountCountAggregateInputType = {
+    id?: true
+    affiliateId?: true
+    bankName?: true
+    accountNumber?: true
+    accountName?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AffiliatePayoutAccountAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AffiliatePayoutAccount to aggregate.
+     */
+    where?: AffiliatePayoutAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliatePayoutAccounts to fetch.
+     */
+    orderBy?: AffiliatePayoutAccountOrderByWithRelationInput | AffiliatePayoutAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AffiliatePayoutAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliatePayoutAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliatePayoutAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AffiliatePayoutAccounts
+    **/
+    _count?: true | AffiliatePayoutAccountCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AffiliatePayoutAccountAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AffiliatePayoutAccountSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AffiliatePayoutAccountMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AffiliatePayoutAccountMaxAggregateInputType
+  }
+
+  export type GetAffiliatePayoutAccountAggregateType<T extends AffiliatePayoutAccountAggregateArgs> = {
+        [P in keyof T & keyof AggregateAffiliatePayoutAccount]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAffiliatePayoutAccount[P]>
+      : GetScalarType<T[P], AggregateAffiliatePayoutAccount[P]>
+  }
+
+
+
+
+  export type AffiliatePayoutAccountGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AffiliatePayoutAccountWhereInput
+    orderBy?: AffiliatePayoutAccountOrderByWithAggregationInput | AffiliatePayoutAccountOrderByWithAggregationInput[]
+    by: AffiliatePayoutAccountScalarFieldEnum[] | AffiliatePayoutAccountScalarFieldEnum
+    having?: AffiliatePayoutAccountScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AffiliatePayoutAccountCountAggregateInputType | true
+    _avg?: AffiliatePayoutAccountAvgAggregateInputType
+    _sum?: AffiliatePayoutAccountSumAggregateInputType
+    _min?: AffiliatePayoutAccountMinAggregateInputType
+    _max?: AffiliatePayoutAccountMaxAggregateInputType
+  }
+
+  export type AffiliatePayoutAccountGroupByOutputType = {
+    id: number
+    affiliateId: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    createdAt: Date
+    updatedAt: Date
+    _count: AffiliatePayoutAccountCountAggregateOutputType | null
+    _avg: AffiliatePayoutAccountAvgAggregateOutputType | null
+    _sum: AffiliatePayoutAccountSumAggregateOutputType | null
+    _min: AffiliatePayoutAccountMinAggregateOutputType | null
+    _max: AffiliatePayoutAccountMaxAggregateOutputType | null
+  }
+
+  type GetAffiliatePayoutAccountGroupByPayload<T extends AffiliatePayoutAccountGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AffiliatePayoutAccountGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AffiliatePayoutAccountGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AffiliatePayoutAccountGroupByOutputType[P]>
+            : GetScalarType<T[P], AffiliatePayoutAccountGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AffiliatePayoutAccountSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    affiliateId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliatePayoutAccount"]>
+
+  export type AffiliatePayoutAccountSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    affiliateId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliatePayoutAccount"]>
+
+  export type AffiliatePayoutAccountSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    affiliateId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliatePayoutAccount"]>
+
+  export type AffiliatePayoutAccountSelectScalar = {
+    id?: boolean
+    affiliateId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AffiliatePayoutAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "affiliateId" | "bankName" | "accountNumber" | "accountName" | "createdAt" | "updatedAt", ExtArgs["result"]["affiliatePayoutAccount"]>
+  export type AffiliatePayoutAccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }
+  export type AffiliatePayoutAccountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }
+  export type AffiliatePayoutAccountIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }
+
+  export type $AffiliatePayoutAccountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AffiliatePayoutAccount"
+    objects: {
+      affiliate: Prisma.$AffiliatePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      affiliateId: string
+      bankName: string
+      accountNumber: string
+      accountName: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["affiliatePayoutAccount"]>
+    composites: {}
+  }
+
+  type AffiliatePayoutAccountGetPayload<S extends boolean | null | undefined | AffiliatePayoutAccountDefaultArgs> = $Result.GetResult<Prisma.$AffiliatePayoutAccountPayload, S>
+
+  type AffiliatePayoutAccountCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AffiliatePayoutAccountFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AffiliatePayoutAccountCountAggregateInputType | true
+    }
+
+  export interface AffiliatePayoutAccountDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AffiliatePayoutAccount'], meta: { name: 'AffiliatePayoutAccount' } }
+    /**
+     * Find zero or one AffiliatePayoutAccount that matches the filter.
+     * @param {AffiliatePayoutAccountFindUniqueArgs} args - Arguments to find a AffiliatePayoutAccount
+     * @example
+     * // Get one AffiliatePayoutAccount
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AffiliatePayoutAccountFindUniqueArgs>(args: SelectSubset<T, AffiliatePayoutAccountFindUniqueArgs<ExtArgs>>): Prisma__AffiliatePayoutAccountClient<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AffiliatePayoutAccount that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AffiliatePayoutAccountFindUniqueOrThrowArgs} args - Arguments to find a AffiliatePayoutAccount
+     * @example
+     * // Get one AffiliatePayoutAccount
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AffiliatePayoutAccountFindUniqueOrThrowArgs>(args: SelectSubset<T, AffiliatePayoutAccountFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AffiliatePayoutAccountClient<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AffiliatePayoutAccount that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliatePayoutAccountFindFirstArgs} args - Arguments to find a AffiliatePayoutAccount
+     * @example
+     * // Get one AffiliatePayoutAccount
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AffiliatePayoutAccountFindFirstArgs>(args?: SelectSubset<T, AffiliatePayoutAccountFindFirstArgs<ExtArgs>>): Prisma__AffiliatePayoutAccountClient<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AffiliatePayoutAccount that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliatePayoutAccountFindFirstOrThrowArgs} args - Arguments to find a AffiliatePayoutAccount
+     * @example
+     * // Get one AffiliatePayoutAccount
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AffiliatePayoutAccountFindFirstOrThrowArgs>(args?: SelectSubset<T, AffiliatePayoutAccountFindFirstOrThrowArgs<ExtArgs>>): Prisma__AffiliatePayoutAccountClient<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AffiliatePayoutAccounts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliatePayoutAccountFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AffiliatePayoutAccounts
+     * const affiliatePayoutAccounts = await prisma.affiliatePayoutAccount.findMany()
+     * 
+     * // Get first 10 AffiliatePayoutAccounts
+     * const affiliatePayoutAccounts = await prisma.affiliatePayoutAccount.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const affiliatePayoutAccountWithIdOnly = await prisma.affiliatePayoutAccount.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AffiliatePayoutAccountFindManyArgs>(args?: SelectSubset<T, AffiliatePayoutAccountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AffiliatePayoutAccount.
+     * @param {AffiliatePayoutAccountCreateArgs} args - Arguments to create a AffiliatePayoutAccount.
+     * @example
+     * // Create one AffiliatePayoutAccount
+     * const AffiliatePayoutAccount = await prisma.affiliatePayoutAccount.create({
+     *   data: {
+     *     // ... data to create a AffiliatePayoutAccount
+     *   }
+     * })
+     * 
+     */
+    create<T extends AffiliatePayoutAccountCreateArgs>(args: SelectSubset<T, AffiliatePayoutAccountCreateArgs<ExtArgs>>): Prisma__AffiliatePayoutAccountClient<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AffiliatePayoutAccounts.
+     * @param {AffiliatePayoutAccountCreateManyArgs} args - Arguments to create many AffiliatePayoutAccounts.
+     * @example
+     * // Create many AffiliatePayoutAccounts
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AffiliatePayoutAccountCreateManyArgs>(args?: SelectSubset<T, AffiliatePayoutAccountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AffiliatePayoutAccounts and returns the data saved in the database.
+     * @param {AffiliatePayoutAccountCreateManyAndReturnArgs} args - Arguments to create many AffiliatePayoutAccounts.
+     * @example
+     * // Create many AffiliatePayoutAccounts
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AffiliatePayoutAccounts and only return the `id`
+     * const affiliatePayoutAccountWithIdOnly = await prisma.affiliatePayoutAccount.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AffiliatePayoutAccountCreateManyAndReturnArgs>(args?: SelectSubset<T, AffiliatePayoutAccountCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AffiliatePayoutAccount.
+     * @param {AffiliatePayoutAccountDeleteArgs} args - Arguments to delete one AffiliatePayoutAccount.
+     * @example
+     * // Delete one AffiliatePayoutAccount
+     * const AffiliatePayoutAccount = await prisma.affiliatePayoutAccount.delete({
+     *   where: {
+     *     // ... filter to delete one AffiliatePayoutAccount
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AffiliatePayoutAccountDeleteArgs>(args: SelectSubset<T, AffiliatePayoutAccountDeleteArgs<ExtArgs>>): Prisma__AffiliatePayoutAccountClient<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AffiliatePayoutAccount.
+     * @param {AffiliatePayoutAccountUpdateArgs} args - Arguments to update one AffiliatePayoutAccount.
+     * @example
+     * // Update one AffiliatePayoutAccount
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AffiliatePayoutAccountUpdateArgs>(args: SelectSubset<T, AffiliatePayoutAccountUpdateArgs<ExtArgs>>): Prisma__AffiliatePayoutAccountClient<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AffiliatePayoutAccounts.
+     * @param {AffiliatePayoutAccountDeleteManyArgs} args - Arguments to filter AffiliatePayoutAccounts to delete.
+     * @example
+     * // Delete a few AffiliatePayoutAccounts
+     * const { count } = await prisma.affiliatePayoutAccount.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AffiliatePayoutAccountDeleteManyArgs>(args?: SelectSubset<T, AffiliatePayoutAccountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AffiliatePayoutAccounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliatePayoutAccountUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AffiliatePayoutAccounts
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AffiliatePayoutAccountUpdateManyArgs>(args: SelectSubset<T, AffiliatePayoutAccountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AffiliatePayoutAccounts and returns the data updated in the database.
+     * @param {AffiliatePayoutAccountUpdateManyAndReturnArgs} args - Arguments to update many AffiliatePayoutAccounts.
+     * @example
+     * // Update many AffiliatePayoutAccounts
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AffiliatePayoutAccounts and only return the `id`
+     * const affiliatePayoutAccountWithIdOnly = await prisma.affiliatePayoutAccount.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AffiliatePayoutAccountUpdateManyAndReturnArgs>(args: SelectSubset<T, AffiliatePayoutAccountUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AffiliatePayoutAccount.
+     * @param {AffiliatePayoutAccountUpsertArgs} args - Arguments to update or create a AffiliatePayoutAccount.
+     * @example
+     * // Update or create a AffiliatePayoutAccount
+     * const affiliatePayoutAccount = await prisma.affiliatePayoutAccount.upsert({
+     *   create: {
+     *     // ... data to create a AffiliatePayoutAccount
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AffiliatePayoutAccount we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AffiliatePayoutAccountUpsertArgs>(args: SelectSubset<T, AffiliatePayoutAccountUpsertArgs<ExtArgs>>): Prisma__AffiliatePayoutAccountClient<$Result.GetResult<Prisma.$AffiliatePayoutAccountPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AffiliatePayoutAccounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliatePayoutAccountCountArgs} args - Arguments to filter AffiliatePayoutAccounts to count.
+     * @example
+     * // Count the number of AffiliatePayoutAccounts
+     * const count = await prisma.affiliatePayoutAccount.count({
+     *   where: {
+     *     // ... the filter for the AffiliatePayoutAccounts we want to count
+     *   }
+     * })
+    **/
+    count<T extends AffiliatePayoutAccountCountArgs>(
+      args?: Subset<T, AffiliatePayoutAccountCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AffiliatePayoutAccountCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AffiliatePayoutAccount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliatePayoutAccountAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AffiliatePayoutAccountAggregateArgs>(args: Subset<T, AffiliatePayoutAccountAggregateArgs>): Prisma.PrismaPromise<GetAffiliatePayoutAccountAggregateType<T>>
+
+    /**
+     * Group by AffiliatePayoutAccount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliatePayoutAccountGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AffiliatePayoutAccountGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AffiliatePayoutAccountGroupByArgs['orderBy'] }
+        : { orderBy?: AffiliatePayoutAccountGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AffiliatePayoutAccountGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAffiliatePayoutAccountGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AffiliatePayoutAccount model
+   */
+  readonly fields: AffiliatePayoutAccountFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AffiliatePayoutAccount.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AffiliatePayoutAccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    affiliate<T extends AffiliateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateDefaultArgs<ExtArgs>>): Prisma__AffiliateClient<$Result.GetResult<Prisma.$AffiliatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AffiliatePayoutAccount model
+   */
+  interface AffiliatePayoutAccountFieldRefs {
+    readonly id: FieldRef<"AffiliatePayoutAccount", 'Int'>
+    readonly affiliateId: FieldRef<"AffiliatePayoutAccount", 'String'>
+    readonly bankName: FieldRef<"AffiliatePayoutAccount", 'String'>
+    readonly accountNumber: FieldRef<"AffiliatePayoutAccount", 'String'>
+    readonly accountName: FieldRef<"AffiliatePayoutAccount", 'String'>
+    readonly createdAt: FieldRef<"AffiliatePayoutAccount", 'DateTime'>
+    readonly updatedAt: FieldRef<"AffiliatePayoutAccount", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AffiliatePayoutAccount findUnique
+   */
+  export type AffiliatePayoutAccountFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliatePayoutAccount to fetch.
+     */
+    where: AffiliatePayoutAccountWhereUniqueInput
+  }
+
+  /**
+   * AffiliatePayoutAccount findUniqueOrThrow
+   */
+  export type AffiliatePayoutAccountFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliatePayoutAccount to fetch.
+     */
+    where: AffiliatePayoutAccountWhereUniqueInput
+  }
+
+  /**
+   * AffiliatePayoutAccount findFirst
+   */
+  export type AffiliatePayoutAccountFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliatePayoutAccount to fetch.
+     */
+    where?: AffiliatePayoutAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliatePayoutAccounts to fetch.
+     */
+    orderBy?: AffiliatePayoutAccountOrderByWithRelationInput | AffiliatePayoutAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AffiliatePayoutAccounts.
+     */
+    cursor?: AffiliatePayoutAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliatePayoutAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliatePayoutAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AffiliatePayoutAccounts.
+     */
+    distinct?: AffiliatePayoutAccountScalarFieldEnum | AffiliatePayoutAccountScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliatePayoutAccount findFirstOrThrow
+   */
+  export type AffiliatePayoutAccountFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliatePayoutAccount to fetch.
+     */
+    where?: AffiliatePayoutAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliatePayoutAccounts to fetch.
+     */
+    orderBy?: AffiliatePayoutAccountOrderByWithRelationInput | AffiliatePayoutAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AffiliatePayoutAccounts.
+     */
+    cursor?: AffiliatePayoutAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliatePayoutAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliatePayoutAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AffiliatePayoutAccounts.
+     */
+    distinct?: AffiliatePayoutAccountScalarFieldEnum | AffiliatePayoutAccountScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliatePayoutAccount findMany
+   */
+  export type AffiliatePayoutAccountFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliatePayoutAccounts to fetch.
+     */
+    where?: AffiliatePayoutAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliatePayoutAccounts to fetch.
+     */
+    orderBy?: AffiliatePayoutAccountOrderByWithRelationInput | AffiliatePayoutAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AffiliatePayoutAccounts.
+     */
+    cursor?: AffiliatePayoutAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliatePayoutAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliatePayoutAccounts.
+     */
+    skip?: number
+    distinct?: AffiliatePayoutAccountScalarFieldEnum | AffiliatePayoutAccountScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliatePayoutAccount create
+   */
+  export type AffiliatePayoutAccountCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AffiliatePayoutAccount.
+     */
+    data: XOR<AffiliatePayoutAccountCreateInput, AffiliatePayoutAccountUncheckedCreateInput>
+  }
+
+  /**
+   * AffiliatePayoutAccount createMany
+   */
+  export type AffiliatePayoutAccountCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AffiliatePayoutAccounts.
+     */
+    data: AffiliatePayoutAccountCreateManyInput | AffiliatePayoutAccountCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AffiliatePayoutAccount createManyAndReturn
+   */
+  export type AffiliatePayoutAccountCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * The data used to create many AffiliatePayoutAccounts.
+     */
+    data: AffiliatePayoutAccountCreateManyInput | AffiliatePayoutAccountCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AffiliatePayoutAccount update
+   */
+  export type AffiliatePayoutAccountUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AffiliatePayoutAccount.
+     */
+    data: XOR<AffiliatePayoutAccountUpdateInput, AffiliatePayoutAccountUncheckedUpdateInput>
+    /**
+     * Choose, which AffiliatePayoutAccount to update.
+     */
+    where: AffiliatePayoutAccountWhereUniqueInput
+  }
+
+  /**
+   * AffiliatePayoutAccount updateMany
+   */
+  export type AffiliatePayoutAccountUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AffiliatePayoutAccounts.
+     */
+    data: XOR<AffiliatePayoutAccountUpdateManyMutationInput, AffiliatePayoutAccountUncheckedUpdateManyInput>
+    /**
+     * Filter which AffiliatePayoutAccounts to update
+     */
+    where?: AffiliatePayoutAccountWhereInput
+    /**
+     * Limit how many AffiliatePayoutAccounts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AffiliatePayoutAccount updateManyAndReturn
+   */
+  export type AffiliatePayoutAccountUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * The data used to update AffiliatePayoutAccounts.
+     */
+    data: XOR<AffiliatePayoutAccountUpdateManyMutationInput, AffiliatePayoutAccountUncheckedUpdateManyInput>
+    /**
+     * Filter which AffiliatePayoutAccounts to update
+     */
+    where?: AffiliatePayoutAccountWhereInput
+    /**
+     * Limit how many AffiliatePayoutAccounts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AffiliatePayoutAccount upsert
+   */
+  export type AffiliatePayoutAccountUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AffiliatePayoutAccount to update in case it exists.
+     */
+    where: AffiliatePayoutAccountWhereUniqueInput
+    /**
+     * In case the AffiliatePayoutAccount found by the `where` argument doesn't exist, create a new AffiliatePayoutAccount with this data.
+     */
+    create: XOR<AffiliatePayoutAccountCreateInput, AffiliatePayoutAccountUncheckedCreateInput>
+    /**
+     * In case the AffiliatePayoutAccount was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AffiliatePayoutAccountUpdateInput, AffiliatePayoutAccountUncheckedUpdateInput>
+  }
+
+  /**
+   * AffiliatePayoutAccount delete
+   */
+  export type AffiliatePayoutAccountDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
+    /**
+     * Filter which AffiliatePayoutAccount to delete.
+     */
+    where: AffiliatePayoutAccountWhereUniqueInput
+  }
+
+  /**
+   * AffiliatePayoutAccount deleteMany
+   */
+  export type AffiliatePayoutAccountDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AffiliatePayoutAccounts to delete
+     */
+    where?: AffiliatePayoutAccountWhereInput
+    /**
+     * Limit how many AffiliatePayoutAccounts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AffiliatePayoutAccount without action
+   */
+  export type AffiliatePayoutAccountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliatePayoutAccount
+     */
+    select?: AffiliatePayoutAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliatePayoutAccount
+     */
+    omit?: AffiliatePayoutAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliatePayoutAccountInclude<ExtArgs> | null
   }
 
 
@@ -7905,6 +9349,7 @@ export namespace Prisma {
     referredUser?: boolean
     referredAt?: boolean
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["referral"]>
 
   export type ReferralSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7913,6 +9358,7 @@ export namespace Prisma {
     referredUser?: boolean
     referredAt?: boolean
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["referral"]>
 
   export type ReferralSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7921,6 +9367,7 @@ export namespace Prisma {
     referredUser?: boolean
     referredAt?: boolean
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["referral"]>
 
   export type ReferralSelectScalar = {
@@ -7933,18 +9380,22 @@ export namespace Prisma {
   export type ReferralOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "affiliateId" | "referredUser" | "referredAt", ExtArgs["result"]["referral"]>
   export type ReferralInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ReferralIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ReferralIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ReferralPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Referral"
     objects: {
       affiliate: Prisma.$AffiliatePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8346,6 +9797,7 @@ export namespace Prisma {
   export interface Prisma__ReferralClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     affiliate<T extends AffiliateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateDefaultArgs<ExtArgs>>): Prisma__AffiliateClient<$Result.GetResult<Prisma.$AffiliatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9973,10 +11425,12 @@ export namespace Prisma {
 
   export type CommissionAvgAggregateOutputType = {
     amount: number | null
+    payoutLogId: number | null
   }
 
   export type CommissionSumAggregateOutputType = {
     amount: number | null
+    payoutLogId: number | null
   }
 
   export type CommissionMinAggregateOutputType = {
@@ -9986,6 +11440,7 @@ export namespace Prisma {
     amount: number | null
     paid: boolean | null
     createdAt: Date | null
+    payoutLogId: number | null
   }
 
   export type CommissionMaxAggregateOutputType = {
@@ -9995,6 +11450,7 @@ export namespace Prisma {
     amount: number | null
     paid: boolean | null
     createdAt: Date | null
+    payoutLogId: number | null
   }
 
   export type CommissionCountAggregateOutputType = {
@@ -10004,16 +11460,19 @@ export namespace Prisma {
     amount: number
     paid: number
     createdAt: number
+    payoutLogId: number
     _all: number
   }
 
 
   export type CommissionAvgAggregateInputType = {
     amount?: true
+    payoutLogId?: true
   }
 
   export type CommissionSumAggregateInputType = {
     amount?: true
+    payoutLogId?: true
   }
 
   export type CommissionMinAggregateInputType = {
@@ -10023,6 +11482,7 @@ export namespace Prisma {
     amount?: true
     paid?: true
     createdAt?: true
+    payoutLogId?: true
   }
 
   export type CommissionMaxAggregateInputType = {
@@ -10032,6 +11492,7 @@ export namespace Prisma {
     amount?: true
     paid?: true
     createdAt?: true
+    payoutLogId?: true
   }
 
   export type CommissionCountAggregateInputType = {
@@ -10041,6 +11502,7 @@ export namespace Prisma {
     amount?: true
     paid?: true
     createdAt?: true
+    payoutLogId?: true
     _all?: true
   }
 
@@ -10137,6 +11599,7 @@ export namespace Prisma {
     amount: number
     paid: boolean
     createdAt: Date
+    payoutLogId: number | null
     _count: CommissionCountAggregateOutputType | null
     _avg: CommissionAvgAggregateOutputType | null
     _sum: CommissionSumAggregateOutputType | null
@@ -10165,8 +11628,10 @@ export namespace Prisma {
     amount?: boolean
     paid?: boolean
     createdAt?: boolean
+    payoutLogId?: boolean
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    payoutLog?: boolean | Commission$payoutLogArgs<ExtArgs>
   }, ExtArgs["result"]["commission"]>
 
   export type CommissionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10176,8 +11641,10 @@ export namespace Prisma {
     amount?: boolean
     paid?: boolean
     createdAt?: boolean
+    payoutLogId?: boolean
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    payoutLog?: boolean | Commission$payoutLogArgs<ExtArgs>
   }, ExtArgs["result"]["commission"]>
 
   export type CommissionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10187,8 +11654,10 @@ export namespace Prisma {
     amount?: boolean
     paid?: boolean
     createdAt?: boolean
+    payoutLogId?: boolean
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    payoutLog?: boolean | Commission$payoutLogArgs<ExtArgs>
   }, ExtArgs["result"]["commission"]>
 
   export type CommissionSelectScalar = {
@@ -10198,20 +11667,24 @@ export namespace Prisma {
     amount?: boolean
     paid?: boolean
     createdAt?: boolean
+    payoutLogId?: boolean
   }
 
-  export type CommissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "affiliateId" | "orderId" | "amount" | "paid" | "createdAt", ExtArgs["result"]["commission"]>
+  export type CommissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "affiliateId" | "orderId" | "amount" | "paid" | "createdAt" | "payoutLogId", ExtArgs["result"]["commission"]>
   export type CommissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    payoutLog?: boolean | Commission$payoutLogArgs<ExtArgs>
   }
   export type CommissionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    payoutLog?: boolean | Commission$payoutLogArgs<ExtArgs>
   }
   export type CommissionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    payoutLog?: boolean | Commission$payoutLogArgs<ExtArgs>
   }
 
   export type $CommissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10219,6 +11692,7 @@ export namespace Prisma {
     objects: {
       affiliate: Prisma.$AffiliatePayload<ExtArgs>
       order: Prisma.$OrderPayload<ExtArgs>
+      payoutLog: Prisma.$CommissionPayoutLogPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10227,6 +11701,7 @@ export namespace Prisma {
       amount: number
       paid: boolean
       createdAt: Date
+      payoutLogId: number | null
     }, ExtArgs["result"]["commission"]>
     composites: {}
   }
@@ -10623,6 +12098,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     affiliate<T extends AffiliateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateDefaultArgs<ExtArgs>>): Prisma__AffiliateClient<$Result.GetResult<Prisma.$AffiliatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    payoutLog<T extends Commission$payoutLogArgs<ExtArgs> = {}>(args?: Subset<T, Commission$payoutLogArgs<ExtArgs>>): Prisma__CommissionPayoutLogClient<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10658,6 +12134,7 @@ export namespace Prisma {
     readonly amount: FieldRef<"Commission", 'Float'>
     readonly paid: FieldRef<"Commission", 'Boolean'>
     readonly createdAt: FieldRef<"Commission", 'DateTime'>
+    readonly payoutLogId: FieldRef<"Commission", 'Int'>
   }
     
 
@@ -11054,6 +12531,25 @@ export namespace Prisma {
   }
 
   /**
+   * Commission.payoutLog
+   */
+  export type Commission$payoutLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    where?: CommissionPayoutLogWhereInput
+  }
+
+  /**
    * Commission without action
    */
   export type CommissionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11069,6 +12565,1171 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CommissionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CommissionPayoutLog
+   */
+
+  export type AggregateCommissionPayoutLog = {
+    _count: CommissionPayoutLogCountAggregateOutputType | null
+    _avg: CommissionPayoutLogAvgAggregateOutputType | null
+    _sum: CommissionPayoutLogSumAggregateOutputType | null
+    _min: CommissionPayoutLogMinAggregateOutputType | null
+    _max: CommissionPayoutLogMaxAggregateOutputType | null
+  }
+
+  export type CommissionPayoutLogAvgAggregateOutputType = {
+    id: number | null
+    totalAmount: number | null
+  }
+
+  export type CommissionPayoutLogSumAggregateOutputType = {
+    id: number | null
+    totalAmount: number | null
+  }
+
+  export type CommissionPayoutLogMinAggregateOutputType = {
+    id: number | null
+    affiliateId: string | null
+    totalAmount: number | null
+    note: string | null
+    accountName: string | null
+    bankName: string | null
+    accountNumber: string | null
+    paidAt: Date | null
+  }
+
+  export type CommissionPayoutLogMaxAggregateOutputType = {
+    id: number | null
+    affiliateId: string | null
+    totalAmount: number | null
+    note: string | null
+    accountName: string | null
+    bankName: string | null
+    accountNumber: string | null
+    paidAt: Date | null
+  }
+
+  export type CommissionPayoutLogCountAggregateOutputType = {
+    id: number
+    affiliateId: number
+    totalAmount: number
+    note: number
+    accountName: number
+    bankName: number
+    accountNumber: number
+    paidAt: number
+    _all: number
+  }
+
+
+  export type CommissionPayoutLogAvgAggregateInputType = {
+    id?: true
+    totalAmount?: true
+  }
+
+  export type CommissionPayoutLogSumAggregateInputType = {
+    id?: true
+    totalAmount?: true
+  }
+
+  export type CommissionPayoutLogMinAggregateInputType = {
+    id?: true
+    affiliateId?: true
+    totalAmount?: true
+    note?: true
+    accountName?: true
+    bankName?: true
+    accountNumber?: true
+    paidAt?: true
+  }
+
+  export type CommissionPayoutLogMaxAggregateInputType = {
+    id?: true
+    affiliateId?: true
+    totalAmount?: true
+    note?: true
+    accountName?: true
+    bankName?: true
+    accountNumber?: true
+    paidAt?: true
+  }
+
+  export type CommissionPayoutLogCountAggregateInputType = {
+    id?: true
+    affiliateId?: true
+    totalAmount?: true
+    note?: true
+    accountName?: true
+    bankName?: true
+    accountNumber?: true
+    paidAt?: true
+    _all?: true
+  }
+
+  export type CommissionPayoutLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CommissionPayoutLog to aggregate.
+     */
+    where?: CommissionPayoutLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommissionPayoutLogs to fetch.
+     */
+    orderBy?: CommissionPayoutLogOrderByWithRelationInput | CommissionPayoutLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CommissionPayoutLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommissionPayoutLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommissionPayoutLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CommissionPayoutLogs
+    **/
+    _count?: true | CommissionPayoutLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CommissionPayoutLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CommissionPayoutLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CommissionPayoutLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CommissionPayoutLogMaxAggregateInputType
+  }
+
+  export type GetCommissionPayoutLogAggregateType<T extends CommissionPayoutLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateCommissionPayoutLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCommissionPayoutLog[P]>
+      : GetScalarType<T[P], AggregateCommissionPayoutLog[P]>
+  }
+
+
+
+
+  export type CommissionPayoutLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommissionPayoutLogWhereInput
+    orderBy?: CommissionPayoutLogOrderByWithAggregationInput | CommissionPayoutLogOrderByWithAggregationInput[]
+    by: CommissionPayoutLogScalarFieldEnum[] | CommissionPayoutLogScalarFieldEnum
+    having?: CommissionPayoutLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CommissionPayoutLogCountAggregateInputType | true
+    _avg?: CommissionPayoutLogAvgAggregateInputType
+    _sum?: CommissionPayoutLogSumAggregateInputType
+    _min?: CommissionPayoutLogMinAggregateInputType
+    _max?: CommissionPayoutLogMaxAggregateInputType
+  }
+
+  export type CommissionPayoutLogGroupByOutputType = {
+    id: number
+    affiliateId: string
+    totalAmount: number
+    note: string | null
+    accountName: string
+    bankName: string
+    accountNumber: string
+    paidAt: Date
+    _count: CommissionPayoutLogCountAggregateOutputType | null
+    _avg: CommissionPayoutLogAvgAggregateOutputType | null
+    _sum: CommissionPayoutLogSumAggregateOutputType | null
+    _min: CommissionPayoutLogMinAggregateOutputType | null
+    _max: CommissionPayoutLogMaxAggregateOutputType | null
+  }
+
+  type GetCommissionPayoutLogGroupByPayload<T extends CommissionPayoutLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CommissionPayoutLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CommissionPayoutLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CommissionPayoutLogGroupByOutputType[P]>
+            : GetScalarType<T[P], CommissionPayoutLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CommissionPayoutLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    affiliateId?: boolean
+    totalAmount?: boolean
+    note?: boolean
+    accountName?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    paidAt?: boolean
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+    commissions?: boolean | CommissionPayoutLog$commissionsArgs<ExtArgs>
+    _count?: boolean | CommissionPayoutLogCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["commissionPayoutLog"]>
+
+  export type CommissionPayoutLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    affiliateId?: boolean
+    totalAmount?: boolean
+    note?: boolean
+    accountName?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    paidAt?: boolean
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["commissionPayoutLog"]>
+
+  export type CommissionPayoutLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    affiliateId?: boolean
+    totalAmount?: boolean
+    note?: boolean
+    accountName?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    paidAt?: boolean
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["commissionPayoutLog"]>
+
+  export type CommissionPayoutLogSelectScalar = {
+    id?: boolean
+    affiliateId?: boolean
+    totalAmount?: boolean
+    note?: boolean
+    accountName?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    paidAt?: boolean
+  }
+
+  export type CommissionPayoutLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "affiliateId" | "totalAmount" | "note" | "accountName" | "bankName" | "accountNumber" | "paidAt", ExtArgs["result"]["commissionPayoutLog"]>
+  export type CommissionPayoutLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+    commissions?: boolean | CommissionPayoutLog$commissionsArgs<ExtArgs>
+    _count?: boolean | CommissionPayoutLogCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CommissionPayoutLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }
+  export type CommissionPayoutLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliate?: boolean | AffiliateDefaultArgs<ExtArgs>
+  }
+
+  export type $CommissionPayoutLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CommissionPayoutLog"
+    objects: {
+      affiliate: Prisma.$AffiliatePayload<ExtArgs>
+      commissions: Prisma.$CommissionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      affiliateId: string
+      totalAmount: number
+      note: string | null
+      accountName: string
+      bankName: string
+      accountNumber: string
+      paidAt: Date
+    }, ExtArgs["result"]["commissionPayoutLog"]>
+    composites: {}
+  }
+
+  type CommissionPayoutLogGetPayload<S extends boolean | null | undefined | CommissionPayoutLogDefaultArgs> = $Result.GetResult<Prisma.$CommissionPayoutLogPayload, S>
+
+  type CommissionPayoutLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CommissionPayoutLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CommissionPayoutLogCountAggregateInputType | true
+    }
+
+  export interface CommissionPayoutLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CommissionPayoutLog'], meta: { name: 'CommissionPayoutLog' } }
+    /**
+     * Find zero or one CommissionPayoutLog that matches the filter.
+     * @param {CommissionPayoutLogFindUniqueArgs} args - Arguments to find a CommissionPayoutLog
+     * @example
+     * // Get one CommissionPayoutLog
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CommissionPayoutLogFindUniqueArgs>(args: SelectSubset<T, CommissionPayoutLogFindUniqueArgs<ExtArgs>>): Prisma__CommissionPayoutLogClient<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CommissionPayoutLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CommissionPayoutLogFindUniqueOrThrowArgs} args - Arguments to find a CommissionPayoutLog
+     * @example
+     * // Get one CommissionPayoutLog
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CommissionPayoutLogFindUniqueOrThrowArgs>(args: SelectSubset<T, CommissionPayoutLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CommissionPayoutLogClient<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CommissionPayoutLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionPayoutLogFindFirstArgs} args - Arguments to find a CommissionPayoutLog
+     * @example
+     * // Get one CommissionPayoutLog
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CommissionPayoutLogFindFirstArgs>(args?: SelectSubset<T, CommissionPayoutLogFindFirstArgs<ExtArgs>>): Prisma__CommissionPayoutLogClient<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CommissionPayoutLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionPayoutLogFindFirstOrThrowArgs} args - Arguments to find a CommissionPayoutLog
+     * @example
+     * // Get one CommissionPayoutLog
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CommissionPayoutLogFindFirstOrThrowArgs>(args?: SelectSubset<T, CommissionPayoutLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__CommissionPayoutLogClient<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CommissionPayoutLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionPayoutLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CommissionPayoutLogs
+     * const commissionPayoutLogs = await prisma.commissionPayoutLog.findMany()
+     * 
+     * // Get first 10 CommissionPayoutLogs
+     * const commissionPayoutLogs = await prisma.commissionPayoutLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const commissionPayoutLogWithIdOnly = await prisma.commissionPayoutLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CommissionPayoutLogFindManyArgs>(args?: SelectSubset<T, CommissionPayoutLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CommissionPayoutLog.
+     * @param {CommissionPayoutLogCreateArgs} args - Arguments to create a CommissionPayoutLog.
+     * @example
+     * // Create one CommissionPayoutLog
+     * const CommissionPayoutLog = await prisma.commissionPayoutLog.create({
+     *   data: {
+     *     // ... data to create a CommissionPayoutLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends CommissionPayoutLogCreateArgs>(args: SelectSubset<T, CommissionPayoutLogCreateArgs<ExtArgs>>): Prisma__CommissionPayoutLogClient<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CommissionPayoutLogs.
+     * @param {CommissionPayoutLogCreateManyArgs} args - Arguments to create many CommissionPayoutLogs.
+     * @example
+     * // Create many CommissionPayoutLogs
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CommissionPayoutLogCreateManyArgs>(args?: SelectSubset<T, CommissionPayoutLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CommissionPayoutLogs and returns the data saved in the database.
+     * @param {CommissionPayoutLogCreateManyAndReturnArgs} args - Arguments to create many CommissionPayoutLogs.
+     * @example
+     * // Create many CommissionPayoutLogs
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CommissionPayoutLogs and only return the `id`
+     * const commissionPayoutLogWithIdOnly = await prisma.commissionPayoutLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CommissionPayoutLogCreateManyAndReturnArgs>(args?: SelectSubset<T, CommissionPayoutLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CommissionPayoutLog.
+     * @param {CommissionPayoutLogDeleteArgs} args - Arguments to delete one CommissionPayoutLog.
+     * @example
+     * // Delete one CommissionPayoutLog
+     * const CommissionPayoutLog = await prisma.commissionPayoutLog.delete({
+     *   where: {
+     *     // ... filter to delete one CommissionPayoutLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CommissionPayoutLogDeleteArgs>(args: SelectSubset<T, CommissionPayoutLogDeleteArgs<ExtArgs>>): Prisma__CommissionPayoutLogClient<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CommissionPayoutLog.
+     * @param {CommissionPayoutLogUpdateArgs} args - Arguments to update one CommissionPayoutLog.
+     * @example
+     * // Update one CommissionPayoutLog
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CommissionPayoutLogUpdateArgs>(args: SelectSubset<T, CommissionPayoutLogUpdateArgs<ExtArgs>>): Prisma__CommissionPayoutLogClient<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CommissionPayoutLogs.
+     * @param {CommissionPayoutLogDeleteManyArgs} args - Arguments to filter CommissionPayoutLogs to delete.
+     * @example
+     * // Delete a few CommissionPayoutLogs
+     * const { count } = await prisma.commissionPayoutLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CommissionPayoutLogDeleteManyArgs>(args?: SelectSubset<T, CommissionPayoutLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CommissionPayoutLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionPayoutLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CommissionPayoutLogs
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CommissionPayoutLogUpdateManyArgs>(args: SelectSubset<T, CommissionPayoutLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CommissionPayoutLogs and returns the data updated in the database.
+     * @param {CommissionPayoutLogUpdateManyAndReturnArgs} args - Arguments to update many CommissionPayoutLogs.
+     * @example
+     * // Update many CommissionPayoutLogs
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CommissionPayoutLogs and only return the `id`
+     * const commissionPayoutLogWithIdOnly = await prisma.commissionPayoutLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CommissionPayoutLogUpdateManyAndReturnArgs>(args: SelectSubset<T, CommissionPayoutLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CommissionPayoutLog.
+     * @param {CommissionPayoutLogUpsertArgs} args - Arguments to update or create a CommissionPayoutLog.
+     * @example
+     * // Update or create a CommissionPayoutLog
+     * const commissionPayoutLog = await prisma.commissionPayoutLog.upsert({
+     *   create: {
+     *     // ... data to create a CommissionPayoutLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CommissionPayoutLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CommissionPayoutLogUpsertArgs>(args: SelectSubset<T, CommissionPayoutLogUpsertArgs<ExtArgs>>): Prisma__CommissionPayoutLogClient<$Result.GetResult<Prisma.$CommissionPayoutLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CommissionPayoutLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionPayoutLogCountArgs} args - Arguments to filter CommissionPayoutLogs to count.
+     * @example
+     * // Count the number of CommissionPayoutLogs
+     * const count = await prisma.commissionPayoutLog.count({
+     *   where: {
+     *     // ... the filter for the CommissionPayoutLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends CommissionPayoutLogCountArgs>(
+      args?: Subset<T, CommissionPayoutLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CommissionPayoutLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CommissionPayoutLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionPayoutLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CommissionPayoutLogAggregateArgs>(args: Subset<T, CommissionPayoutLogAggregateArgs>): Prisma.PrismaPromise<GetCommissionPayoutLogAggregateType<T>>
+
+    /**
+     * Group by CommissionPayoutLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommissionPayoutLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CommissionPayoutLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CommissionPayoutLogGroupByArgs['orderBy'] }
+        : { orderBy?: CommissionPayoutLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CommissionPayoutLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommissionPayoutLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CommissionPayoutLog model
+   */
+  readonly fields: CommissionPayoutLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CommissionPayoutLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CommissionPayoutLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    affiliate<T extends AffiliateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateDefaultArgs<ExtArgs>>): Prisma__AffiliateClient<$Result.GetResult<Prisma.$AffiliatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    commissions<T extends CommissionPayoutLog$commissionsArgs<ExtArgs> = {}>(args?: Subset<T, CommissionPayoutLog$commissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CommissionPayoutLog model
+   */
+  interface CommissionPayoutLogFieldRefs {
+    readonly id: FieldRef<"CommissionPayoutLog", 'Int'>
+    readonly affiliateId: FieldRef<"CommissionPayoutLog", 'String'>
+    readonly totalAmount: FieldRef<"CommissionPayoutLog", 'Float'>
+    readonly note: FieldRef<"CommissionPayoutLog", 'String'>
+    readonly accountName: FieldRef<"CommissionPayoutLog", 'String'>
+    readonly bankName: FieldRef<"CommissionPayoutLog", 'String'>
+    readonly accountNumber: FieldRef<"CommissionPayoutLog", 'String'>
+    readonly paidAt: FieldRef<"CommissionPayoutLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CommissionPayoutLog findUnique
+   */
+  export type CommissionPayoutLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    /**
+     * Filter, which CommissionPayoutLog to fetch.
+     */
+    where: CommissionPayoutLogWhereUniqueInput
+  }
+
+  /**
+   * CommissionPayoutLog findUniqueOrThrow
+   */
+  export type CommissionPayoutLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    /**
+     * Filter, which CommissionPayoutLog to fetch.
+     */
+    where: CommissionPayoutLogWhereUniqueInput
+  }
+
+  /**
+   * CommissionPayoutLog findFirst
+   */
+  export type CommissionPayoutLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    /**
+     * Filter, which CommissionPayoutLog to fetch.
+     */
+    where?: CommissionPayoutLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommissionPayoutLogs to fetch.
+     */
+    orderBy?: CommissionPayoutLogOrderByWithRelationInput | CommissionPayoutLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CommissionPayoutLogs.
+     */
+    cursor?: CommissionPayoutLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommissionPayoutLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommissionPayoutLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommissionPayoutLogs.
+     */
+    distinct?: CommissionPayoutLogScalarFieldEnum | CommissionPayoutLogScalarFieldEnum[]
+  }
+
+  /**
+   * CommissionPayoutLog findFirstOrThrow
+   */
+  export type CommissionPayoutLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    /**
+     * Filter, which CommissionPayoutLog to fetch.
+     */
+    where?: CommissionPayoutLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommissionPayoutLogs to fetch.
+     */
+    orderBy?: CommissionPayoutLogOrderByWithRelationInput | CommissionPayoutLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CommissionPayoutLogs.
+     */
+    cursor?: CommissionPayoutLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommissionPayoutLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommissionPayoutLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommissionPayoutLogs.
+     */
+    distinct?: CommissionPayoutLogScalarFieldEnum | CommissionPayoutLogScalarFieldEnum[]
+  }
+
+  /**
+   * CommissionPayoutLog findMany
+   */
+  export type CommissionPayoutLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    /**
+     * Filter, which CommissionPayoutLogs to fetch.
+     */
+    where?: CommissionPayoutLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommissionPayoutLogs to fetch.
+     */
+    orderBy?: CommissionPayoutLogOrderByWithRelationInput | CommissionPayoutLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CommissionPayoutLogs.
+     */
+    cursor?: CommissionPayoutLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommissionPayoutLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommissionPayoutLogs.
+     */
+    skip?: number
+    distinct?: CommissionPayoutLogScalarFieldEnum | CommissionPayoutLogScalarFieldEnum[]
+  }
+
+  /**
+   * CommissionPayoutLog create
+   */
+  export type CommissionPayoutLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CommissionPayoutLog.
+     */
+    data: XOR<CommissionPayoutLogCreateInput, CommissionPayoutLogUncheckedCreateInput>
+  }
+
+  /**
+   * CommissionPayoutLog createMany
+   */
+  export type CommissionPayoutLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CommissionPayoutLogs.
+     */
+    data: CommissionPayoutLogCreateManyInput | CommissionPayoutLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CommissionPayoutLog createManyAndReturn
+   */
+  export type CommissionPayoutLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many CommissionPayoutLogs.
+     */
+    data: CommissionPayoutLogCreateManyInput | CommissionPayoutLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CommissionPayoutLog update
+   */
+  export type CommissionPayoutLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CommissionPayoutLog.
+     */
+    data: XOR<CommissionPayoutLogUpdateInput, CommissionPayoutLogUncheckedUpdateInput>
+    /**
+     * Choose, which CommissionPayoutLog to update.
+     */
+    where: CommissionPayoutLogWhereUniqueInput
+  }
+
+  /**
+   * CommissionPayoutLog updateMany
+   */
+  export type CommissionPayoutLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CommissionPayoutLogs.
+     */
+    data: XOR<CommissionPayoutLogUpdateManyMutationInput, CommissionPayoutLogUncheckedUpdateManyInput>
+    /**
+     * Filter which CommissionPayoutLogs to update
+     */
+    where?: CommissionPayoutLogWhereInput
+    /**
+     * Limit how many CommissionPayoutLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CommissionPayoutLog updateManyAndReturn
+   */
+  export type CommissionPayoutLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * The data used to update CommissionPayoutLogs.
+     */
+    data: XOR<CommissionPayoutLogUpdateManyMutationInput, CommissionPayoutLogUncheckedUpdateManyInput>
+    /**
+     * Filter which CommissionPayoutLogs to update
+     */
+    where?: CommissionPayoutLogWhereInput
+    /**
+     * Limit how many CommissionPayoutLogs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CommissionPayoutLog upsert
+   */
+  export type CommissionPayoutLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CommissionPayoutLog to update in case it exists.
+     */
+    where: CommissionPayoutLogWhereUniqueInput
+    /**
+     * In case the CommissionPayoutLog found by the `where` argument doesn't exist, create a new CommissionPayoutLog with this data.
+     */
+    create: XOR<CommissionPayoutLogCreateInput, CommissionPayoutLogUncheckedCreateInput>
+    /**
+     * In case the CommissionPayoutLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CommissionPayoutLogUpdateInput, CommissionPayoutLogUncheckedUpdateInput>
+  }
+
+  /**
+   * CommissionPayoutLog delete
+   */
+  export type CommissionPayoutLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
+    /**
+     * Filter which CommissionPayoutLog to delete.
+     */
+    where: CommissionPayoutLogWhereUniqueInput
+  }
+
+  /**
+   * CommissionPayoutLog deleteMany
+   */
+  export type CommissionPayoutLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CommissionPayoutLogs to delete
+     */
+    where?: CommissionPayoutLogWhereInput
+    /**
+     * Limit how many CommissionPayoutLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CommissionPayoutLog.commissions
+   */
+  export type CommissionPayoutLog$commissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Commission
+     */
+    select?: CommissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Commission
+     */
+    omit?: CommissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionInclude<ExtArgs> | null
+    where?: CommissionWhereInput
+    orderBy?: CommissionOrderByWithRelationInput | CommissionOrderByWithRelationInput[]
+    cursor?: CommissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CommissionScalarFieldEnum | CommissionScalarFieldEnum[]
+  }
+
+  /**
+   * CommissionPayoutLog without action
+   */
+  export type CommissionPayoutLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommissionPayoutLog
+     */
+    select?: CommissionPayoutLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommissionPayoutLog
+     */
+    omit?: CommissionPayoutLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommissionPayoutLogInclude<ExtArgs> | null
   }
 
 
@@ -28305,13 +30966,26 @@ export namespace Prisma {
 
   export const AffiliateScalarFieldEnum: {
     userId: 'userId',
-    approved: 'approved',
+    status: 'status',
     referralCode: 'referralCode',
     totalEarnings: 'totalEarnings',
     createdAt: 'createdAt'
   };
 
   export type AffiliateScalarFieldEnum = (typeof AffiliateScalarFieldEnum)[keyof typeof AffiliateScalarFieldEnum]
+
+
+  export const AffiliatePayoutAccountScalarFieldEnum: {
+    id: 'id',
+    affiliateId: 'affiliateId',
+    bankName: 'bankName',
+    accountNumber: 'accountNumber',
+    accountName: 'accountName',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AffiliatePayoutAccountScalarFieldEnum = (typeof AffiliatePayoutAccountScalarFieldEnum)[keyof typeof AffiliatePayoutAccountScalarFieldEnum]
 
 
   export const ReferralScalarFieldEnum: {
@@ -28347,10 +31021,25 @@ export namespace Prisma {
     orderId: 'orderId',
     amount: 'amount',
     paid: 'paid',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    payoutLogId: 'payoutLogId'
   };
 
   export type CommissionScalarFieldEnum = (typeof CommissionScalarFieldEnum)[keyof typeof CommissionScalarFieldEnum]
+
+
+  export const CommissionPayoutLogScalarFieldEnum: {
+    id: 'id',
+    affiliateId: 'affiliateId',
+    totalAmount: 'totalAmount',
+    note: 'note',
+    accountName: 'accountName',
+    bankName: 'bankName',
+    accountNumber: 'accountNumber',
+    paidAt: 'paidAt'
+  };
+
+  export type CommissionPayoutLogScalarFieldEnum = (typeof CommissionPayoutLogScalarFieldEnum)[keyof typeof CommissionPayoutLogScalarFieldEnum]
 
 
   export const CategoryScalarFieldEnum: {
@@ -28672,6 +31361,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'AffiliateApprovalStatus'
+   */
+  export type EnumAffiliateApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AffiliateApprovalStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AffiliateApprovalStatus[]'
+   */
+  export type ListEnumAffiliateApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AffiliateApprovalStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -28763,6 +31466,7 @@ export namespace Prisma {
     affiliate?: XOR<AffiliateNullableScalarRelationFilter, AffiliateWhereInput> | null
     posSessions?: PosSessionListRelationFilter
     cartItems?: CartItemListRelationFilter
+    referrals?: ReferralListRelationFilter
     permissions?: UserPermissionListRelationFilter
   }
 
@@ -28782,6 +31486,7 @@ export namespace Prisma {
     affiliate?: AffiliateOrderByWithRelationInput
     posSessions?: PosSessionOrderByRelationAggregateInput
     cartItems?: CartItemOrderByRelationAggregateInput
+    referrals?: ReferralOrderByRelationAggregateInput
     permissions?: UserPermissionOrderByRelationAggregateInput
   }
 
@@ -28804,6 +31509,7 @@ export namespace Prisma {
     affiliate?: XOR<AffiliateNullableScalarRelationFilter, AffiliateWhereInput> | null
     posSessions?: PosSessionListRelationFilter
     cartItems?: CartItemListRelationFilter
+    referrals?: ReferralListRelationFilter
     permissions?: UserPermissionListRelationFilter
   }, "id" | "email">
 
@@ -28951,24 +31657,28 @@ export namespace Prisma {
     OR?: AffiliateWhereInput[]
     NOT?: AffiliateWhereInput | AffiliateWhereInput[]
     userId?: StringFilter<"Affiliate"> | string
-    approved?: BoolFilter<"Affiliate"> | boolean
+    status?: EnumAffiliateApprovalStatusFilter<"Affiliate"> | $Enums.AffiliateApprovalStatus
     referralCode?: StringFilter<"Affiliate"> | string
     totalEarnings?: FloatFilter<"Affiliate"> | number
     createdAt?: DateTimeFilter<"Affiliate"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    bankAccount?: XOR<AffiliatePayoutAccountNullableScalarRelationFilter, AffiliatePayoutAccountWhereInput> | null
     referrals?: ReferralListRelationFilter
     commissions?: CommissionListRelationFilter
+    payoutLogs?: CommissionPayoutLogListRelationFilter
   }
 
   export type AffiliateOrderByWithRelationInput = {
     userId?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
     referralCode?: SortOrder
     totalEarnings?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    bankAccount?: AffiliatePayoutAccountOrderByWithRelationInput
     referrals?: ReferralOrderByRelationAggregateInput
     commissions?: CommissionOrderByRelationAggregateInput
+    payoutLogs?: CommissionPayoutLogOrderByRelationAggregateInput
   }
 
   export type AffiliateWhereUniqueInput = Prisma.AtLeast<{
@@ -28977,17 +31687,19 @@ export namespace Prisma {
     AND?: AffiliateWhereInput | AffiliateWhereInput[]
     OR?: AffiliateWhereInput[]
     NOT?: AffiliateWhereInput | AffiliateWhereInput[]
-    approved?: BoolFilter<"Affiliate"> | boolean
+    status?: EnumAffiliateApprovalStatusFilter<"Affiliate"> | $Enums.AffiliateApprovalStatus
     totalEarnings?: FloatFilter<"Affiliate"> | number
     createdAt?: DateTimeFilter<"Affiliate"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    bankAccount?: XOR<AffiliatePayoutAccountNullableScalarRelationFilter, AffiliatePayoutAccountWhereInput> | null
     referrals?: ReferralListRelationFilter
     commissions?: CommissionListRelationFilter
+    payoutLogs?: CommissionPayoutLogListRelationFilter
   }, "userId" | "referralCode">
 
   export type AffiliateOrderByWithAggregationInput = {
     userId?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
     referralCode?: SortOrder
     totalEarnings?: SortOrder
     createdAt?: SortOrder
@@ -29003,10 +31715,77 @@ export namespace Prisma {
     OR?: AffiliateScalarWhereWithAggregatesInput[]
     NOT?: AffiliateScalarWhereWithAggregatesInput | AffiliateScalarWhereWithAggregatesInput[]
     userId?: StringWithAggregatesFilter<"Affiliate"> | string
-    approved?: BoolWithAggregatesFilter<"Affiliate"> | boolean
+    status?: EnumAffiliateApprovalStatusWithAggregatesFilter<"Affiliate"> | $Enums.AffiliateApprovalStatus
     referralCode?: StringWithAggregatesFilter<"Affiliate"> | string
     totalEarnings?: FloatWithAggregatesFilter<"Affiliate"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Affiliate"> | Date | string
+  }
+
+  export type AffiliatePayoutAccountWhereInput = {
+    AND?: AffiliatePayoutAccountWhereInput | AffiliatePayoutAccountWhereInput[]
+    OR?: AffiliatePayoutAccountWhereInput[]
+    NOT?: AffiliatePayoutAccountWhereInput | AffiliatePayoutAccountWhereInput[]
+    id?: IntFilter<"AffiliatePayoutAccount"> | number
+    affiliateId?: StringFilter<"AffiliatePayoutAccount"> | string
+    bankName?: StringFilter<"AffiliatePayoutAccount"> | string
+    accountNumber?: StringFilter<"AffiliatePayoutAccount"> | string
+    accountName?: StringFilter<"AffiliatePayoutAccount"> | string
+    createdAt?: DateTimeFilter<"AffiliatePayoutAccount"> | Date | string
+    updatedAt?: DateTimeFilter<"AffiliatePayoutAccount"> | Date | string
+    affiliate?: XOR<AffiliateScalarRelationFilter, AffiliateWhereInput>
+  }
+
+  export type AffiliatePayoutAccountOrderByWithRelationInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    affiliate?: AffiliateOrderByWithRelationInput
+  }
+
+  export type AffiliatePayoutAccountWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    affiliateId?: string
+    AND?: AffiliatePayoutAccountWhereInput | AffiliatePayoutAccountWhereInput[]
+    OR?: AffiliatePayoutAccountWhereInput[]
+    NOT?: AffiliatePayoutAccountWhereInput | AffiliatePayoutAccountWhereInput[]
+    bankName?: StringFilter<"AffiliatePayoutAccount"> | string
+    accountNumber?: StringFilter<"AffiliatePayoutAccount"> | string
+    accountName?: StringFilter<"AffiliatePayoutAccount"> | string
+    createdAt?: DateTimeFilter<"AffiliatePayoutAccount"> | Date | string
+    updatedAt?: DateTimeFilter<"AffiliatePayoutAccount"> | Date | string
+    affiliate?: XOR<AffiliateScalarRelationFilter, AffiliateWhereInput>
+  }, "id" | "affiliateId">
+
+  export type AffiliatePayoutAccountOrderByWithAggregationInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AffiliatePayoutAccountCountOrderByAggregateInput
+    _avg?: AffiliatePayoutAccountAvgOrderByAggregateInput
+    _max?: AffiliatePayoutAccountMaxOrderByAggregateInput
+    _min?: AffiliatePayoutAccountMinOrderByAggregateInput
+    _sum?: AffiliatePayoutAccountSumOrderByAggregateInput
+  }
+
+  export type AffiliatePayoutAccountScalarWhereWithAggregatesInput = {
+    AND?: AffiliatePayoutAccountScalarWhereWithAggregatesInput | AffiliatePayoutAccountScalarWhereWithAggregatesInput[]
+    OR?: AffiliatePayoutAccountScalarWhereWithAggregatesInput[]
+    NOT?: AffiliatePayoutAccountScalarWhereWithAggregatesInput | AffiliatePayoutAccountScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"AffiliatePayoutAccount"> | number
+    affiliateId?: StringWithAggregatesFilter<"AffiliatePayoutAccount"> | string
+    bankName?: StringWithAggregatesFilter<"AffiliatePayoutAccount"> | string
+    accountNumber?: StringWithAggregatesFilter<"AffiliatePayoutAccount"> | string
+    accountName?: StringWithAggregatesFilter<"AffiliatePayoutAccount"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"AffiliatePayoutAccount"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AffiliatePayoutAccount"> | Date | string
   }
 
   export type ReferralWhereInput = {
@@ -29018,6 +31797,7 @@ export namespace Prisma {
     referredUser?: StringFilter<"Referral"> | string
     referredAt?: DateTimeFilter<"Referral"> | Date | string
     affiliate?: XOR<AffiliateScalarRelationFilter, AffiliateWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type ReferralOrderByWithRelationInput = {
@@ -29026,6 +31806,7 @@ export namespace Prisma {
     referredUser?: SortOrder
     referredAt?: SortOrder
     affiliate?: AffiliateOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type ReferralWhereUniqueInput = Prisma.AtLeast<{
@@ -29037,6 +31818,7 @@ export namespace Prisma {
     affiliateId?: StringFilter<"Referral"> | string
     referredAt?: DateTimeFilter<"Referral"> | Date | string
     affiliate?: XOR<AffiliateScalarRelationFilter, AffiliateWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "referredUser">
 
   export type ReferralOrderByWithAggregationInput = {
@@ -29157,8 +31939,10 @@ export namespace Prisma {
     amount?: FloatFilter<"Commission"> | number
     paid?: BoolFilter<"Commission"> | boolean
     createdAt?: DateTimeFilter<"Commission"> | Date | string
+    payoutLogId?: IntNullableFilter<"Commission"> | number | null
     affiliate?: XOR<AffiliateScalarRelationFilter, AffiliateWhereInput>
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    payoutLog?: XOR<CommissionPayoutLogNullableScalarRelationFilter, CommissionPayoutLogWhereInput> | null
   }
 
   export type CommissionOrderByWithRelationInput = {
@@ -29168,8 +31952,10 @@ export namespace Prisma {
     amount?: SortOrder
     paid?: SortOrder
     createdAt?: SortOrder
+    payoutLogId?: SortOrderInput | SortOrder
     affiliate?: AffiliateOrderByWithRelationInput
     order?: OrderOrderByWithRelationInput
+    payoutLog?: CommissionPayoutLogOrderByWithRelationInput
   }
 
   export type CommissionWhereUniqueInput = Prisma.AtLeast<{
@@ -29182,8 +31968,10 @@ export namespace Prisma {
     amount?: FloatFilter<"Commission"> | number
     paid?: BoolFilter<"Commission"> | boolean
     createdAt?: DateTimeFilter<"Commission"> | Date | string
+    payoutLogId?: IntNullableFilter<"Commission"> | number | null
     affiliate?: XOR<AffiliateScalarRelationFilter, AffiliateWhereInput>
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    payoutLog?: XOR<CommissionPayoutLogNullableScalarRelationFilter, CommissionPayoutLogWhereInput> | null
   }, "id" | "orderId">
 
   export type CommissionOrderByWithAggregationInput = {
@@ -29193,6 +31981,7 @@ export namespace Prisma {
     amount?: SortOrder
     paid?: SortOrder
     createdAt?: SortOrder
+    payoutLogId?: SortOrderInput | SortOrder
     _count?: CommissionCountOrderByAggregateInput
     _avg?: CommissionAvgOrderByAggregateInput
     _max?: CommissionMaxOrderByAggregateInput
@@ -29210,6 +31999,82 @@ export namespace Prisma {
     amount?: FloatWithAggregatesFilter<"Commission"> | number
     paid?: BoolWithAggregatesFilter<"Commission"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Commission"> | Date | string
+    payoutLogId?: IntNullableWithAggregatesFilter<"Commission"> | number | null
+  }
+
+  export type CommissionPayoutLogWhereInput = {
+    AND?: CommissionPayoutLogWhereInput | CommissionPayoutLogWhereInput[]
+    OR?: CommissionPayoutLogWhereInput[]
+    NOT?: CommissionPayoutLogWhereInput | CommissionPayoutLogWhereInput[]
+    id?: IntFilter<"CommissionPayoutLog"> | number
+    affiliateId?: StringFilter<"CommissionPayoutLog"> | string
+    totalAmount?: FloatFilter<"CommissionPayoutLog"> | number
+    note?: StringNullableFilter<"CommissionPayoutLog"> | string | null
+    accountName?: StringFilter<"CommissionPayoutLog"> | string
+    bankName?: StringFilter<"CommissionPayoutLog"> | string
+    accountNumber?: StringFilter<"CommissionPayoutLog"> | string
+    paidAt?: DateTimeFilter<"CommissionPayoutLog"> | Date | string
+    affiliate?: XOR<AffiliateScalarRelationFilter, AffiliateWhereInput>
+    commissions?: CommissionListRelationFilter
+  }
+
+  export type CommissionPayoutLogOrderByWithRelationInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    totalAmount?: SortOrder
+    note?: SortOrderInput | SortOrder
+    accountName?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    paidAt?: SortOrder
+    affiliate?: AffiliateOrderByWithRelationInput
+    commissions?: CommissionOrderByRelationAggregateInput
+  }
+
+  export type CommissionPayoutLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: CommissionPayoutLogWhereInput | CommissionPayoutLogWhereInput[]
+    OR?: CommissionPayoutLogWhereInput[]
+    NOT?: CommissionPayoutLogWhereInput | CommissionPayoutLogWhereInput[]
+    affiliateId?: StringFilter<"CommissionPayoutLog"> | string
+    totalAmount?: FloatFilter<"CommissionPayoutLog"> | number
+    note?: StringNullableFilter<"CommissionPayoutLog"> | string | null
+    accountName?: StringFilter<"CommissionPayoutLog"> | string
+    bankName?: StringFilter<"CommissionPayoutLog"> | string
+    accountNumber?: StringFilter<"CommissionPayoutLog"> | string
+    paidAt?: DateTimeFilter<"CommissionPayoutLog"> | Date | string
+    affiliate?: XOR<AffiliateScalarRelationFilter, AffiliateWhereInput>
+    commissions?: CommissionListRelationFilter
+  }, "id">
+
+  export type CommissionPayoutLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    totalAmount?: SortOrder
+    note?: SortOrderInput | SortOrder
+    accountName?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    paidAt?: SortOrder
+    _count?: CommissionPayoutLogCountOrderByAggregateInput
+    _avg?: CommissionPayoutLogAvgOrderByAggregateInput
+    _max?: CommissionPayoutLogMaxOrderByAggregateInput
+    _min?: CommissionPayoutLogMinOrderByAggregateInput
+    _sum?: CommissionPayoutLogSumOrderByAggregateInput
+  }
+
+  export type CommissionPayoutLogScalarWhereWithAggregatesInput = {
+    AND?: CommissionPayoutLogScalarWhereWithAggregatesInput | CommissionPayoutLogScalarWhereWithAggregatesInput[]
+    OR?: CommissionPayoutLogScalarWhereWithAggregatesInput[]
+    NOT?: CommissionPayoutLogScalarWhereWithAggregatesInput | CommissionPayoutLogScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"CommissionPayoutLog"> | number
+    affiliateId?: StringWithAggregatesFilter<"CommissionPayoutLog"> | string
+    totalAmount?: FloatWithAggregatesFilter<"CommissionPayoutLog"> | number
+    note?: StringNullableWithAggregatesFilter<"CommissionPayoutLog"> | string | null
+    accountName?: StringWithAggregatesFilter<"CommissionPayoutLog"> | string
+    bankName?: StringWithAggregatesFilter<"CommissionPayoutLog"> | string
+    accountNumber?: StringWithAggregatesFilter<"CommissionPayoutLog"> | string
+    paidAt?: DateTimeWithAggregatesFilter<"CommissionPayoutLog"> | Date | string
   }
 
   export type CategoryWhereInput = {
@@ -30281,6 +33146,7 @@ export namespace Prisma {
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     posSessions?: PosSessionCreateNestedManyWithoutStaffInput
     cartItems?: CartItemCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutUserInput
     permissions?: UserPermissionCreateNestedManyWithoutUserInput
   }
 
@@ -30300,6 +33166,7 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     posSessions?: PosSessionUncheckedCreateNestedManyWithoutStaffInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     permissions?: UserPermissionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -30319,6 +33186,7 @@ export namespace Prisma {
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUpdateManyWithoutUserNestedInput
   }
 
@@ -30338,6 +33206,7 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUncheckedUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -30479,55 +33348,63 @@ export namespace Prisma {
   }
 
   export type AffiliateCreateInput = {
-    approved?: boolean
+    status?: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutAffiliateInput
+    bankAccount?: AffiliatePayoutAccountCreateNestedOneWithoutAffiliateInput
     referrals?: ReferralCreateNestedManyWithoutAffiliateInput
     commissions?: CommissionCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogCreateNestedManyWithoutAffiliateInput
   }
 
   export type AffiliateUncheckedCreateInput = {
     userId: string
-    approved?: boolean
+    status?: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings?: number
     createdAt?: Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedCreateNestedOneWithoutAffiliateInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     commissions?: CommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogUncheckedCreateNestedManyWithoutAffiliateInput
   }
 
   export type AffiliateUpdateInput = {
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutAffiliateNestedInput
+    bankAccount?: AffiliatePayoutAccountUpdateOneWithoutAffiliateNestedInput
     referrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     commissions?: CommissionUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUpdateManyWithoutAffiliateNestedInput
   }
 
   export type AffiliateUncheckedUpdateInput = {
     userId?: StringFieldUpdateOperationsInput | string
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedUpdateOneWithoutAffiliateNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     commissions?: CommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUncheckedUpdateManyWithoutAffiliateNestedInput
   }
 
   export type AffiliateCreateManyInput = {
     userId: string
-    approved?: boolean
+    status?: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings?: number
     createdAt?: Date | string
   }
 
   export type AffiliateUpdateManyMutationInput = {
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30535,17 +33412,83 @@ export namespace Prisma {
 
   export type AffiliateUncheckedUpdateManyInput = {
     userId?: StringFieldUpdateOperationsInput | string
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AffiliatePayoutAccountCreateInput = {
+    bankName: string
+    accountNumber: string
+    accountName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliate: AffiliateCreateNestedOneWithoutBankAccountInput
+  }
+
+  export type AffiliatePayoutAccountUncheckedCreateInput = {
+    id?: number
+    affiliateId: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AffiliatePayoutAccountUpdateInput = {
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliate?: AffiliateUpdateOneRequiredWithoutBankAccountNestedInput
+  }
+
+  export type AffiliatePayoutAccountUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    affiliateId?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliatePayoutAccountCreateManyInput = {
+    id?: number
+    affiliateId: string
+    bankName: string
+    accountNumber: string
+    accountName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AffiliatePayoutAccountUpdateManyMutationInput = {
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliatePayoutAccountUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    affiliateId?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ReferralCreateInput = {
     id?: string
-    referredUser: string
     referredAt?: Date | string
     affiliate: AffiliateCreateNestedOneWithoutReferralsInput
+    user: UserCreateNestedOneWithoutReferralsInput
   }
 
   export type ReferralUncheckedCreateInput = {
@@ -30557,9 +33500,9 @@ export namespace Prisma {
 
   export type ReferralUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    referredUser?: StringFieldUpdateOperationsInput | string
     referredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     affiliate?: AffiliateUpdateOneRequiredWithoutReferralsNestedInput
+    user?: UserUpdateOneRequiredWithoutReferralsNestedInput
   }
 
   export type ReferralUncheckedUpdateInput = {
@@ -30578,7 +33521,6 @@ export namespace Prisma {
 
   export type ReferralUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    referredUser?: StringFieldUpdateOperationsInput | string
     referredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -30697,6 +33639,7 @@ export namespace Prisma {
     createdAt?: Date | string
     affiliate: AffiliateCreateNestedOneWithoutCommissionsInput
     order: OrderCreateNestedOneWithoutCommissionInput
+    payoutLog?: CommissionPayoutLogCreateNestedOneWithoutCommissionsInput
   }
 
   export type CommissionUncheckedCreateInput = {
@@ -30706,6 +33649,7 @@ export namespace Prisma {
     amount: number
     paid?: boolean
     createdAt?: Date | string
+    payoutLogId?: number | null
   }
 
   export type CommissionUpdateInput = {
@@ -30715,6 +33659,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     affiliate?: AffiliateUpdateOneRequiredWithoutCommissionsNestedInput
     order?: OrderUpdateOneRequiredWithoutCommissionNestedInput
+    payoutLog?: CommissionPayoutLogUpdateOneWithoutCommissionsNestedInput
   }
 
   export type CommissionUncheckedUpdateInput = {
@@ -30724,6 +33669,7 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     paid?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payoutLogId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CommissionCreateManyInput = {
@@ -30733,6 +33679,7 @@ export namespace Prisma {
     amount: number
     paid?: boolean
     createdAt?: Date | string
+    payoutLogId?: number | null
   }
 
   export type CommissionUpdateManyMutationInput = {
@@ -30749,6 +33696,84 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     paid?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payoutLogId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type CommissionPayoutLogCreateInput = {
+    totalAmount: number
+    note?: string | null
+    accountName: string
+    bankName: string
+    accountNumber: string
+    paidAt?: Date | string
+    affiliate: AffiliateCreateNestedOneWithoutPayoutLogsInput
+    commissions?: CommissionCreateNestedManyWithoutPayoutLogInput
+  }
+
+  export type CommissionPayoutLogUncheckedCreateInput = {
+    id?: number
+    affiliateId: string
+    totalAmount: number
+    note?: string | null
+    accountName: string
+    bankName: string
+    accountNumber: string
+    paidAt?: Date | string
+    commissions?: CommissionUncheckedCreateNestedManyWithoutPayoutLogInput
+  }
+
+  export type CommissionPayoutLogUpdateInput = {
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliate?: AffiliateUpdateOneRequiredWithoutPayoutLogsNestedInput
+    commissions?: CommissionUpdateManyWithoutPayoutLogNestedInput
+  }
+
+  export type CommissionPayoutLogUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    affiliateId?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commissions?: CommissionUncheckedUpdateManyWithoutPayoutLogNestedInput
+  }
+
+  export type CommissionPayoutLogCreateManyInput = {
+    id?: number
+    affiliateId: string
+    totalAmount: number
+    note?: string | null
+    accountName: string
+    bankName: string
+    accountNumber: string
+    paidAt?: Date | string
+  }
+
+  export type CommissionPayoutLogUpdateManyMutationInput = {
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommissionPayoutLogUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    affiliateId?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CategoryCreateInput = {
@@ -31895,6 +34920,12 @@ export namespace Prisma {
     none?: CartItemWhereInput
   }
 
+  export type ReferralListRelationFilter = {
+    every?: ReferralWhereInput
+    some?: ReferralWhereInput
+    none?: ReferralWhereInput
+  }
+
   export type UserPermissionListRelationFilter = {
     every?: UserPermissionWhereInput
     some?: UserPermissionWhereInput
@@ -31919,6 +34950,10 @@ export namespace Prisma {
   }
 
   export type CartItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ReferralOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -32187,6 +35222,13 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type EnumAffiliateApprovalStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AffiliateApprovalStatus | EnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AffiliateApprovalStatus[] | ListEnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AffiliateApprovalStatus[] | ListEnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAffiliateApprovalStatusFilter<$PrismaModel> | $Enums.AffiliateApprovalStatus
+  }
+
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -32198,10 +35240,9 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type ReferralListRelationFilter = {
-    every?: ReferralWhereInput
-    some?: ReferralWhereInput
-    none?: ReferralWhereInput
+  export type AffiliatePayoutAccountNullableScalarRelationFilter = {
+    is?: AffiliatePayoutAccountWhereInput | null
+    isNot?: AffiliatePayoutAccountWhereInput | null
   }
 
   export type CommissionListRelationFilter = {
@@ -32210,17 +35251,23 @@ export namespace Prisma {
     none?: CommissionWhereInput
   }
 
-  export type ReferralOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type CommissionPayoutLogListRelationFilter = {
+    every?: CommissionPayoutLogWhereInput
+    some?: CommissionPayoutLogWhereInput
+    none?: CommissionPayoutLogWhereInput
   }
 
   export type CommissionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
+  export type CommissionPayoutLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type AffiliateCountOrderByAggregateInput = {
     userId?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
     referralCode?: SortOrder
     totalEarnings?: SortOrder
     createdAt?: SortOrder
@@ -32232,7 +35279,7 @@ export namespace Prisma {
 
   export type AffiliateMaxOrderByAggregateInput = {
     userId?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
     referralCode?: SortOrder
     totalEarnings?: SortOrder
     createdAt?: SortOrder
@@ -32240,7 +35287,7 @@ export namespace Prisma {
 
   export type AffiliateMinOrderByAggregateInput = {
     userId?: SortOrder
-    approved?: SortOrder
+    status?: SortOrder
     referralCode?: SortOrder
     totalEarnings?: SortOrder
     createdAt?: SortOrder
@@ -32248,6 +35295,16 @@ export namespace Prisma {
 
   export type AffiliateSumOrderByAggregateInput = {
     totalEarnings?: SortOrder
+  }
+
+  export type EnumAffiliateApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AffiliateApprovalStatus | EnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AffiliateApprovalStatus[] | ListEnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AffiliateApprovalStatus[] | ListEnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAffiliateApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.AffiliateApprovalStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAffiliateApprovalStatusFilter<$PrismaModel>
+    _max?: NestedEnumAffiliateApprovalStatusFilter<$PrismaModel>
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -32269,6 +35326,44 @@ export namespace Prisma {
   export type AffiliateScalarRelationFilter = {
     is?: AffiliateWhereInput
     isNot?: AffiliateWhereInput
+  }
+
+  export type AffiliatePayoutAccountCountOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AffiliatePayoutAccountAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type AffiliatePayoutAccountMaxOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AffiliatePayoutAccountMinOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AffiliatePayoutAccountSumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type ReferralCountOrderByAggregateInput = {
@@ -32334,9 +35429,25 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type OrderScalarRelationFilter = {
     is?: OrderWhereInput
     isNot?: OrderWhereInput
+  }
+
+  export type CommissionPayoutLogNullableScalarRelationFilter = {
+    is?: CommissionPayoutLogWhereInput | null
+    isNot?: CommissionPayoutLogWhereInput | null
   }
 
   export type CommissionCountOrderByAggregateInput = {
@@ -32346,10 +35457,12 @@ export namespace Prisma {
     amount?: SortOrder
     paid?: SortOrder
     createdAt?: SortOrder
+    payoutLogId?: SortOrder
   }
 
   export type CommissionAvgOrderByAggregateInput = {
     amount?: SortOrder
+    payoutLogId?: SortOrder
   }
 
   export type CommissionMaxOrderByAggregateInput = {
@@ -32359,6 +35472,7 @@ export namespace Prisma {
     amount?: SortOrder
     paid?: SortOrder
     createdAt?: SortOrder
+    payoutLogId?: SortOrder
   }
 
   export type CommissionMinOrderByAggregateInput = {
@@ -32368,10 +35482,71 @@ export namespace Prisma {
     amount?: SortOrder
     paid?: SortOrder
     createdAt?: SortOrder
+    payoutLogId?: SortOrder
   }
 
   export type CommissionSumOrderByAggregateInput = {
     amount?: SortOrder
+    payoutLogId?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type CommissionPayoutLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    totalAmount?: SortOrder
+    note?: SortOrder
+    accountName?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    paidAt?: SortOrder
+  }
+
+  export type CommissionPayoutLogAvgOrderByAggregateInput = {
+    id?: SortOrder
+    totalAmount?: SortOrder
+  }
+
+  export type CommissionPayoutLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    totalAmount?: SortOrder
+    note?: SortOrder
+    accountName?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    paidAt?: SortOrder
+  }
+
+  export type CommissionPayoutLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    totalAmount?: SortOrder
+    note?: SortOrder
+    accountName?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    paidAt?: SortOrder
+  }
+
+  export type CommissionPayoutLogSumOrderByAggregateInput = {
+    id?: SortOrder
+    totalAmount?: SortOrder
   }
 
   export type ProductListRelationFilter = {
@@ -33276,6 +36451,13 @@ export namespace Prisma {
     connect?: CartItemWhereUniqueInput | CartItemWhereUniqueInput[]
   }
 
+  export type ReferralCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput> | ReferralCreateWithoutUserInput[] | ReferralUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
+    createMany?: ReferralCreateManyUserInputEnvelope
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+  }
+
   export type UserPermissionCreateNestedManyWithoutUserInput = {
     create?: XOR<UserPermissionCreateWithoutUserInput, UserPermissionUncheckedCreateWithoutUserInput> | UserPermissionCreateWithoutUserInput[] | UserPermissionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserPermissionCreateOrConnectWithoutUserInput | UserPermissionCreateOrConnectWithoutUserInput[]
@@ -33315,6 +36497,13 @@ export namespace Prisma {
     connectOrCreate?: CartItemCreateOrConnectWithoutUserInput | CartItemCreateOrConnectWithoutUserInput[]
     createMany?: CartItemCreateManyUserInputEnvelope
     connect?: CartItemWhereUniqueInput | CartItemWhereUniqueInput[]
+  }
+
+  export type ReferralUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput> | ReferralCreateWithoutUserInput[] | ReferralUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
+    createMany?: ReferralCreateManyUserInputEnvelope
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
   }
 
   export type UserPermissionUncheckedCreateNestedManyWithoutUserInput = {
@@ -33414,6 +36603,20 @@ export namespace Prisma {
     deleteMany?: CartItemScalarWhereInput | CartItemScalarWhereInput[]
   }
 
+  export type ReferralUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput> | ReferralCreateWithoutUserInput[] | ReferralUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
+    upsert?: ReferralUpsertWithWhereUniqueWithoutUserInput | ReferralUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReferralCreateManyUserInputEnvelope
+    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    update?: ReferralUpdateWithWhereUniqueWithoutUserInput | ReferralUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReferralUpdateManyWithWhereWithoutUserInput | ReferralUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+  }
+
   export type UserPermissionUpdateManyWithoutUserNestedInput = {
     create?: XOR<UserPermissionCreateWithoutUserInput, UserPermissionUncheckedCreateWithoutUserInput> | UserPermissionCreateWithoutUserInput[] | UserPermissionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserPermissionCreateOrConnectWithoutUserInput | UserPermissionCreateOrConnectWithoutUserInput[]
@@ -33494,6 +36697,20 @@ export namespace Prisma {
     deleteMany?: CartItemScalarWhereInput | CartItemScalarWhereInput[]
   }
 
+  export type ReferralUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput> | ReferralCreateWithoutUserInput[] | ReferralUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
+    upsert?: ReferralUpsertWithWhereUniqueWithoutUserInput | ReferralUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ReferralCreateManyUserInputEnvelope
+    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    update?: ReferralUpdateWithWhereUniqueWithoutUserInput | ReferralUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ReferralUpdateManyWithWhereWithoutUserInput | ReferralUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+  }
+
   export type UserPermissionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<UserPermissionCreateWithoutUserInput, UserPermissionUncheckedCreateWithoutUserInput> | UserPermissionCreateWithoutUserInput[] | UserPermissionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserPermissionCreateOrConnectWithoutUserInput | UserPermissionCreateOrConnectWithoutUserInput[]
@@ -33536,6 +36753,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type AffiliatePayoutAccountCreateNestedOneWithoutAffiliateInput = {
+    create?: XOR<AffiliatePayoutAccountCreateWithoutAffiliateInput, AffiliatePayoutAccountUncheckedCreateWithoutAffiliateInput>
+    connectOrCreate?: AffiliatePayoutAccountCreateOrConnectWithoutAffiliateInput
+    connect?: AffiliatePayoutAccountWhereUniqueInput
+  }
+
   export type ReferralCreateNestedManyWithoutAffiliateInput = {
     create?: XOR<ReferralCreateWithoutAffiliateInput, ReferralUncheckedCreateWithoutAffiliateInput> | ReferralCreateWithoutAffiliateInput[] | ReferralUncheckedCreateWithoutAffiliateInput[]
     connectOrCreate?: ReferralCreateOrConnectWithoutAffiliateInput | ReferralCreateOrConnectWithoutAffiliateInput[]
@@ -33548,6 +36771,19 @@ export namespace Prisma {
     connectOrCreate?: CommissionCreateOrConnectWithoutAffiliateInput | CommissionCreateOrConnectWithoutAffiliateInput[]
     createMany?: CommissionCreateManyAffiliateInputEnvelope
     connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+  }
+
+  export type CommissionPayoutLogCreateNestedManyWithoutAffiliateInput = {
+    create?: XOR<CommissionPayoutLogCreateWithoutAffiliateInput, CommissionPayoutLogUncheckedCreateWithoutAffiliateInput> | CommissionPayoutLogCreateWithoutAffiliateInput[] | CommissionPayoutLogUncheckedCreateWithoutAffiliateInput[]
+    connectOrCreate?: CommissionPayoutLogCreateOrConnectWithoutAffiliateInput | CommissionPayoutLogCreateOrConnectWithoutAffiliateInput[]
+    createMany?: CommissionPayoutLogCreateManyAffiliateInputEnvelope
+    connect?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+  }
+
+  export type AffiliatePayoutAccountUncheckedCreateNestedOneWithoutAffiliateInput = {
+    create?: XOR<AffiliatePayoutAccountCreateWithoutAffiliateInput, AffiliatePayoutAccountUncheckedCreateWithoutAffiliateInput>
+    connectOrCreate?: AffiliatePayoutAccountCreateOrConnectWithoutAffiliateInput
+    connect?: AffiliatePayoutAccountWhereUniqueInput
   }
 
   export type ReferralUncheckedCreateNestedManyWithoutAffiliateInput = {
@@ -33564,6 +36800,17 @@ export namespace Prisma {
     connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
   }
 
+  export type CommissionPayoutLogUncheckedCreateNestedManyWithoutAffiliateInput = {
+    create?: XOR<CommissionPayoutLogCreateWithoutAffiliateInput, CommissionPayoutLogUncheckedCreateWithoutAffiliateInput> | CommissionPayoutLogCreateWithoutAffiliateInput[] | CommissionPayoutLogUncheckedCreateWithoutAffiliateInput[]
+    connectOrCreate?: CommissionPayoutLogCreateOrConnectWithoutAffiliateInput | CommissionPayoutLogCreateOrConnectWithoutAffiliateInput[]
+    createMany?: CommissionPayoutLogCreateManyAffiliateInputEnvelope
+    connect?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+  }
+
+  export type EnumAffiliateApprovalStatusFieldUpdateOperationsInput = {
+    set?: $Enums.AffiliateApprovalStatus
+  }
+
   export type FloatFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -33578,6 +36825,16 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutAffiliateInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAffiliateInput, UserUpdateWithoutAffiliateInput>, UserUncheckedUpdateWithoutAffiliateInput>
+  }
+
+  export type AffiliatePayoutAccountUpdateOneWithoutAffiliateNestedInput = {
+    create?: XOR<AffiliatePayoutAccountCreateWithoutAffiliateInput, AffiliatePayoutAccountUncheckedCreateWithoutAffiliateInput>
+    connectOrCreate?: AffiliatePayoutAccountCreateOrConnectWithoutAffiliateInput
+    upsert?: AffiliatePayoutAccountUpsertWithoutAffiliateInput
+    disconnect?: AffiliatePayoutAccountWhereInput | boolean
+    delete?: AffiliatePayoutAccountWhereInput | boolean
+    connect?: AffiliatePayoutAccountWhereUniqueInput
+    update?: XOR<XOR<AffiliatePayoutAccountUpdateToOneWithWhereWithoutAffiliateInput, AffiliatePayoutAccountUpdateWithoutAffiliateInput>, AffiliatePayoutAccountUncheckedUpdateWithoutAffiliateInput>
   }
 
   export type ReferralUpdateManyWithoutAffiliateNestedInput = {
@@ -33608,6 +36865,30 @@ export namespace Prisma {
     deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
   }
 
+  export type CommissionPayoutLogUpdateManyWithoutAffiliateNestedInput = {
+    create?: XOR<CommissionPayoutLogCreateWithoutAffiliateInput, CommissionPayoutLogUncheckedCreateWithoutAffiliateInput> | CommissionPayoutLogCreateWithoutAffiliateInput[] | CommissionPayoutLogUncheckedCreateWithoutAffiliateInput[]
+    connectOrCreate?: CommissionPayoutLogCreateOrConnectWithoutAffiliateInput | CommissionPayoutLogCreateOrConnectWithoutAffiliateInput[]
+    upsert?: CommissionPayoutLogUpsertWithWhereUniqueWithoutAffiliateInput | CommissionPayoutLogUpsertWithWhereUniqueWithoutAffiliateInput[]
+    createMany?: CommissionPayoutLogCreateManyAffiliateInputEnvelope
+    set?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+    disconnect?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+    delete?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+    connect?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+    update?: CommissionPayoutLogUpdateWithWhereUniqueWithoutAffiliateInput | CommissionPayoutLogUpdateWithWhereUniqueWithoutAffiliateInput[]
+    updateMany?: CommissionPayoutLogUpdateManyWithWhereWithoutAffiliateInput | CommissionPayoutLogUpdateManyWithWhereWithoutAffiliateInput[]
+    deleteMany?: CommissionPayoutLogScalarWhereInput | CommissionPayoutLogScalarWhereInput[]
+  }
+
+  export type AffiliatePayoutAccountUncheckedUpdateOneWithoutAffiliateNestedInput = {
+    create?: XOR<AffiliatePayoutAccountCreateWithoutAffiliateInput, AffiliatePayoutAccountUncheckedCreateWithoutAffiliateInput>
+    connectOrCreate?: AffiliatePayoutAccountCreateOrConnectWithoutAffiliateInput
+    upsert?: AffiliatePayoutAccountUpsertWithoutAffiliateInput
+    disconnect?: AffiliatePayoutAccountWhereInput | boolean
+    delete?: AffiliatePayoutAccountWhereInput | boolean
+    connect?: AffiliatePayoutAccountWhereUniqueInput
+    update?: XOR<XOR<AffiliatePayoutAccountUpdateToOneWithWhereWithoutAffiliateInput, AffiliatePayoutAccountUpdateWithoutAffiliateInput>, AffiliatePayoutAccountUncheckedUpdateWithoutAffiliateInput>
+  }
+
   export type ReferralUncheckedUpdateManyWithoutAffiliateNestedInput = {
     create?: XOR<ReferralCreateWithoutAffiliateInput, ReferralUncheckedCreateWithoutAffiliateInput> | ReferralCreateWithoutAffiliateInput[] | ReferralUncheckedCreateWithoutAffiliateInput[]
     connectOrCreate?: ReferralCreateOrConnectWithoutAffiliateInput | ReferralCreateOrConnectWithoutAffiliateInput[]
@@ -33636,10 +36917,44 @@ export namespace Prisma {
     deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
   }
 
+  export type CommissionPayoutLogUncheckedUpdateManyWithoutAffiliateNestedInput = {
+    create?: XOR<CommissionPayoutLogCreateWithoutAffiliateInput, CommissionPayoutLogUncheckedCreateWithoutAffiliateInput> | CommissionPayoutLogCreateWithoutAffiliateInput[] | CommissionPayoutLogUncheckedCreateWithoutAffiliateInput[]
+    connectOrCreate?: CommissionPayoutLogCreateOrConnectWithoutAffiliateInput | CommissionPayoutLogCreateOrConnectWithoutAffiliateInput[]
+    upsert?: CommissionPayoutLogUpsertWithWhereUniqueWithoutAffiliateInput | CommissionPayoutLogUpsertWithWhereUniqueWithoutAffiliateInput[]
+    createMany?: CommissionPayoutLogCreateManyAffiliateInputEnvelope
+    set?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+    disconnect?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+    delete?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+    connect?: CommissionPayoutLogWhereUniqueInput | CommissionPayoutLogWhereUniqueInput[]
+    update?: CommissionPayoutLogUpdateWithWhereUniqueWithoutAffiliateInput | CommissionPayoutLogUpdateWithWhereUniqueWithoutAffiliateInput[]
+    updateMany?: CommissionPayoutLogUpdateManyWithWhereWithoutAffiliateInput | CommissionPayoutLogUpdateManyWithWhereWithoutAffiliateInput[]
+    deleteMany?: CommissionPayoutLogScalarWhereInput | CommissionPayoutLogScalarWhereInput[]
+  }
+
+  export type AffiliateCreateNestedOneWithoutBankAccountInput = {
+    create?: XOR<AffiliateCreateWithoutBankAccountInput, AffiliateUncheckedCreateWithoutBankAccountInput>
+    connectOrCreate?: AffiliateCreateOrConnectWithoutBankAccountInput
+    connect?: AffiliateWhereUniqueInput
+  }
+
+  export type AffiliateUpdateOneRequiredWithoutBankAccountNestedInput = {
+    create?: XOR<AffiliateCreateWithoutBankAccountInput, AffiliateUncheckedCreateWithoutBankAccountInput>
+    connectOrCreate?: AffiliateCreateOrConnectWithoutBankAccountInput
+    upsert?: AffiliateUpsertWithoutBankAccountInput
+    connect?: AffiliateWhereUniqueInput
+    update?: XOR<XOR<AffiliateUpdateToOneWithWhereWithoutBankAccountInput, AffiliateUpdateWithoutBankAccountInput>, AffiliateUncheckedUpdateWithoutBankAccountInput>
+  }
+
   export type AffiliateCreateNestedOneWithoutReferralsInput = {
     create?: XOR<AffiliateCreateWithoutReferralsInput, AffiliateUncheckedCreateWithoutReferralsInput>
     connectOrCreate?: AffiliateCreateOrConnectWithoutReferralsInput
     connect?: AffiliateWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutReferralsInput = {
+    create?: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type AffiliateUpdateOneRequiredWithoutReferralsNestedInput = {
@@ -33648,6 +36963,14 @@ export namespace Prisma {
     upsert?: AffiliateUpsertWithoutReferralsInput
     connect?: AffiliateWhereUniqueInput
     update?: XOR<XOR<AffiliateUpdateToOneWithWhereWithoutReferralsInput, AffiliateUpdateWithoutReferralsInput>, AffiliateUncheckedUpdateWithoutReferralsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutReferralsNestedInput = {
+    create?: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralsInput
+    upsert?: UserUpsertWithoutReferralsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferralsInput, UserUpdateWithoutReferralsInput>, UserUncheckedUpdateWithoutReferralsInput>
   }
 
   export type UserCreateNestedOneWithoutAddressesInput = {
@@ -33718,6 +37041,12 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput
   }
 
+  export type CommissionPayoutLogCreateNestedOneWithoutCommissionsInput = {
+    create?: XOR<CommissionPayoutLogCreateWithoutCommissionsInput, CommissionPayoutLogUncheckedCreateWithoutCommissionsInput>
+    connectOrCreate?: CommissionPayoutLogCreateOrConnectWithoutCommissionsInput
+    connect?: CommissionPayoutLogWhereUniqueInput
+  }
+
   export type AffiliateUpdateOneRequiredWithoutCommissionsNestedInput = {
     create?: XOR<AffiliateCreateWithoutCommissionsInput, AffiliateUncheckedCreateWithoutCommissionsInput>
     connectOrCreate?: AffiliateCreateOrConnectWithoutCommissionsInput
@@ -33732,6 +37061,80 @@ export namespace Prisma {
     upsert?: OrderUpsertWithoutCommissionInput
     connect?: OrderWhereUniqueInput
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutCommissionInput, OrderUpdateWithoutCommissionInput>, OrderUncheckedUpdateWithoutCommissionInput>
+  }
+
+  export type CommissionPayoutLogUpdateOneWithoutCommissionsNestedInput = {
+    create?: XOR<CommissionPayoutLogCreateWithoutCommissionsInput, CommissionPayoutLogUncheckedCreateWithoutCommissionsInput>
+    connectOrCreate?: CommissionPayoutLogCreateOrConnectWithoutCommissionsInput
+    upsert?: CommissionPayoutLogUpsertWithoutCommissionsInput
+    disconnect?: CommissionPayoutLogWhereInput | boolean
+    delete?: CommissionPayoutLogWhereInput | boolean
+    connect?: CommissionPayoutLogWhereUniqueInput
+    update?: XOR<XOR<CommissionPayoutLogUpdateToOneWithWhereWithoutCommissionsInput, CommissionPayoutLogUpdateWithoutCommissionsInput>, CommissionPayoutLogUncheckedUpdateWithoutCommissionsInput>
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type AffiliateCreateNestedOneWithoutPayoutLogsInput = {
+    create?: XOR<AffiliateCreateWithoutPayoutLogsInput, AffiliateUncheckedCreateWithoutPayoutLogsInput>
+    connectOrCreate?: AffiliateCreateOrConnectWithoutPayoutLogsInput
+    connect?: AffiliateWhereUniqueInput
+  }
+
+  export type CommissionCreateNestedManyWithoutPayoutLogInput = {
+    create?: XOR<CommissionCreateWithoutPayoutLogInput, CommissionUncheckedCreateWithoutPayoutLogInput> | CommissionCreateWithoutPayoutLogInput[] | CommissionUncheckedCreateWithoutPayoutLogInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutPayoutLogInput | CommissionCreateOrConnectWithoutPayoutLogInput[]
+    createMany?: CommissionCreateManyPayoutLogInputEnvelope
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+  }
+
+  export type CommissionUncheckedCreateNestedManyWithoutPayoutLogInput = {
+    create?: XOR<CommissionCreateWithoutPayoutLogInput, CommissionUncheckedCreateWithoutPayoutLogInput> | CommissionCreateWithoutPayoutLogInput[] | CommissionUncheckedCreateWithoutPayoutLogInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutPayoutLogInput | CommissionCreateOrConnectWithoutPayoutLogInput[]
+    createMany?: CommissionCreateManyPayoutLogInputEnvelope
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+  }
+
+  export type AffiliateUpdateOneRequiredWithoutPayoutLogsNestedInput = {
+    create?: XOR<AffiliateCreateWithoutPayoutLogsInput, AffiliateUncheckedCreateWithoutPayoutLogsInput>
+    connectOrCreate?: AffiliateCreateOrConnectWithoutPayoutLogsInput
+    upsert?: AffiliateUpsertWithoutPayoutLogsInput
+    connect?: AffiliateWhereUniqueInput
+    update?: XOR<XOR<AffiliateUpdateToOneWithWhereWithoutPayoutLogsInput, AffiliateUpdateWithoutPayoutLogsInput>, AffiliateUncheckedUpdateWithoutPayoutLogsInput>
+  }
+
+  export type CommissionUpdateManyWithoutPayoutLogNestedInput = {
+    create?: XOR<CommissionCreateWithoutPayoutLogInput, CommissionUncheckedCreateWithoutPayoutLogInput> | CommissionCreateWithoutPayoutLogInput[] | CommissionUncheckedCreateWithoutPayoutLogInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutPayoutLogInput | CommissionCreateOrConnectWithoutPayoutLogInput[]
+    upsert?: CommissionUpsertWithWhereUniqueWithoutPayoutLogInput | CommissionUpsertWithWhereUniqueWithoutPayoutLogInput[]
+    createMany?: CommissionCreateManyPayoutLogInputEnvelope
+    set?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    disconnect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    delete?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    update?: CommissionUpdateWithWhereUniqueWithoutPayoutLogInput | CommissionUpdateWithWhereUniqueWithoutPayoutLogInput[]
+    updateMany?: CommissionUpdateManyWithWhereWithoutPayoutLogInput | CommissionUpdateManyWithWhereWithoutPayoutLogInput[]
+    deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
+  }
+
+  export type CommissionUncheckedUpdateManyWithoutPayoutLogNestedInput = {
+    create?: XOR<CommissionCreateWithoutPayoutLogInput, CommissionUncheckedCreateWithoutPayoutLogInput> | CommissionCreateWithoutPayoutLogInput[] | CommissionUncheckedCreateWithoutPayoutLogInput[]
+    connectOrCreate?: CommissionCreateOrConnectWithoutPayoutLogInput | CommissionCreateOrConnectWithoutPayoutLogInput[]
+    upsert?: CommissionUpsertWithWhereUniqueWithoutPayoutLogInput | CommissionUpsertWithWhereUniqueWithoutPayoutLogInput[]
+    createMany?: CommissionCreateManyPayoutLogInputEnvelope
+    set?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    disconnect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    delete?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    connect?: CommissionWhereUniqueInput | CommissionWhereUniqueInput[]
+    update?: CommissionUpdateWithWhereUniqueWithoutPayoutLogInput | CommissionUpdateWithWhereUniqueWithoutPayoutLogInput[]
+    updateMany?: CommissionUpdateManyWithWhereWithoutPayoutLogInput | CommissionUpdateManyWithWhereWithoutPayoutLogInput[]
+    deleteMany?: CommissionScalarWhereInput | CommissionScalarWhereInput[]
   }
 
   export type ProductCreateNestedManyWithoutCategoryInput = {
@@ -34708,6 +38111,23 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumAffiliateApprovalStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AffiliateApprovalStatus | EnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AffiliateApprovalStatus[] | ListEnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AffiliateApprovalStatus[] | ListEnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAffiliateApprovalStatusFilter<$PrismaModel> | $Enums.AffiliateApprovalStatus
+  }
+
+  export type NestedEnumAffiliateApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AffiliateApprovalStatus | EnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AffiliateApprovalStatus[] | ListEnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AffiliateApprovalStatus[] | ListEnumAffiliateApprovalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAffiliateApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.AffiliateApprovalStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAffiliateApprovalStatusFilter<$PrismaModel>
+    _max?: NestedEnumAffiliateApprovalStatusFilter<$PrismaModel>
+  }
+
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -34722,6 +38142,22 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
@@ -34935,21 +38371,25 @@ export namespace Prisma {
   }
 
   export type AffiliateCreateWithoutUserInput = {
-    approved?: boolean
+    status?: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings?: number
     createdAt?: Date | string
+    bankAccount?: AffiliatePayoutAccountCreateNestedOneWithoutAffiliateInput
     referrals?: ReferralCreateNestedManyWithoutAffiliateInput
     commissions?: CommissionCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogCreateNestedManyWithoutAffiliateInput
   }
 
   export type AffiliateUncheckedCreateWithoutUserInput = {
-    approved?: boolean
+    status?: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings?: number
     createdAt?: Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedCreateNestedOneWithoutAffiliateInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     commissions?: CommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogUncheckedCreateNestedManyWithoutAffiliateInput
   }
 
   export type AffiliateCreateOrConnectWithoutUserInput = {
@@ -35015,6 +38455,28 @@ export namespace Prisma {
 
   export type CartItemCreateManyUserInputEnvelope = {
     data: CartItemCreateManyUserInput | CartItemCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReferralCreateWithoutUserInput = {
+    id?: string
+    referredAt?: Date | string
+    affiliate: AffiliateCreateNestedOneWithoutReferralsInput
+  }
+
+  export type ReferralUncheckedCreateWithoutUserInput = {
+    id?: string
+    affiliateId: string
+    referredAt?: Date | string
+  }
+
+  export type ReferralCreateOrConnectWithoutUserInput = {
+    where: ReferralWhereUniqueInput
+    create: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReferralCreateManyUserInputEnvelope = {
+    data: ReferralCreateManyUserInput | ReferralCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -35124,21 +38586,25 @@ export namespace Prisma {
   }
 
   export type AffiliateUpdateWithoutUserInput = {
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bankAccount?: AffiliatePayoutAccountUpdateOneWithoutAffiliateNestedInput
     referrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     commissions?: CommissionUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUpdateManyWithoutAffiliateNestedInput
   }
 
   export type AffiliateUncheckedUpdateWithoutUserInput = {
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedUpdateOneWithoutAffiliateNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     commissions?: CommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUncheckedUpdateManyWithoutAffiliateNestedInput
   }
 
   export type PosSessionUpsertWithWhereUniqueWithoutStaffInput = {
@@ -35200,6 +38666,32 @@ export namespace Prisma {
     addedAt?: DateTimeFilter<"CartItem"> | Date | string
   }
 
+  export type ReferralUpsertWithWhereUniqueWithoutUserInput = {
+    where: ReferralWhereUniqueInput
+    update: XOR<ReferralUpdateWithoutUserInput, ReferralUncheckedUpdateWithoutUserInput>
+    create: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReferralUpdateWithWhereUniqueWithoutUserInput = {
+    where: ReferralWhereUniqueInput
+    data: XOR<ReferralUpdateWithoutUserInput, ReferralUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ReferralUpdateManyWithWhereWithoutUserInput = {
+    where: ReferralScalarWhereInput
+    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ReferralScalarWhereInput = {
+    AND?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+    OR?: ReferralScalarWhereInput[]
+    NOT?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+    id?: StringFilter<"Referral"> | string
+    affiliateId?: StringFilter<"Referral"> | string
+    referredUser?: StringFilter<"Referral"> | string
+    referredAt?: DateTimeFilter<"Referral"> | Date | string
+  }
+
   export type UserPermissionUpsertWithWhereUniqueWithoutUserInput = {
     where: UserPermissionWhereUniqueInput
     update: XOR<UserPermissionUpdateWithoutUserInput, UserPermissionUncheckedUpdateWithoutUserInput>
@@ -35243,6 +38735,7 @@ export namespace Prisma {
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     posSessions?: PosSessionCreateNestedManyWithoutStaffInput
     cartItems?: CartItemCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPermissionsInput = {
@@ -35261,6 +38754,7 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     posSessions?: PosSessionUncheckedCreateNestedManyWithoutStaffInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPermissionsInput = {
@@ -35295,6 +38789,7 @@ export namespace Prisma {
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPermissionsInput = {
@@ -35313,6 +38808,7 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUncheckedUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateInput = {
@@ -35330,6 +38826,7 @@ export namespace Prisma {
     addresses?: AddressCreateNestedManyWithoutUserInput
     posSessions?: PosSessionCreateNestedManyWithoutStaffInput
     cartItems?: CartItemCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutUserInput
     permissions?: UserPermissionCreateNestedManyWithoutUserInput
   }
 
@@ -35348,6 +38845,7 @@ export namespace Prisma {
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
     posSessions?: PosSessionUncheckedCreateNestedManyWithoutStaffInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     permissions?: UserPermissionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -35356,10 +38854,32 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutAffiliateInput, UserUncheckedCreateWithoutAffiliateInput>
   }
 
+  export type AffiliatePayoutAccountCreateWithoutAffiliateInput = {
+    bankName: string
+    accountNumber: string
+    accountName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AffiliatePayoutAccountUncheckedCreateWithoutAffiliateInput = {
+    id?: number
+    bankName: string
+    accountNumber: string
+    accountName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AffiliatePayoutAccountCreateOrConnectWithoutAffiliateInput = {
+    where: AffiliatePayoutAccountWhereUniqueInput
+    create: XOR<AffiliatePayoutAccountCreateWithoutAffiliateInput, AffiliatePayoutAccountUncheckedCreateWithoutAffiliateInput>
+  }
+
   export type ReferralCreateWithoutAffiliateInput = {
     id?: string
-    referredUser: string
     referredAt?: Date | string
+    user: UserCreateNestedOneWithoutReferralsInput
   }
 
   export type ReferralUncheckedCreateWithoutAffiliateInput = {
@@ -35384,6 +38904,7 @@ export namespace Prisma {
     paid?: boolean
     createdAt?: Date | string
     order: OrderCreateNestedOneWithoutCommissionInput
+    payoutLog?: CommissionPayoutLogCreateNestedOneWithoutCommissionsInput
   }
 
   export type CommissionUncheckedCreateWithoutAffiliateInput = {
@@ -35392,6 +38913,7 @@ export namespace Prisma {
     amount: number
     paid?: boolean
     createdAt?: Date | string
+    payoutLogId?: number | null
   }
 
   export type CommissionCreateOrConnectWithoutAffiliateInput = {
@@ -35401,6 +38923,37 @@ export namespace Prisma {
 
   export type CommissionCreateManyAffiliateInputEnvelope = {
     data: CommissionCreateManyAffiliateInput | CommissionCreateManyAffiliateInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CommissionPayoutLogCreateWithoutAffiliateInput = {
+    totalAmount: number
+    note?: string | null
+    accountName: string
+    bankName: string
+    accountNumber: string
+    paidAt?: Date | string
+    commissions?: CommissionCreateNestedManyWithoutPayoutLogInput
+  }
+
+  export type CommissionPayoutLogUncheckedCreateWithoutAffiliateInput = {
+    id?: number
+    totalAmount: number
+    note?: string | null
+    accountName: string
+    bankName: string
+    accountNumber: string
+    paidAt?: Date | string
+    commissions?: CommissionUncheckedCreateNestedManyWithoutPayoutLogInput
+  }
+
+  export type CommissionPayoutLogCreateOrConnectWithoutAffiliateInput = {
+    where: CommissionPayoutLogWhereUniqueInput
+    create: XOR<CommissionPayoutLogCreateWithoutAffiliateInput, CommissionPayoutLogUncheckedCreateWithoutAffiliateInput>
+  }
+
+  export type CommissionPayoutLogCreateManyAffiliateInputEnvelope = {
+    data: CommissionPayoutLogCreateManyAffiliateInput | CommissionPayoutLogCreateManyAffiliateInput[]
     skipDuplicates?: boolean
   }
 
@@ -35430,6 +38983,7 @@ export namespace Prisma {
     addresses?: AddressUpdateManyWithoutUserNestedInput
     posSessions?: PosSessionUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUpdateManyWithoutUserNestedInput
   }
 
@@ -35448,7 +39002,36 @@ export namespace Prisma {
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
     posSessions?: PosSessionUncheckedUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type AffiliatePayoutAccountUpsertWithoutAffiliateInput = {
+    update: XOR<AffiliatePayoutAccountUpdateWithoutAffiliateInput, AffiliatePayoutAccountUncheckedUpdateWithoutAffiliateInput>
+    create: XOR<AffiliatePayoutAccountCreateWithoutAffiliateInput, AffiliatePayoutAccountUncheckedCreateWithoutAffiliateInput>
+    where?: AffiliatePayoutAccountWhereInput
+  }
+
+  export type AffiliatePayoutAccountUpdateToOneWithWhereWithoutAffiliateInput = {
+    where?: AffiliatePayoutAccountWhereInput
+    data: XOR<AffiliatePayoutAccountUpdateWithoutAffiliateInput, AffiliatePayoutAccountUncheckedUpdateWithoutAffiliateInput>
+  }
+
+  export type AffiliatePayoutAccountUpdateWithoutAffiliateInput = {
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliatePayoutAccountUncheckedUpdateWithoutAffiliateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReferralUpsertWithWhereUniqueWithoutAffiliateInput = {
@@ -35465,16 +39048,6 @@ export namespace Prisma {
   export type ReferralUpdateManyWithWhereWithoutAffiliateInput = {
     where: ReferralScalarWhereInput
     data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyWithoutAffiliateInput>
-  }
-
-  export type ReferralScalarWhereInput = {
-    AND?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
-    OR?: ReferralScalarWhereInput[]
-    NOT?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
-    id?: StringFilter<"Referral"> | string
-    affiliateId?: StringFilter<"Referral"> | string
-    referredUser?: StringFilter<"Referral"> | string
-    referredAt?: DateTimeFilter<"Referral"> | Date | string
   }
 
   export type CommissionUpsertWithWhereUniqueWithoutAffiliateInput = {
@@ -35503,29 +39076,167 @@ export namespace Prisma {
     amount?: FloatFilter<"Commission"> | number
     paid?: BoolFilter<"Commission"> | boolean
     createdAt?: DateTimeFilter<"Commission"> | Date | string
+    payoutLogId?: IntNullableFilter<"Commission"> | number | null
   }
 
-  export type AffiliateCreateWithoutReferralsInput = {
-    approved?: boolean
+  export type CommissionPayoutLogUpsertWithWhereUniqueWithoutAffiliateInput = {
+    where: CommissionPayoutLogWhereUniqueInput
+    update: XOR<CommissionPayoutLogUpdateWithoutAffiliateInput, CommissionPayoutLogUncheckedUpdateWithoutAffiliateInput>
+    create: XOR<CommissionPayoutLogCreateWithoutAffiliateInput, CommissionPayoutLogUncheckedCreateWithoutAffiliateInput>
+  }
+
+  export type CommissionPayoutLogUpdateWithWhereUniqueWithoutAffiliateInput = {
+    where: CommissionPayoutLogWhereUniqueInput
+    data: XOR<CommissionPayoutLogUpdateWithoutAffiliateInput, CommissionPayoutLogUncheckedUpdateWithoutAffiliateInput>
+  }
+
+  export type CommissionPayoutLogUpdateManyWithWhereWithoutAffiliateInput = {
+    where: CommissionPayoutLogScalarWhereInput
+    data: XOR<CommissionPayoutLogUpdateManyMutationInput, CommissionPayoutLogUncheckedUpdateManyWithoutAffiliateInput>
+  }
+
+  export type CommissionPayoutLogScalarWhereInput = {
+    AND?: CommissionPayoutLogScalarWhereInput | CommissionPayoutLogScalarWhereInput[]
+    OR?: CommissionPayoutLogScalarWhereInput[]
+    NOT?: CommissionPayoutLogScalarWhereInput | CommissionPayoutLogScalarWhereInput[]
+    id?: IntFilter<"CommissionPayoutLog"> | number
+    affiliateId?: StringFilter<"CommissionPayoutLog"> | string
+    totalAmount?: FloatFilter<"CommissionPayoutLog"> | number
+    note?: StringNullableFilter<"CommissionPayoutLog"> | string | null
+    accountName?: StringFilter<"CommissionPayoutLog"> | string
+    bankName?: StringFilter<"CommissionPayoutLog"> | string
+    accountNumber?: StringFilter<"CommissionPayoutLog"> | string
+    paidAt?: DateTimeFilter<"CommissionPayoutLog"> | Date | string
+  }
+
+  export type AffiliateCreateWithoutBankAccountInput = {
+    status?: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutAffiliateInput
+    referrals?: ReferralCreateNestedManyWithoutAffiliateInput
     commissions?: CommissionCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogCreateNestedManyWithoutAffiliateInput
+  }
+
+  export type AffiliateUncheckedCreateWithoutBankAccountInput = {
+    userId: string
+    status?: $Enums.AffiliateApprovalStatus
+    referralCode: string
+    totalEarnings?: number
+    createdAt?: Date | string
+    referrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogUncheckedCreateNestedManyWithoutAffiliateInput
+  }
+
+  export type AffiliateCreateOrConnectWithoutBankAccountInput = {
+    where: AffiliateWhereUniqueInput
+    create: XOR<AffiliateCreateWithoutBankAccountInput, AffiliateUncheckedCreateWithoutBankAccountInput>
+  }
+
+  export type AffiliateUpsertWithoutBankAccountInput = {
+    update: XOR<AffiliateUpdateWithoutBankAccountInput, AffiliateUncheckedUpdateWithoutBankAccountInput>
+    create: XOR<AffiliateCreateWithoutBankAccountInput, AffiliateUncheckedCreateWithoutBankAccountInput>
+    where?: AffiliateWhereInput
+  }
+
+  export type AffiliateUpdateToOneWithWhereWithoutBankAccountInput = {
+    where?: AffiliateWhereInput
+    data: XOR<AffiliateUpdateWithoutBankAccountInput, AffiliateUncheckedUpdateWithoutBankAccountInput>
+  }
+
+  export type AffiliateUpdateWithoutBankAccountInput = {
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAffiliateNestedInput
+    referrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    commissions?: CommissionUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUpdateManyWithoutAffiliateNestedInput
+  }
+
+  export type AffiliateUncheckedUpdateWithoutBankAccountInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUncheckedUpdateManyWithoutAffiliateNestedInput
+  }
+
+  export type AffiliateCreateWithoutReferralsInput = {
+    status?: $Enums.AffiliateApprovalStatus
+    referralCode: string
+    totalEarnings?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutAffiliateInput
+    bankAccount?: AffiliatePayoutAccountCreateNestedOneWithoutAffiliateInput
+    commissions?: CommissionCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogCreateNestedManyWithoutAffiliateInput
   }
 
   export type AffiliateUncheckedCreateWithoutReferralsInput = {
     userId: string
-    approved?: boolean
+    status?: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings?: number
     createdAt?: Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedCreateNestedOneWithoutAffiliateInput
     commissions?: CommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogUncheckedCreateNestedManyWithoutAffiliateInput
   }
 
   export type AffiliateCreateOrConnectWithoutReferralsInput = {
     where: AffiliateWhereUniqueInput
     create: XOR<AffiliateCreateWithoutReferralsInput, AffiliateUncheckedCreateWithoutReferralsInput>
+  }
+
+  export type UserCreateWithoutReferralsInput = {
+    id?: string
+    email: string
+    emailVerified?: boolean | null
+    passwordHash: string
+    name?: string | null
+    phone?: string | null
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isActive?: boolean
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    addresses?: AddressCreateNestedManyWithoutUserInput
+    affiliate?: AffiliateCreateNestedOneWithoutUserInput
+    posSessions?: PosSessionCreateNestedManyWithoutStaffInput
+    cartItems?: CartItemCreateNestedManyWithoutUserInput
+    permissions?: UserPermissionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReferralsInput = {
+    id?: string
+    email: string
+    emailVerified?: boolean | null
+    passwordHash: string
+    name?: string | null
+    phone?: string | null
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isActive?: boolean
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
+    posSessions?: PosSessionUncheckedCreateNestedManyWithoutStaffInput
+    cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
+    permissions?: UserPermissionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutReferralsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
   }
 
   export type AffiliateUpsertWithoutReferralsInput = {
@@ -35540,21 +39251,74 @@ export namespace Prisma {
   }
 
   export type AffiliateUpdateWithoutReferralsInput = {
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutAffiliateNestedInput
+    bankAccount?: AffiliatePayoutAccountUpdateOneWithoutAffiliateNestedInput
     commissions?: CommissionUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUpdateManyWithoutAffiliateNestedInput
   }
 
   export type AffiliateUncheckedUpdateWithoutReferralsInput = {
     userId?: StringFieldUpdateOperationsInput | string
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedUpdateOneWithoutAffiliateNestedInput
     commissions?: CommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUncheckedUpdateManyWithoutAffiliateNestedInput
+  }
+
+  export type UserUpsertWithoutReferralsInput = {
+    update: XOR<UserUpdateWithoutReferralsInput, UserUncheckedUpdateWithoutReferralsInput>
+    create: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReferralsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReferralsInput, UserUncheckedUpdateWithoutReferralsInput>
+  }
+
+  export type UserUpdateWithoutReferralsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    addresses?: AddressUpdateManyWithoutUserNestedInput
+    affiliate?: AffiliateUpdateOneWithoutUserNestedInput
+    posSessions?: PosSessionUpdateManyWithoutStaffNestedInput
+    cartItems?: CartItemUpdateManyWithoutUserNestedInput
+    permissions?: UserPermissionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferralsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
+    posSessions?: PosSessionUncheckedUpdateManyWithoutStaffNestedInput
+    cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
+    permissions?: UserPermissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAddressesInput = {
@@ -35572,6 +39336,7 @@ export namespace Prisma {
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     posSessions?: PosSessionCreateNestedManyWithoutStaffInput
     cartItems?: CartItemCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutUserInput
     permissions?: UserPermissionCreateNestedManyWithoutUserInput
   }
 
@@ -35590,6 +39355,7 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     posSessions?: PosSessionUncheckedCreateNestedManyWithoutStaffInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     permissions?: UserPermissionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -35676,6 +39442,7 @@ export namespace Prisma {
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUpdateManyWithoutUserNestedInput
   }
 
@@ -35694,6 +39461,7 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUncheckedUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -35714,21 +39482,25 @@ export namespace Prisma {
   }
 
   export type AffiliateCreateWithoutCommissionsInput = {
-    approved?: boolean
+    status?: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutAffiliateInput
+    bankAccount?: AffiliatePayoutAccountCreateNestedOneWithoutAffiliateInput
     referrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogCreateNestedManyWithoutAffiliateInput
   }
 
   export type AffiliateUncheckedCreateWithoutCommissionsInput = {
     userId: string
-    approved?: boolean
+    status?: $Enums.AffiliateApprovalStatus
     referralCode: string
     totalEarnings?: number
     createdAt?: Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedCreateNestedOneWithoutAffiliateInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    payoutLogs?: CommissionPayoutLogUncheckedCreateNestedManyWithoutAffiliateInput
   }
 
   export type AffiliateCreateOrConnectWithoutCommissionsInput = {
@@ -35783,6 +39555,32 @@ export namespace Prisma {
     create: XOR<OrderCreateWithoutCommissionInput, OrderUncheckedCreateWithoutCommissionInput>
   }
 
+  export type CommissionPayoutLogCreateWithoutCommissionsInput = {
+    totalAmount: number
+    note?: string | null
+    accountName: string
+    bankName: string
+    accountNumber: string
+    paidAt?: Date | string
+    affiliate: AffiliateCreateNestedOneWithoutPayoutLogsInput
+  }
+
+  export type CommissionPayoutLogUncheckedCreateWithoutCommissionsInput = {
+    id?: number
+    affiliateId: string
+    totalAmount: number
+    note?: string | null
+    accountName: string
+    bankName: string
+    accountNumber: string
+    paidAt?: Date | string
+  }
+
+  export type CommissionPayoutLogCreateOrConnectWithoutCommissionsInput = {
+    where: CommissionPayoutLogWhereUniqueInput
+    create: XOR<CommissionPayoutLogCreateWithoutCommissionsInput, CommissionPayoutLogUncheckedCreateWithoutCommissionsInput>
+  }
+
   export type AffiliateUpsertWithoutCommissionsInput = {
     update: XOR<AffiliateUpdateWithoutCommissionsInput, AffiliateUncheckedUpdateWithoutCommissionsInput>
     create: XOR<AffiliateCreateWithoutCommissionsInput, AffiliateUncheckedCreateWithoutCommissionsInput>
@@ -35795,21 +39593,25 @@ export namespace Prisma {
   }
 
   export type AffiliateUpdateWithoutCommissionsInput = {
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutAffiliateNestedInput
+    bankAccount?: AffiliatePayoutAccountUpdateOneWithoutAffiliateNestedInput
     referrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUpdateManyWithoutAffiliateNestedInput
   }
 
   export type AffiliateUncheckedUpdateWithoutCommissionsInput = {
     userId?: StringFieldUpdateOperationsInput | string
-    approved?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
     referralCode?: StringFieldUpdateOperationsInput | string
     totalEarnings?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedUpdateOneWithoutAffiliateNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    payoutLogs?: CommissionPayoutLogUncheckedUpdateManyWithoutAffiliateNestedInput
   }
 
   export type OrderUpsertWithoutCommissionInput = {
@@ -35863,6 +39665,142 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
     payment?: PaymentUncheckedUpdateOneWithoutOrderNestedInput
+  }
+
+  export type CommissionPayoutLogUpsertWithoutCommissionsInput = {
+    update: XOR<CommissionPayoutLogUpdateWithoutCommissionsInput, CommissionPayoutLogUncheckedUpdateWithoutCommissionsInput>
+    create: XOR<CommissionPayoutLogCreateWithoutCommissionsInput, CommissionPayoutLogUncheckedCreateWithoutCommissionsInput>
+    where?: CommissionPayoutLogWhereInput
+  }
+
+  export type CommissionPayoutLogUpdateToOneWithWhereWithoutCommissionsInput = {
+    where?: CommissionPayoutLogWhereInput
+    data: XOR<CommissionPayoutLogUpdateWithoutCommissionsInput, CommissionPayoutLogUncheckedUpdateWithoutCommissionsInput>
+  }
+
+  export type CommissionPayoutLogUpdateWithoutCommissionsInput = {
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliate?: AffiliateUpdateOneRequiredWithoutPayoutLogsNestedInput
+  }
+
+  export type CommissionPayoutLogUncheckedUpdateWithoutCommissionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    affiliateId?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AffiliateCreateWithoutPayoutLogsInput = {
+    status?: $Enums.AffiliateApprovalStatus
+    referralCode: string
+    totalEarnings?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutAffiliateInput
+    bankAccount?: AffiliatePayoutAccountCreateNestedOneWithoutAffiliateInput
+    referrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    commissions?: CommissionCreateNestedManyWithoutAffiliateInput
+  }
+
+  export type AffiliateUncheckedCreateWithoutPayoutLogsInput = {
+    userId: string
+    status?: $Enums.AffiliateApprovalStatus
+    referralCode: string
+    totalEarnings?: number
+    createdAt?: Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedCreateNestedOneWithoutAffiliateInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    commissions?: CommissionUncheckedCreateNestedManyWithoutAffiliateInput
+  }
+
+  export type AffiliateCreateOrConnectWithoutPayoutLogsInput = {
+    where: AffiliateWhereUniqueInput
+    create: XOR<AffiliateCreateWithoutPayoutLogsInput, AffiliateUncheckedCreateWithoutPayoutLogsInput>
+  }
+
+  export type CommissionCreateWithoutPayoutLogInput = {
+    id?: string
+    amount: number
+    paid?: boolean
+    createdAt?: Date | string
+    affiliate: AffiliateCreateNestedOneWithoutCommissionsInput
+    order: OrderCreateNestedOneWithoutCommissionInput
+  }
+
+  export type CommissionUncheckedCreateWithoutPayoutLogInput = {
+    id?: string
+    affiliateId: string
+    orderId: string
+    amount: number
+    paid?: boolean
+    createdAt?: Date | string
+  }
+
+  export type CommissionCreateOrConnectWithoutPayoutLogInput = {
+    where: CommissionWhereUniqueInput
+    create: XOR<CommissionCreateWithoutPayoutLogInput, CommissionUncheckedCreateWithoutPayoutLogInput>
+  }
+
+  export type CommissionCreateManyPayoutLogInputEnvelope = {
+    data: CommissionCreateManyPayoutLogInput | CommissionCreateManyPayoutLogInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AffiliateUpsertWithoutPayoutLogsInput = {
+    update: XOR<AffiliateUpdateWithoutPayoutLogsInput, AffiliateUncheckedUpdateWithoutPayoutLogsInput>
+    create: XOR<AffiliateCreateWithoutPayoutLogsInput, AffiliateUncheckedCreateWithoutPayoutLogsInput>
+    where?: AffiliateWhereInput
+  }
+
+  export type AffiliateUpdateToOneWithWhereWithoutPayoutLogsInput = {
+    where?: AffiliateWhereInput
+    data: XOR<AffiliateUpdateWithoutPayoutLogsInput, AffiliateUncheckedUpdateWithoutPayoutLogsInput>
+  }
+
+  export type AffiliateUpdateWithoutPayoutLogsInput = {
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAffiliateNestedInput
+    bankAccount?: AffiliatePayoutAccountUpdateOneWithoutAffiliateNestedInput
+    referrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    commissions?: CommissionUpdateManyWithoutAffiliateNestedInput
+  }
+
+  export type AffiliateUncheckedUpdateWithoutPayoutLogsInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: EnumAffiliateApprovalStatusFieldUpdateOperationsInput | $Enums.AffiliateApprovalStatus
+    referralCode?: StringFieldUpdateOperationsInput | string
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bankAccount?: AffiliatePayoutAccountUncheckedUpdateOneWithoutAffiliateNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    commissions?: CommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+  }
+
+  export type CommissionUpsertWithWhereUniqueWithoutPayoutLogInput = {
+    where: CommissionWhereUniqueInput
+    update: XOR<CommissionUpdateWithoutPayoutLogInput, CommissionUncheckedUpdateWithoutPayoutLogInput>
+    create: XOR<CommissionCreateWithoutPayoutLogInput, CommissionUncheckedCreateWithoutPayoutLogInput>
+  }
+
+  export type CommissionUpdateWithWhereUniqueWithoutPayoutLogInput = {
+    where: CommissionWhereUniqueInput
+    data: XOR<CommissionUpdateWithoutPayoutLogInput, CommissionUncheckedUpdateWithoutPayoutLogInput>
+  }
+
+  export type CommissionUpdateManyWithWhereWithoutPayoutLogInput = {
+    where: CommissionScalarWhereInput
+    data: XOR<CommissionUpdateManyMutationInput, CommissionUncheckedUpdateManyWithoutPayoutLogInput>
   }
 
   export type ProductCreateWithoutCategoryInput = {
@@ -36496,6 +40434,7 @@ export namespace Prisma {
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     posSessions?: PosSessionCreateNestedManyWithoutStaffInput
     cartItems?: CartItemCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutUserInput
     permissions?: UserPermissionCreateNestedManyWithoutUserInput
   }
 
@@ -36514,6 +40453,7 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     posSessions?: PosSessionUncheckedCreateNestedManyWithoutStaffInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     permissions?: UserPermissionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -36642,6 +40582,7 @@ export namespace Prisma {
     paid?: boolean
     createdAt?: Date | string
     affiliate: AffiliateCreateNestedOneWithoutCommissionsInput
+    payoutLog?: CommissionPayoutLogCreateNestedOneWithoutCommissionsInput
   }
 
   export type CommissionUncheckedCreateWithoutOrderInput = {
@@ -36650,6 +40591,7 @@ export namespace Prisma {
     amount: number
     paid?: boolean
     createdAt?: Date | string
+    payoutLogId?: number | null
   }
 
   export type CommissionCreateOrConnectWithoutOrderInput = {
@@ -36683,6 +40625,7 @@ export namespace Prisma {
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUpdateManyWithoutUserNestedInput
   }
 
@@ -36701,6 +40644,7 @@ export namespace Prisma {
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUncheckedUpdateManyWithoutStaffNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -36846,6 +40790,7 @@ export namespace Prisma {
     paid?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     affiliate?: AffiliateUpdateOneRequiredWithoutCommissionsNestedInput
+    payoutLog?: CommissionPayoutLogUpdateOneWithoutCommissionsNestedInput
   }
 
   export type CommissionUncheckedUpdateWithoutOrderInput = {
@@ -36854,6 +40799,7 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     paid?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payoutLogId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type OrderCreateWithoutItemsInput = {
@@ -37157,6 +41103,7 @@ export namespace Prisma {
     addresses?: AddressCreateNestedManyWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     cartItems?: CartItemCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutUserInput
     permissions?: UserPermissionCreateNestedManyWithoutUserInput
   }
 
@@ -37175,6 +41122,7 @@ export namespace Prisma {
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     permissions?: UserPermissionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -37284,6 +41232,7 @@ export namespace Prisma {
     addresses?: AddressUpdateManyWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     cartItems?: CartItemUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUpdateManyWithoutUserNestedInput
   }
 
@@ -37302,6 +41251,7 @@ export namespace Prisma {
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -37510,6 +41460,7 @@ export namespace Prisma {
     addresses?: AddressCreateNestedManyWithoutUserInput
     affiliate?: AffiliateCreateNestedOneWithoutUserInput
     posSessions?: PosSessionCreateNestedManyWithoutStaffInput
+    referrals?: ReferralCreateNestedManyWithoutUserInput
     permissions?: UserPermissionCreateNestedManyWithoutUserInput
   }
 
@@ -37528,6 +41479,7 @@ export namespace Prisma {
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
     affiliate?: AffiliateUncheckedCreateNestedOneWithoutUserInput
     posSessions?: PosSessionUncheckedCreateNestedManyWithoutStaffInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     permissions?: UserPermissionUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -37602,6 +41554,7 @@ export namespace Prisma {
     addresses?: AddressUpdateManyWithoutUserNestedInput
     affiliate?: AffiliateUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUpdateManyWithoutStaffNestedInput
+    referrals?: ReferralUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUpdateManyWithoutUserNestedInput
   }
 
@@ -37620,6 +41573,7 @@ export namespace Prisma {
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
     affiliate?: AffiliateUncheckedUpdateOneWithoutUserNestedInput
     posSessions?: PosSessionUncheckedUpdateManyWithoutStaffNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     permissions?: UserPermissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -37834,6 +41788,12 @@ export namespace Prisma {
     addedAt?: Date | string
   }
 
+  export type ReferralCreateManyUserInput = {
+    id?: string
+    affiliateId: string
+    referredAt?: Date | string
+  }
+
   export type UserPermissionCreateManyUserInput = {
     id?: number
     module: string
@@ -38002,6 +41962,24 @@ export namespace Prisma {
     addedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ReferralUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliate?: AffiliateUpdateOneRequiredWithoutReferralsNestedInput
+  }
+
+  export type ReferralUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    affiliateId?: StringFieldUpdateOperationsInput | string
+    referredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReferralUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    affiliateId?: StringFieldUpdateOperationsInput | string
+    referredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserPermissionUpdateWithoutUserInput = {
     module?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
@@ -38034,12 +42012,23 @@ export namespace Prisma {
     amount: number
     paid?: boolean
     createdAt?: Date | string
+    payoutLogId?: number | null
+  }
+
+  export type CommissionPayoutLogCreateManyAffiliateInput = {
+    id?: number
+    totalAmount: number
+    note?: string | null
+    accountName: string
+    bankName: string
+    accountNumber: string
+    paidAt?: Date | string
   }
 
   export type ReferralUpdateWithoutAffiliateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    referredUser?: StringFieldUpdateOperationsInput | string
     referredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutReferralsNestedInput
   }
 
   export type ReferralUncheckedUpdateWithoutAffiliateInput = {
@@ -38060,6 +42049,7 @@ export namespace Prisma {
     paid?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     order?: OrderUpdateOneRequiredWithoutCommissionNestedInput
+    payoutLog?: CommissionPayoutLogUpdateOneWithoutCommissionsNestedInput
   }
 
   export type CommissionUncheckedUpdateWithoutAffiliateInput = {
@@ -38068,6 +42058,7 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     paid?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payoutLogId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CommissionUncheckedUpdateManyWithoutAffiliateInput = {
@@ -38076,6 +42067,38 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     paid?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payoutLogId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type CommissionPayoutLogUpdateWithoutAffiliateInput = {
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commissions?: CommissionUpdateManyWithoutPayoutLogNestedInput
+  }
+
+  export type CommissionPayoutLogUncheckedUpdateWithoutAffiliateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commissions?: CommissionUncheckedUpdateManyWithoutPayoutLogNestedInput
+  }
+
+  export type CommissionPayoutLogUncheckedUpdateManyWithoutAffiliateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    accountName?: StringFieldUpdateOperationsInput | string
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    paidAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderCreateManyAddressInput = {
@@ -38154,6 +42177,42 @@ export namespace Prisma {
     orderNotes?: NullableStringFieldUpdateOperationsInput | string | null
     placedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommissionCreateManyPayoutLogInput = {
+    id?: string
+    affiliateId: string
+    orderId: string
+    amount: number
+    paid?: boolean
+    createdAt?: Date | string
+  }
+
+  export type CommissionUpdateWithoutPayoutLogInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paid?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliate?: AffiliateUpdateOneRequiredWithoutCommissionsNestedInput
+    order?: OrderUpdateOneRequiredWithoutCommissionNestedInput
+  }
+
+  export type CommissionUncheckedUpdateWithoutPayoutLogInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    affiliateId?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paid?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommissionUncheckedUpdateManyWithoutPayoutLogInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    affiliateId?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paid?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductCreateManyCategoryInput = {

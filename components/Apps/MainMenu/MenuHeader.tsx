@@ -8,7 +8,7 @@ import useCartStore from '@/stores/cartstore'
 
 const MenuHeader = () => {
   const loadCart = useCartStore((state) => state.loadCart)
-  useEffect(() => { loadCart() }, [])
+  useEffect(() => { loadCart() }, [loadCart])
   return (
     <div className='p-6 flex flex-col gap-8'>
       <h1 className={`text-5xl font-semibold`}>Delicious <br />food for you</h1>

@@ -26,7 +26,7 @@ export interface ReceiptProps {
     taxAmount: number
     totalAmount: number
     payment?: {
-      method: "CASH" | "TRANSFER" | "PAYSTACK"
+      method: "CASH" | "TRANSFER" | "CARD"
     }
     placedAt: Date
     cashierName: string

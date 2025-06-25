@@ -75,7 +75,7 @@ export const customersTableColumn: ColumnDef<Customer>[] =[
     {
         id: "actions",
         header: "Actions",
-        cell: ({ row }) => {
+        cell: function CellComponent ({ row }) {
             const customer = row.original;
             const setIsOpen = useUIStore((state) => state.setIsCustomerDialogOpen);
             const setselectedCustomer = useUIStore((state) => state.setSelectedCustomer);

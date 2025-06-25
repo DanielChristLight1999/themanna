@@ -76,7 +76,7 @@ export default function ConfirmPage() {
     return (
       <div className="text-center mt-10 text-red-600">
         <h2 className="text-xl font-semibold">Payment Verification Failed</h2>
-        <p>We couldn't verify your payment. Please contact support if you were charged.</p>
+        <p>We couldn&#39;t verify your payment. Please contact support if you were charged.</p>
         <Link href="/" className="text-blue-600 underline mt-2 inline-block">Go back to Menu</Link>
       </div>
     )

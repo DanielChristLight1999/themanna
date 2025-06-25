@@ -88,7 +88,7 @@ const ReusableAuthForm = <T extends ZodTypeAny>({
             loading={loading}
           />
           <div className='col-span-2 flex justify-center'>
-            {type === "login" ? <p>Don't have an account? <Link className='text-[#FF7E00]' href="/auth/signup">Signup</Link></p> : <p>Already have an account? <Link className='text-[#FF7E00]' href="/auth/login">Login</Link></p>}
+            {type === "login" ? <p>Don&#39;t have an account? <Link className='text-[#FF7E00]' href="/auth/signup">Signup</Link></p> : <p>Already have an account? <Link className='text-[#FF7E00]' href="/auth/login">Login</Link></p>}
           </div>
           {googleLogin ? <div className='flex w-full col-span-2 flex-col gap-4 items-center'>
             <Button onClick={async () => await LoginOAuth()} className='flex items-center gap-2 w-full rounded-2xl p-6 text-xl h-14'>

@@ -7,10 +7,10 @@ export class RBACService {
   ) {
     const merged = { ...roleSettings }
 
-    for (const module in userOverrides) {
-      merged[module] = {
-        ...(merged[module] || {}),
-        ...userOverrides[module],
+    for (const mod in userOverrides) {
+      merged[mod] = {
+        ...(merged[mod] || {}),
+        ...userOverrides[mod],
       }
     }
 
@@ -19,9 +19,9 @@ export class RBACService {
 
   static hasPermission(
     permissions: Record<string, any>,
-    module: string,
+    mod: string,
     action: string
   ): boolean {
-    return permissions?.[module]?.[action] ?? false
+    return permissions?.[mod]?.[action] ?? false
   }
 }

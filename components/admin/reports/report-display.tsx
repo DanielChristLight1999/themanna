@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -59,13 +59,9 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
   const [isGenerating, setIsGenerating] = useState(false)
   const [activeTab, setActiveTab] = useState("table")
 
-  useEffect(() => {
-    if (config) {
-      generateReport(config)
-    }
-  }, [config])
 
-  const generateReport = async (reportConfig: ReportConfig) => {
+
+  const generateReport = useCallback( async (reportConfig: ReportConfig) => {
     setIsGenerating(true)
     setReport({
       id: `report_${Date.now()}`,
@@ -108,7 +104,13 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
     } finally {
       setIsGenerating(false)
     }
-  }
+  }, [setReport, setIsGenerating])
+
+    useEffect(() => {
+    if (config) {
+      generateReport(config)
+    }
+  }, [config, generateReport])
 
   const processReportData = (reportData: ReportData, config: ReportConfig): any[] => {
     let data: any[] = []
@@ -206,7 +208,7 @@ export function ReportDisplay({ config, onConfigSave, onRefresh }: ReportDisplay
             affiliateEmail: user?.email || "N/A",
             referralCode: affiliate.referralCode,
             totalEarnings: affiliate.totalEarnings,
-            approved: affiliate.approved,
+            status: affiliate.status,
             createdAt: affiliate.createdAt,
             totalCommissions,
             paidCommissions: commissions.filter((c) => c.paid).reduce((sum, c) => sum + c.amount, 0),

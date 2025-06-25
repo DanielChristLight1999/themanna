@@ -1,7 +1,7 @@
 "use client"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 type PriceInputProps = {
   value: number
@@ -15,16 +15,16 @@ type PriceInputProps = {
 const PriceInput = ({ value, onChange, min, max, label = "Price", placeholder = "₦0.00" }: PriceInputProps) => {
   const [input, setInput] = useState("")
 
-  const formatter = new Intl.NumberFormat("en-NG", {
+  const formatter = useMemo(() => new Intl.NumberFormat("en-NG", {
     style: "currency",
     currency: "NGN",
-  })
+  }), [])
 
   useEffect(() => {
     if (!input && value > 0) {
       setInput(formatter.format(value))
     }
-  }, [value])
+  }, [value, formatter, input])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let raw = e.target.value.replace(/[^0-9.]/g, "")
