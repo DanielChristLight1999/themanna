@@ -34,7 +34,7 @@ const MenuSection = ({ menuItems, isVisible }: { menuItems: HomeMenuItem[], isVi
             }
         }
         checkForExistingCart()
-    }, [])
+    }, [guestId])
     const handleIncrement = async (item: HomeMenuItem) => {
         const data = {
             productId: item.id.toString(),
