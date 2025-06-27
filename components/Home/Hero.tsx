@@ -3,9 +3,12 @@ import { Button } from '../ui/button'
 import { ChefHat } from 'lucide-react'
 import { Badge } from '../ui/badge'
 import { motion } from 'framer-motion'
-
-const Hero = ({ isVisible }: { isVisible: boolean }) => {
-  // Define fixed positions to avoid hydration mismatch
+import { herodata } from '@/lib/home-data/getlandingpage'
+import { useLocalStorage } from 'usehooks-ts'
+import { useRouter } from 'next/navigation'
+import useCartStore from '@/stores/cartstore'
+import { generateGuestId } from '@/lib/utils'
+import { goToCartFromLanding } from '@/actions/cartactions'
   const floatingItems = [
     { emoji: "🍔", delay: 0, duration: 3, top: 12.98, left: 38.86 },
     { emoji: "🍕", delay: 0.5, duration: 4, top: 63.72, left: 11.04 },
@@ -14,6 +17,26 @@ const Hero = ({ isVisible }: { isVisible: boolean }) => {
     { emoji: "🥤", delay: 2, duration: 3, top: 48.07, left: 6.89 },
     { emoji: "🍗", delay: 2.5, duration: 4, top: 22.78, left: 40.21 },
   ]
+const Hero = ({ isVisible }: { isVisible: boolean }) => {
+  // Define fixed positions to avoid hydration mismatch
+  const [guestId, setGuestId] = useLocalStorage("guestId", "", { initializeWithValue: true })
+  const router = useRouter()
+  const cart = useCartStore((state) => state.cart)
+
+   async function handleLogin() {
+      if (cart.length > 0) {
+        const Id = guestId || generateGuestId()
+        setGuestId(Id)
+        const response = await goToCartFromLanding(cart, Id)
+        if (response.error) {
+          console.error(response.message)
+          return
+        }
+        router.push(`/auth/signup?guestId=${guestId}`)
+      }else {
+        router.push("/auth/signup")
+      }
+    }
 
   return (
     <section id="home" className="pt-20 pb-16 relative overflow-hidden">
@@ -32,14 +55,13 @@ const Hero = ({ isVisible }: { isVisible: boolean }) => {
                 <span className="text-gray-800">Delivery</span>
               </h1>
               <p className="text-xl text-gray-600 max-w-lg">
-                Satisfy your cravings with our delicious fast food delivered fresh and hot to your doorstep in
-                minutes!
+                {herodata.description}
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-gray-800 hover:bg-gray-900 text-white px-8 py-4 text-lg rounded-full">
-                Order Now
+              <Button onClick={handleLogin} size="lg" className="bg-gray-800 hover:bg-gray-900 text-white px-8 py-4 text-lg rounded-full">
+                {herodata.cta1}
               </Button>
               <Button
                 variant="ghost"
@@ -48,22 +70,22 @@ const Hero = ({ isVisible }: { isVisible: boolean }) => {
                 onClick={() => document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })}
               >
                 <ChefHat className="h-5 w-5 mr-2" />
-                View Menu
+                {herodata.cta2}
               </Button>
             </div>
 
             <div className="flex items-center space-x-8 pt-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-500">15min</div>
-                <div className="text-sm text-gray-600">Delivery Time</div>
+                <div className="text-3xl font-bold text-orange-500">{herodata.deliverytime.value}</div>
+                <div className="text-sm text-gray-600">{herodata.deliverytime.title}</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-500">4.9★</div>
-                <div className="text-sm text-gray-600">Customer Rating</div>
+                <div className="text-3xl font-bold text-orange-500">{herodata.customerRating.value}★</div>
+                <div className="text-sm text-gray-600">{herodata.customerRating.title}</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-500">50+</div>
-                <div className="text-sm text-gray-600">Menu Items</div>
+                <div className="text-3xl font-bold text-orange-500">{herodata.menuitems.value}</div>
+                <div className="text-sm text-gray-600">{herodata.menuitems.title}</div>
               </div>
             </div>
           </motion.div>

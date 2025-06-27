@@ -10,6 +10,7 @@ import useCartStore from '@/stores/cartstore'
 import { Minus, Plus } from 'lucide-react'
 import { useReadLocalStorage } from 'usehooks-ts'
 import { getCartFromLanding } from '@/actions/cartactions'
+import { menusectiondata } from '@/lib/home-data/getlandingpage'
 
 const MenuSection = ({ menuItems, isVisible }: { menuItems: HomeMenuItem[], isVisible: boolean }) => {
     const cart = useCartStore(state => state.cart)
@@ -52,10 +53,8 @@ const MenuSection = ({ menuItems, isVisible }: { menuItems: HomeMenuItem[], isVi
         <section id="menu" className="py-16 bg-gradient-to-br from-orange-50 to-red-50">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12">
-                    <h2 className="text-4xl font-bold text-gray-800 mb-4">Our Delicious Menu</h2>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Discover our mouth-watering selection of fast food favorites, made fresh daily with premium ingredients
-                    </p>
+                    <h2 className="text-4xl font-bold text-gray-800 mb-4">{menusectiondata.title}</h2>
+                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">{menusectiondata.description}</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -116,7 +115,7 @@ const MenuSection = ({ menuItems, isVisible }: { menuItems: HomeMenuItem[], isVi
 
                 <div className="text-center mt-12">
                     <Button size="lg" className="bg-gray-800 hover:bg-gray-900 text-white px-8 py-4">
-                        View Full Menu
+                        {menusectiondata.cta}
                     </Button>
                 </div>
             </div>

@@ -50,7 +50,7 @@ const Nav = () => {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <ChefHat className="h-8 w-8 text-orange-500" />
-          <span className="text-2xl font-bold text-gray-800">Mana</span>
+          <span className="text-2xl font-bold text-gray-800">The Manna</span>
         </div>
         <div className="hidden md:flex items-center space-x-8">
           <Link href="#home" className="text-gray-700 hover:text-orange-500 transition-colors">

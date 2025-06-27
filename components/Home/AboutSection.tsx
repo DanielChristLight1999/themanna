@@ -1,3 +1,4 @@
+import { aboutdata } from '@/lib/home-data/getlandingpage'
 import Image from 'next/image'
 import React from 'react'
 
@@ -9,13 +10,13 @@ const AboutSection = () => {
                     <div>
                         <h2 className="text-4xl font-bold text-gray-800 mb-6">About Mana Restaurant</h2>
                         <p className="text-lg text-gray-600 mb-6">
-                            Since 2015, Mana has been serving the community with delicious, high-quality fast food that doesn't
-                            compromise on taste or freshness. Our commitment to using premium ingredients and innovative cooking
-                            techniques has made us a local favorite.
+                           {aboutdata.description.slice(0, 190)}
                         </p>
                         <p className="text-lg text-gray-600 mb-8">
-                            From our signature burgers to our crispy fries, every item on our menu is crafted with care and passion.
-                            We believe that fast food can be both quick and exceptional.
+                            {aboutdata.description.slice(190, 406)}
+                        </p>
+                        <p className="text-lg text-gray-600 mb-8">
+                            {aboutdata.description.slice(406, aboutdata.description.length)}
                         </p>
                         <div className="grid grid-cols-2 gap-6">
                             <div className="text-center">

@@ -24,9 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html className="scroll-smooth" lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} h-full bg-gradient-to-r from-orange-50 to-amber-50 antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable}  h-full bg-gradient-to-r from-orange-50 to-amber-50 antialiased`}
       >
         {children}
         <Toaster position="top-left" richColors />
