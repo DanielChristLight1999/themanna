@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { formatPrice } from "@/lib/utils"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useLocalStorage } from "usehooks-ts"
 
 type OrderItem = {
   name: string
@@ -41,7 +42,6 @@ type ConfirmationData = {
 }
 
 export default function ConfirmPage() {
-  const router = useRouter()
   const searchParams = useSearchParams()
 //   const reference = searchParams.get("reference") || ""
   const [data, setData] = useState<ConfirmationData | null>(null)

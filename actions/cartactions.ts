@@ -2,6 +2,8 @@
 
 import { auth } from "@/auth"
 import prisma from "@/db"
+import redis from "@/lib/redis"
+import { CartItem } from "@/stores/cartstore"
 // const AddToCartSchema = z.object({
 //   productId: z.string().uuid(),
 // })
@@ -198,4 +200,72 @@ export async function getCart() {
     }
   })
   return cartItems
+}
+
+
+export async function goToCartFromLanding(cartItems: CartItem[], guestId: string) {
+
+  try {
+    const key = `cart:${guestId}`
+    const cart = JSON.stringify(cartItems)
+    await redis.set(key, cart, { ex: 60 * 60 * 24 * 7 }) // 7 days
+
+    return { error: false, message: "Successfully added to cart" }
+  } catch (error) {
+    console.error(error)
+    return { error: true, message: "Error adding to cart" }
+  }
+}
+
+export async function getCartFromLanding(guestId: string) {
+  try {
+    const key = `cart:${guestId}`
+    const cart = await redis.get(key)
+    if (!cart) {
+      return { error: true, message: "Cart not found" }
+    }
+    const cartItems: CartItem[] = cart as CartItem[]
+    return { error: false, message: "Successfully retrieved cart", cartItems }
+  } catch (error) {
+    console.error(error)
+    return { error: true, message: "Error retrieving cart" }
+  }
+}
+
+export async function pushCartFromLanding(guestId: string) {
+  try {
+    const session = await auth()
+    if (!session) {
+      return { error: true, message: "Not authenticated" }
+    }
+    const key = `cart:${guestId}`
+    const cart = await redis.get(key)
+    if (!cart) {
+      return { error: true, message: "Cart not found" }
+    }
+    const cartItems: CartItem[] = cart as CartItem[]
+    await prisma.cartItem.createMany({
+      data: cartItems.map((item) => ({
+        userId: session.user.id,
+        productId: parseInt(item.productId),
+        quantity: item.quantity,
+      })),
+    })
+    await redis.del(key)
+    return { error: false, message: "Successfully pushed cart", cartItems: cartItems }
+  } catch (error) {
+    console.error(error)
+    return { error: true, message: "Error pushing cart" }
+  }
+}
+
+export async function cleanCartFromLanding(guestId: string) {
+  try {
+    const key = `cart:${guestId}`
+    await redis.del(key)
+    return { error: false, message: "Successfully cleaned cart" }
+  } catch (error) {
+    console.error(error)
+    return { error: true, message: "Error cleaning cart" }
+  }
 }

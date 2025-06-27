@@ -56,3 +56,8 @@ export function extractorderId (id: string) {
     .replace(/=+$/, '')    // remove '=' padding
     .substring(0, length); // trim to desired length
 }
+
+export function generateGuestId() {
+  const guestId = generateReferralCode(8)
+  return guestId
+}

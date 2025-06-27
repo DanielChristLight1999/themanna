@@ -3,8 +3,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import FoodMenuCarousel from './FoodMenuCarousel'
 import FoodDialog from './FoodDialog'
 import FoodGrid from './FoodGrid'
-import { FoodItem } from '@/stores/uistore'
-import { useMediaQuery } from 'usehooks-ts'
+import { useLocalStorage, useReadLocalStorage } from 'usehooks-ts'
+import useCartStore from '@/stores/cartstore'
+import { useEffect } from 'react'
+import { getCartFromLanding, pushCartFromLanding } from '@/actions/cartactions'
 
 interface FoodMenuProps {
     products: {
@@ -25,7 +27,25 @@ interface FoodMenuProps {
 }
 const FoodMenu = ({ products, categories }: FoodMenuProps) => {
 
-
+    const [guestId, setGuestId, removeGuestId] = useLocalStorage<string>("guestId", "", { initializeWithValue: true })
+    const setCart = useCartStore(state => state.setCart)
+    useEffect(() => {
+        async function checkForExistingCart() {
+            if (guestId) {
+                const response = await pushCartFromLanding(guestId)
+                if (response.error) {
+                    return
+                }
+                const cartItems = response.cartItems
+                if (!cartItems) {
+                    return
+                }
+                setCart(cartItems)
+                removeGuestId()
+            }
+        }
+        checkForExistingCart()
+    }, [guestId])
     return (
         <div className="px-4 md:px-10 py-4">
             <Tabs defaultValue="all">
@@ -53,9 +73,7 @@ const FoodMenu = ({ products, categories }: FoodMenuProps) => {
                 </TabsContent>
 
                 {categories.map((category) => {
-                    const foodsbycategory = products.filter(
-                        (product) => product.category.id === category.id
-                    )
+                
                     return (
                         <TabsContent key={category.id} value={category.id}>
                             <FoodMenuCarousel foodsbycategory={products} />

@@ -11,10 +11,10 @@ import bcrypt from "bcryptjs"
 import { AuthError } from "next-auth"
 import { z } from "zod"
 import { Resend } from "resend"
-import { Redis } from "@upstash/redis"
 import { generateEmailVerificationCode } from "@/lib/emailutils"
 import { getRestaurantSettingsNoAdmin } from "@/lib/getsettingsData"
 import VerificationCodeEmail from "@/components/EmailTemplates/email-verification"
+import redis from "@/lib/redis"
 
 export async function LoginOAuth() {
     await signIn("google", { redirectTo: "http://app.localhost:3000/" })
@@ -337,7 +337,6 @@ export async function VerifyPhone(phone: string) {
     }
 }
 const resend = new Resend(process.env.RESEND_API_KEY)
-const redis = Redis.fromEnv()
 
 export async function sendVerificationEmail(email: string) {
     const key = `verify:cooldown:${email}`

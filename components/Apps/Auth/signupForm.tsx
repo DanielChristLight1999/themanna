@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
@@ -17,13 +17,21 @@ import { formatPhoneNumber } from "@/lib/phone-utils"
 import { toast } from "sonner"
 import { SignupUser, VerifyPhone } from "@/actions/authactions"
 import { useRouter } from "next/navigation"
+import { useLocalStorage } from "usehooks-ts"
 
-export default function SignupForm() {
+export default function SignupForm({ guestId }: { guestId?: string }) {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [serverError, setServerError] = useState("")
+    const [id, setGuestId] = useLocalStorage("guestId", "", { initializeWithValue: true })
     const router = useRouter()
+
+    useEffect(() => {
+        if (guestId) {
+            setGuestId(guestId)
+        }
+    }, [guestId])
 
     const form = useForm<SignupFormData>({
         resolver: zodResolver(signupSchema),
@@ -66,7 +74,7 @@ export default function SignupForm() {
         }
 
         toast.success(response.message);
-        router.push("/")
+        router.push(`/auth/verify-email?email=${data.email}`)
     }
 
     return (

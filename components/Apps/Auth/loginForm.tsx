@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
@@ -15,13 +15,20 @@ import { LoginFormData, loginSchema } from "@/lib/validations"
 import { LoginUser } from "@/actions/authactions"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { useLocalStorage } from "usehooks-ts"
 
 
-export default function LoginForm() {
+export default function LoginForm({guestId}: { guestId?: string }) {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState("")
   const router = useRouter()
+  const [id, setGuestId] = useLocalStorage("guestId", "", { initializeWithValue: true })
+  useEffect(() => {
+    if (guestId && id === "") {
+      setGuestId(guestId)
+    }
+  }, [guestId, id])
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -39,7 +46,7 @@ export default function LoginForm() {
     try {
       // Simulate API call
       const response = await LoginUser(data.email, data.password)
-      if(response.error){
+      if (response.error) {
         setServerError(response.message)
         toast.error(response.message)
         return

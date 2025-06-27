@@ -1,42 +1,15 @@
-// "use client"
-
-// import { formatPrice } from "@/lib/utils"
-// import useCartStore from "@/stores/cartstore"
-// import { ArrowBigRightIcon, ShoppingCart } from "lucide-react"
-// import { useRouter } from "next/navigation"
-
-// const GoToCart = () => {
-//     const router = useRouter()
-//     const cart = useCartStore((state) => state.cart)
-//     const total = cart.reduce((acc, item) => acc + item.quantity, 0)
-//     const totalPrice = cart.reduce((acc, item) => acc + item.quantity * item.price, 0)
-//   return (
-//     <div className=" fixed bottom-30 left-2 ">
-//         <div className="relative w-full flex items-center">
-//             <div className="border bg-black/10 p-4 shadow rounded-full">
-//                 <ShoppingCart size={40} className="" />
-//             </div>
-//             <h1 className="text-sm bg-green-500 text-white flex items-center justify-center w-8 h-8 text-center rounded-full top-0 left-0 absolute font-semibold">{total}</h1>
-//         </div>
-//     </div>
-//   )
-// }
-
-// export default GoToCart
-
-
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { formatPrice } from "@/lib/utils"
+import { formatPrice, generateGuestId } from "@/lib/utils"
 import useCartStore from "@/stores/cartstore"
 import { ArrowRight, ShoppingCart } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
-import Link from "next/link"
+import { useLocalStorage, useReadLocalStorage } from "usehooks-ts"
+import { goToCartFromLanding } from "@/actions/cartactions"
 
-const GoToCart = () => {
+const GoToCart = ({fromLanding = false}: { fromLanding?: boolean }) => {
     const router = useRouter()
     const cart = useCartStore((state) => state.cart)
     const [expanded, setExpanded] = useState(false)
@@ -44,6 +17,22 @@ const GoToCart = () => {
     const total = cart.reduce((acc, item) => acc + item.quantity, 0)
     const totalPrice = cart.reduce((acc, item) => acc + item.quantity * item.price, 0)
     const bannerRef = useRef<HTMLDivElement>(null)
+    const [guestId, setGuestId] = useLocalStorage("guestId", "", { initializeWithValue: true})
+
+    const handleGotoCart = async () => {
+        if (fromLanding) {
+            const Id = guestId || generateGuestId()
+            setGuestId(Id)
+            const response = await goToCartFromLanding(cart, Id)
+            if (response.error) {
+                console.error(response.message)
+                return
+            }
+            router.push(`/auth/signup?guestId=${guestId}`)
+        } else {
+            router.push("/orders")
+        }
+    }
 
     // Click outside to collapse
     useEffect(() => {
@@ -94,7 +83,7 @@ const GoToCart = () => {
                     exit={{ width: 64 }}
                     transition={{ duration: 0.1, ease: "linear", delay: 0.1 }}
                     className="bg-green-600 text-white px-4 py-3 h-14 rounded-2xl shadow-lg flex items-center justify-between gap-2 w-[400px] cursor-pointer transition-all"
-                    onClick={() => router.push("/orders")}
+                    onClick={handleGotoCart}
                 >
                     <motion.button
                         

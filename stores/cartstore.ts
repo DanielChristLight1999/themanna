@@ -36,20 +36,20 @@ const useCartStore = create<CartStore>((set, get) => ({
   getSubtotal: () =>
     get().cart.reduce((total, item) => total + item.price * item.quantity, 0),
 
-  loadCart: useCallback(async () => {
+  loadCart: async () => {
     const cartData = await loadCart()
     set({ cart: cartData })
-  }, []),
+  },
 
   increment: async (item) => {
     const { cart } = get()
     const existing = cart.find((i) => i.productId === item.productId)
     const updatedCart = existing
       ? cart.map((i) =>
-          i.productId === item.productId
-            ? { ...i, quantity: i.quantity + 1 }
-            : i
-        )
+        i.productId === item.productId
+          ? { ...i, quantity: i.quantity + 1 }
+          : i
+      )
       : [...cart, { ...item, quantity: 1 }]
 
     set({ cart: updatedCart })
@@ -66,10 +66,10 @@ const useCartStore = create<CartStore>((set, get) => ({
       existing.quantity <= 1
         ? cart.filter((i) => i.productId !== productId)
         : cart.map((i) =>
-            i.productId === productId
-              ? { ...i, quantity: i.quantity - 1 }
-              : i
-          )
+          i.productId === productId
+            ? { ...i, quantity: i.quantity - 1 }
+            : i
+        )
 
     set({ cart: updatedCart })
 

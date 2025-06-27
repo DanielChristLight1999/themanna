@@ -1,10 +1,10 @@
 import LoginForm from '@/components/Apps/Auth/loginForm'
 import React from 'react'
-const page = async () => {
- 
+const page = async ({searchParams}: { searchParams: Promise<{ guestId?: string }> }) => {
+  const guestId = (await searchParams).guestId
   return (
     <div className='h-full w-full'>
-        <LoginForm />
+        <LoginForm guestId={guestId} />
     </div>
   )
 }

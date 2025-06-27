@@ -18,10 +18,8 @@ import {
 import useUIStore, { FoodItem } from "@/stores/uistore"
 import Image from "next/image"
 import { useMediaQuery } from "usehooks-ts"
-import { LoaderCircleIcon, Minus, Plus, Star } from "lucide-react"
+import { LoaderCircleIcon, Minus, Plus } from "lucide-react"
 import { formatPrice } from "@/lib/utils"
-import { addToCart } from "@/actions/cartactions"
-import { toast } from "sonner"
 import useCartStore from "@/stores/cartstore"
 
 const FoodDialog = () => {
@@ -29,7 +27,6 @@ const FoodDialog = () => {
   const setOpen = useUIStore((state) => state.setIsFoodDialogOpen)
   const currentFoodItem = useUIStore((state) => state.currentFoodItem)
   const isloading = useUIStore((state) => state.isLoading)
-  const setIsLoading = useUIStore((state) => state.setIsLoading)
   const cartItem = useCartStore((state) => state.getItem(currentFoodItem?.id))
   const increment = useCartStore((state) => state.increment)
   const decrement = useCartStore((state) => state.decrement)

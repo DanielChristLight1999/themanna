@@ -7,7 +7,8 @@ export default auth(async (req) => {
 
     const hostname = req.headers.get('host')!;
     const subdomain = hostname.match(/^([^.]+)\./)?.[1];
-    const pathname = req.nextUrl.pathname
+    const pathname = req.nextUrl.pathname;
+    const searchParams = req.nextUrl.searchParams;
     // const issubdomain = subdomain?.startsWith('app');
     console.log("hostname", hostname)
 
@@ -18,7 +19,7 @@ export default auth(async (req) => {
     if (!subdomain) {
         const isPublicPath = PUBLIC_PATHS.some((publicpath) => pathname.startsWith(publicpath));
         if (isPublicPath) {
-            return NextResponse.redirect(new URL(`http://app.${host}${pathname}`, req.url));
+            return NextResponse.redirect(new URL(`http://app.${host}${pathname}?${searchParams}`, req.url));
         }
         console.log("redirecting to app");
 
