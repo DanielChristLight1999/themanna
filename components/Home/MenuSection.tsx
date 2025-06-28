@@ -113,11 +113,11 @@ const MenuSection = ({ menuItems, isVisible }: { menuItems: HomeMenuItem[], isVi
                     })}
                 </div>
 
-                <div className="text-center mt-12">
+                {/* <div className="text-center mt-12">
                     <Button size="lg" className="bg-gray-800 hover:bg-gray-900 text-white px-8 py-4">
                         {menusectiondata.cta}
                     </Button>
-                </div>
+                </div> */}
             </div>
         </section>
     )

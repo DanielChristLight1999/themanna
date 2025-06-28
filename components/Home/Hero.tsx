@@ -32,9 +32,9 @@ const Hero = ({ isVisible }: { isVisible: boolean }) => {
           console.error(response.message)
           return
         }
-        router.push(`/auth/signup?guestId=${guestId}`)
+        router.push(`https://app.themannafood.com/auth/signup?guestId=${guestId}`)
       }else {
-        router.push("/auth/signup")
+        router.push("https://app.themannafood.com/auth/signup")
       }
     }
 
