@@ -14,9 +14,9 @@ export async function sendAffiliatePendingEmail({
 
     try {
         const data = await resend.emails.send({
-            from: 'Acme <onboarding@resend.dev>',
+            from: 'The Mana Restaurant Affiliate <affiliate@mail.themannafood.com>',
             // from: "The Mana <no-reply@themana.com>",
-            to: "ngenedaniel16@gmail.com",
+            to: to,
             subject: "Your Affiliate Request is Pending Approval",
             react: AffiliatePendingEmail({ name: name }),
         });

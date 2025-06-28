@@ -365,8 +365,8 @@ export async function sendVerificationEmail(email: string) {
     const companyLogo = logo as string
     try {
         const { data, error } = await resend.emails.send({
-            from: 'Acme <onboarding@resend.dev>',
-            to: ['ngenedaniel16@gmail.com'],
+            from: 'The Manna Restaurant <noreply@mail.themannafood.com>',
+            to: email,
             subject: 'The Mana Email Verification',
             react: VerificationCodeEmail({ username: userName, code: code, companyName: name, companyAddress: address, companyLogo: companyLogo, expiryMinutes: 10 })
         });
