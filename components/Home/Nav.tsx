@@ -23,9 +23,9 @@ const Nav = () => {
         console.error(response.message)
         return
       }
-      router.push(`/auth/login?guestId=${guestId}`)
+      router.push(`https://app.themannafood.com/auth/login?guestId=${guestId}`)
     }else {
-      router.push("/auth/login")
+      router.push("https://app.themannafood.com/auth/login")
     }
   }
 
@@ -38,9 +38,9 @@ const Nav = () => {
         console.error(response.message)
         return
       }
-      router.push(`/auth/signup?guestId=${guestId}`)
+      router.push(`https://app.themannafood.com/auth/signup?guestId=${guestId}`)
     }else {
-      router.push("/auth/signup")
+      router.push("https://app.themannafood.com/auth/signup")
     }
   }
 
