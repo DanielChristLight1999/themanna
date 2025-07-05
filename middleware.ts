@@ -5,7 +5,7 @@ import { stripAppSubdomain } from "./lib/utils";
 const PUBLIC_PATHS = ["/auth/login", "/auth/signup"];
 export default auth(async (req) => {
 
-    const hostname = req.headers.get('host')!;
+    const hostname = req.headers.get("x-forwarded-host") || req.headers.get("host")!;
     const subdomain = hostname.match(/^([^.]+)\./)?.[1];
     const pathname = req.nextUrl.pathname;
     const searchParams = req.nextUrl.searchParams;
