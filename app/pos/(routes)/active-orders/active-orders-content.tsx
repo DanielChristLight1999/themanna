@@ -4,6 +4,7 @@ import { OrderTable } from "@/components/pos/order-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Order, Payment } from "@/lib/generated/prisma"
 import { useState } from "react"
+import { PastOrderWithItems } from "../past-orders/past-orders-content"
 
 export type OrderWithItems = Order & {
   items: {
@@ -48,7 +49,7 @@ export type OrderWithItems = Order & {
 //   })
 // }
 
-export function ActiveOrdersContent({ initialOrders}: { initialOrders: OrderWithItems[] }) {
+export function ActiveOrdersContent({ initialOrders}: { initialOrders: PastOrderWithItems[] }) {
   const [orders, setOrders] = useState(initialOrders)
 
   const handleUpdateStatus = async (orderId: string, status: "CONFIRMED" | "CANCELLED" | "DELIVERED") => {
