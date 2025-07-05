@@ -8,6 +8,7 @@ import { useLocalStorage } from 'usehooks-ts'
 import useCartStore from '@/stores/cartstore'
 import { generateGuestId } from '@/lib/utils'
 import { goToCartFromLanding } from '@/actions/cartactions'
+import Image from 'next/image'
 
 const Nav = () => {
   const router = useRouter()
@@ -48,10 +49,9 @@ const Nav = () => {
   return (
     <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-orange-100">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <ChefHat className="h-8 w-8 text-orange-500" />
-          <span className="text-2xl font-bold text-gray-800">The Manna</span>
-        </div>
+        <Link href={"/"} className="">
+          <Image src={"/images/themanalogonew.png"} alt="logo" width={150} height={150} />
+        </Link>
         <div className="hidden md:flex items-center space-x-8">
           <Link href="#home" className="text-gray-700 hover:text-orange-500 transition-colors">
             Home

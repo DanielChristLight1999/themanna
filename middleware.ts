@@ -10,18 +10,15 @@ export default auth(async (req) => {
     const pathname = req.nextUrl.pathname;
     const searchParams = req.nextUrl.searchParams;
     // const issubdomain = subdomain?.startsWith('app');
-    console.log("hostname", hostname)
 
     const host = stripAppSubdomain(hostname);
     const protocol = process.env.NODE_ENV === 'development' ? 'http://' : 'https://';
 
-    console.log("Middleware Debug", hostname, subdomain, pathname, host, protocol)
     if (!subdomain || subdomain === "www") {
         const isPublicPath = PUBLIC_PATHS.some((publicpath) => pathname.startsWith(publicpath));
         if (isPublicPath) {
             return NextResponse.redirect(new URL(`${protocol}app.${host}${pathname}?${searchParams}`, req.url));
         }
-        console.log("redirecting to app");
 
         return NextResponse.next();
     }
