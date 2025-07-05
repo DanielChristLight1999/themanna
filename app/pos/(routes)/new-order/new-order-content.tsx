@@ -127,6 +127,7 @@ export function NewOrderContent({ products, availableCategories, resumeId }: New
       payment: {method: paymentMethod},
       placedAt: order.placedAt,
       cashierName: cashierName,
+      status: order.status,
       changeGiven: changeGiven || 0,
     }
     completeOrder(paymentMethod)
