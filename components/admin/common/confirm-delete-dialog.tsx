@@ -6,20 +6,22 @@ import { Loader2 } from 'lucide-react';
 
 
 interface ConfirmDeleteDialogProps {
+    isOpen: boolean;
+    setisOpen: (isOpen: boolean) => void;
     onConfirm: () => void;
     onCancel: () => void;
     loading: boolean;
+    message?: string;
 }
-const ConfirmDeleteDialog = ({ onConfirm, onCancel, loading }: ConfirmDeleteDialogProps) => {
-    const isOpen = useUIStore((state) => state.isConfirmDeleteDialogOpen);
-    const setisOpen = useUIStore((state) => state.setIsConfirmDeleteDialogOpen);
+const ConfirmDeleteDialog = ({ isOpen, setisOpen,onConfirm, onCancel, loading, message }: ConfirmDeleteDialogProps) => {
+    
     return (
         <Dialog open={isOpen} onOpenChange={setisOpen}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Are you absolutely sure?</DialogTitle>
                     <DialogDescription>
-                        This action cannot be undone.
+                        {message || "This action cannot be undone."}
                     </DialogDescription>
                 </DialogHeader>
                 <div className='flex justify-end gap-4'>

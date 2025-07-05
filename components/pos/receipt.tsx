@@ -8,37 +8,39 @@ import { Separator } from "@/components/ui/separator"
 import { Printer } from "lucide-react"
 import { extractorderId, formatPrice } from "@/lib/utils"
 import { usePOSStore } from "@/stores/usePOSStore"
+import { PastOrderWithItems } from "@/app/pos/(routes)/past-orders/past-orders-content"
 
+// export type ReceiptOrder = {
+//   id: string
+//   items: Array<{
+//     product: {
+//       id: number
+//       name: string
+//       price: number
+//     }
+//     quantity: number
+//   }>
+//   subtotal: number
+//   taxAmount: number
+//   totalAmount: number
+//   payment?: {
+//     method: "CASH" | "TRANSFER" | "CARD"
+//   }
+//   placedAt: Date
+//   cashierName: string
+//   changeGiven?: number
+// }
 export interface ReceiptProps {
   isOpen: boolean
   onClose: () => void
-  order: {
-    id: string
-    items: Array<{
-      product: {
-        id: number
-        name: string
-        price: number
-      }
-      quantity: number
-    }>
-    subtotal: number
-    taxAmount: number
-    totalAmount: number
-    payment?: {
-      method: "CASH" | "TRANSFER" | "CARD"
-    }
-    placedAt: Date
-    cashierName: string
-    changeGiven?: number
-  }
+  order: PastOrderWithItems
 }
 
-function ReceiptContent({ order }: { order: ReceiptProps["order"] }) {
+function ReceiptContent({ order }: { order: PastOrderWithItems  }) {
   const settingsData = usePOSStore((state) => state.settingsData)
   const restaurantInfo = settingsData?.restaurantInfo
   if (!restaurantInfo) return null
-  const {name, address, phone} = restaurantInfo
+  const { name, address, phone } = restaurantInfo
   const date = order.placedAt.toLocaleDateString("en-NG", {
     year: "numeric",
     month: "short",
@@ -102,18 +104,18 @@ function ReceiptContent({ order }: { order: ReceiptProps["order"] }) {
         </div>
         <div className="flex justify-between">
           <span>Tax (7.5%):</span>
-          <span>{formatPrice(order.taxAmount)}</span>
+          <span>{formatPrice(order.taxAmount || 0)}</span>
         </div>
         <div className="flex justify-between font-bold text-base border-t pt-2">
           <span>Total:</span>
           <span>{formatPrice(order.totalAmount)}</span>
         </div>
-        {order.changeGiven && (
+        {order.changeGiven && order.changeGiven > 0 ? (
           <div className="flex justify-between">
             <span>Change Given:</span>
             <span>{formatPrice(order.changeGiven)}</span>
           </div>
-        )}
+        ) : ""}
         {order.payment?.method && (
           <div className="flex justify-between">
             <span>Payment:</span>

@@ -59,10 +59,10 @@ export const useCheckoutStore = create<CheckoutState>((set, get) => ({
     userAddresses: [],
     // cartItems: [],
     // settingsData: null,
-    getuserAddresses: useCallback(async () => {
+    getuserAddresses: async () => {
         const data = await getUserAddresses()
         set({ userAddresses: data })
-    }, []),
+    },
     setSelectedAddressId: (id) => set({ selectedAddressId: id }),
     setPaymentMethod: (method) => set({ paymentMethod: method }),
     setOrderNote: (note) => set({ orderNote: note }),

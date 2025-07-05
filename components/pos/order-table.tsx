@@ -5,15 +5,18 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { OrderWithItems } from "@/app/pos/(routes)/active-orders/active-orders-content"
-import { formatPrice } from "@/lib/utils"
+import { extractorderId, formatPrice } from "@/lib/utils"
+import { PastOrderWithItems } from "@/app/pos/(routes)/past-orders/past-orders-content"
 
 interface OrderTableProps {
-  orders: OrderWithItems[]
+  orders: PastOrderWithItems[]
   showActions?: boolean
   onUpdateStatus?: (orderId: string, status: "CONFIRMED" | "CANCELLED" | "DELIVERED") => void
+  setShowReceipt?: (show: boolean) => void
+  setCurrentOrder?: (order: PastOrderWithItems) => void 
 }
 
-export function OrderTable({ orders, showActions = false, onUpdateStatus }: OrderTableProps) {
+export function OrderTable({ orders, showActions = false, onUpdateStatus, setShowReceipt, setCurrentOrder }: OrderTableProps) {
 
   const formatTime = (date: Date) =>
     new Intl.DateTimeFormat("en-NG", {
@@ -53,7 +56,7 @@ export function OrderTable({ orders, showActions = false, onUpdateStatus }: Orde
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.id}>
-              <TableCell className="font-medium">{order.id.slice(0, 8)}</TableCell>
+              <TableCell className="font-medium uppercase">#ORD-{extractorderId(order.id)}</TableCell>
               <TableCell>{formatTime(order.placedAt)}</TableCell>
               <TableCell>
                 {order.items.slice(0, 2).map((item, index) => (
@@ -98,7 +101,17 @@ export function OrderTable({ orders, showActions = false, onUpdateStatus }: Orde
                           Cancel
                         </Button>
                       </>
-                    ) : null}
+                    ) : <Button 
+                        size={"sm"}
+                        variant={"outline"}
+                        onClick={() => {
+                          setCurrentOrder?.(order)
+                          setShowReceipt?.(true)
+                        }}
+                        className="text-blue-500 hover:text-blue-700"
+                      >
+                        View
+                      </Button>}
                   </div>
                 </TableCell>
               )}

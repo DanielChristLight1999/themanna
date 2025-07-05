@@ -180,9 +180,11 @@ model CommissionPayoutLog {
 }
 
 model Category {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  isActive  Boolean   @default(true)
 
   products Product[]
 }

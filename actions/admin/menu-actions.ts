@@ -6,7 +6,7 @@ import { MenuItem } from "@/lib/columns/productsTableColumn"
 import { z } from "zod"
 import { del } from "@vercel/blob"
 import { auth } from "@/auth"
-import { getUserPermissions } from "@/lib/permissions/check-permissions"
+import { canAccess, getUserPermissions } from "@/lib/permissions/check-permissions"
 
 
 export async function getMenuItems(): Promise<MenuItem[]> {
@@ -37,6 +37,10 @@ export async function getMenuItems(): Promise<MenuItem[]> {
 
 export async function getCategories() {
     const data = await prisma.category.findMany({
+      where: {
+        isActive: true,
+        deletedAt: null,
+      },
         select: {
             id: true,
             name: true,
@@ -161,13 +165,15 @@ export async function updateMenuItem(id: number, data: z.infer<typeof productFor
 
 export async function createMenuItem(data: z.infer<typeof productFormSchema>) {
   try {
-    const validatedData = productFormSchema.safeParse(data)
-    if (!validatedData.success) {
-      console.error("Validation failed:", validatedData.error)
-      return { error: true, message: validatedData.error.message }
+    
+    const session = await auth();
+    if (!session) return { error: true, message: 'Unauthorized' }
+    const canCreate = await canAccess({ userId: session.user.id, mod: 'products', action: 'create' })
+    if (!canCreate) return { error: true, message: 'Unauthorized' }
+    const { name, description, categoryId, price, cost, stock, lowStockAlert, sku, images } = data
+    if (!name || !description || !categoryId || !price || !cost || !stock || !lowStockAlert || !sku || !images) {
+      return { error: true, message: 'Missing required fields' }
     }
-
-    const { name, description, categoryId, price, cost, stock, lowStockAlert, sku, images } = validatedData.data
     const skuData = sku || await generateExpressiveSku(name)
     await prisma.product.create({
       data: {
@@ -216,9 +222,58 @@ export async function deleteMenuItem(id: number) {
   }
 }
 
+export async function deleteCategory(id: number) {
+  try {
+    const session = await auth();
+    if (!session) return { error: true, message: 'Unauthorized' }
+    const canDelete = await canAccess({ userId: session.user.id, mod: "products", action: 'delete' })
+    if (!canDelete) return { error: true, message: 'Unauthorized' }
+    const updatedCategory = await prisma.category.update({
+      where: { id },
+      data: { deletedAt: new Date(), isActive: false }
+    })
+    await prisma.product.updateMany({
+      where: {
+        categoryId: updatedCategory.id,
+      },
+      data: {
+        isActive: false,
+        deletedAt: new Date(),
+      }
+    })
+    return { error: false, message: 'Category deleted successfully' }
+  } catch (err) {
+    console.error("Delete category error:", err)
+    return { error: true, message: 'Failed to delete category' }
+  }
+}
+
+export async function updateCategory(id: number, name: string) {
+  try {
+    const session = await auth();
+    if (!session) return { error: true, message: 'Unauthorized' }
+    const canUpdate = await canAccess({ userId: session.user.id, mod: "products", action: 'update' })
+    if (!canUpdate) return { error: true, message: 'Unauthorized' }
+    await prisma.category.update({
+      where: { id },
+      data: {
+        name,
+      },
+    })
+    return { error: false, message: 'Category updated successfully' }
+  } catch (err) {
+    console.error("Update category error:", err)
+    return { error: true, message: 'Failed to update category' }
+  }
+}
+
 export async function createCategory(name: string) {
   try {
-    const category = await prisma.category.create({
+    const session = await auth();
+    if (!session) return { error: true, message: 'Unauthorized' }
+    const canCreate = await canAccess({ userId: session.user.id, mod: "products", action: 'create' })
+    if (!canCreate) return { error: true, message: 'Unauthorized' }
+    await prisma.category.create({
       data: {
         name,
       },

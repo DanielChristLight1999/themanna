@@ -7,13 +7,38 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search, Filter } from "lucide-react"
 import { OrderTable } from "@/components/pos/order-table"
-import { OrderWithItems } from "../active-orders/active-orders-content"
+// import { OrderWithItems } from "../active-orders/active-orders-content"
+import { ReceiptModal } from "@/components/pos/receipt"
+import { OrderStatus } from "@/lib/generated/prisma"
 
-export function PastOrdersContent({orders}: {orders: OrderWithItems[]}) {
+export type   PastOrderWithItems = {
+  id: string
+  items: Array<{
+    product: {
+      id: number
+      name: string
+      price: number
+    }
+    quantity: number
+  }>
+  subtotal: number
+  taxAmount: number | null
+  totalAmount: number
+  payment: {
+    method: "CASH" | "TRANSFER" | "CARD"
+  } | null
+  status: OrderStatus
+  placedAt: Date
+  cashierName?: string | null
+  changeGiven?: number
+}
+export function PastOrdersContent({ orders }: { orders: PastOrderWithItems[] }) {
   // const pastOrders = usePOSStore((state) => state.orders)
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [paymentFilter, setPaymentFilter] = useState("all")
+  const [showReceipt, setShowReceipt] = useState(false)
+  const [currentOrder, setCurrentOrder] = useState<PastOrderWithItems | null>(null)
 
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
@@ -100,10 +125,17 @@ export function PastOrdersContent({orders}: {orders: OrderWithItems[]}) {
               <p>No orders found</p>
             </div>
           ) : (
-            <OrderTable orders={filteredOrders} />
+            <OrderTable setShowReceipt={setShowReceipt} setCurrentOrder={setCurrentOrder} showActions={true} orders={filteredOrders} />
           )}
         </CardContent>
       </Card>
+
+      {currentOrder && <ReceiptModal
+        isOpen={showReceipt}
+        onClose={() => setShowReceipt(false)}
+        order={currentOrder}
+        
+      />}
     </div>
   )
 }

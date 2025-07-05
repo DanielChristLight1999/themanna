@@ -85,22 +85,52 @@ export async function getCompletedPOSOrders() {
   const activePosSession = await getActivePOSSession()
   if (!activePosSession) return []
 
-  const orders = await prisma.order.findMany({
+  const data = await prisma.order.findMany({
     where: {
       orderType: "POS",
       paymentStatus: "SUCCESS",
       sessionId: activePosSession.id,
     },
     include: {
+      session: {
+        select:{
+          staff: {
+            select: {
+              name: true,
+            }
+          }
+        }
+      },
       items: {
         include: {
           product: true,
+          
         },
       },
       payment: true,
     },
     orderBy: { placedAt: "desc" },
   })
+
+  const orders = data.map((order) => ({
+    id: order.id,
+    items: order.items.map((item) => ({
+      product: {
+        id: item.product.id,
+        name: item.product.name,
+        price: item.product.price,
+      },
+      quantity: item.quantity,
+    })),
+    subtotal: order.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+    taxAmount: order.taxAmount,
+    totalAmount: order.totalAmount,
+    payment: order.payment,
+    status: order.status,
+    placedAt: order.placedAt,
+    cashierName: order.session?.staff.name,
+    changeGiven: 0,
+  }))
 
   return orders
 }

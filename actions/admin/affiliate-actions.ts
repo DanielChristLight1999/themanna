@@ -3,7 +3,9 @@
 import { auth } from "@/auth"
 import prisma from "@/db";
 import { PendingPayoutType } from "@/lib/admin-data/types";
+import { getRestaurantSettingsNoAdmin } from "@/lib/getsettingsData";
 import { canAccess } from "@/lib/permissions/check-permissions";
+import { Resend } from "resend";
 
 
 export async function createPayout(selectedPayout: PendingPayoutType, note: string) {
@@ -80,6 +82,7 @@ export async function approveAffiliate(id: string){
                 status: "APPROVED"
             }
         })
+        await sendAffliateApprovalEmail(id);
         return { error: false, message: "Affiliate approved successfully" }
     } catch (error) {
         console.error("Error approving affiliate:", error)
@@ -108,6 +111,49 @@ export async function rejectAffiliate(id: string) {
         return { error: false, message: "Affiliate rejected successfully" }
     } catch (error) {
         console.error("Error approving affiliate:", error)
+        return { error: true, message: "Something went wrong" }
+    }
+}
+const resend = new Resend(process.env.RESEND_API_KEY);
+export async function sendAffliateApprovalEmail(affiliateId: string) {
+    try {
+        const affiliate = await prisma.affiliate.findUnique({
+            where: {
+                userId: affiliateId
+            },
+            select: {
+                userId: true,
+                user: {
+                    select: {
+                        name: true,
+                        email: true,
+                        phone: true,
+                    }
+                },
+                status: true,
+                referralCode: true,
+                totalEarnings: true,
+            }
+        })
+        if (!affiliate) return { error: true, message: "Affiliate not found" }
+        const {restaurantInfo} = await getRestaurantSettingsNoAdmin()
+        if (!restaurantInfo) return { error: true, message: "Restaurant info not found" }
+        const message = `
+            <p>Dear ${affiliate.user.name},</p>
+            <p>Your affiliate account has been approved. You can now start earning commissions from your customers.</p>
+            <p>Your affiliate code is: ${affiliate.referralCode}</p>
+            <p>Total earnings so far: ${affiliate.totalEarnings}</p>
+            <p>You can contact us at ${restaurantInfo.phone} or ${restaurantInfo.email}</p>
+        `
+        await resend.emails.send({
+            to: affiliate.user.email,
+            from: "The Mana Restaurant Affiliate <affiliate@themannafood.com>",
+            subject: "Affiliate Account Approved",
+            html: message
+        })
+        return { error: false, message: "Email sent successfully" }
+    } catch (error) {
+        console.error("Error sending affiliate approval email:", error)
         return { error: true, message: "Something went wrong" }
     }
 }

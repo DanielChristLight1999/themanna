@@ -120,7 +120,7 @@ const getStatusBadgeVariant = (status: string) => {
 export function MenuTable({products}: { products: MenuItem[] }) {
   const selectedProduct = useUIStore((state) => state.selectedMenuItem);
   const setSelectedProduct = useUIStore((state) => state.setSelectedMenuItem);
-  const setIsConfirmDeleteDialogOpen = useUIStore((state) => state.setIsConfirmDeleteDialogOpen);
+  const [isConfirmDeleteDialogOpen, setIsConfirmDeleteDialogOpen] = useState(false);
   const selectedCategory = useUIStore((state) => state.selectedCategory)
   const [loading, setLoading] = useState(false);
   const router =  useRouter()
@@ -146,7 +146,7 @@ export function MenuTable({products}: { products: MenuItem[] }) {
   return (
     <div className="w-full">
       <DataTable data={filteredProducts} columns={productsTableColumn} />
-      <ConfirmDeleteDialog loading={loading} onCancel={onCancelDelete} onConfirm={onConfirmDelete} />
+      <ConfirmDeleteDialog  isOpen={isConfirmDeleteDialogOpen} setisOpen={setIsConfirmDeleteDialogOpen} loading={loading} onCancel={onCancelDelete} onConfirm={onConfirmDelete} />
     </div>
   )
 }
