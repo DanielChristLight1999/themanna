@@ -3,12 +3,13 @@
 import { OrdersTable } from "../orders/orders-table"
 import { Order } from "@/lib/columns/ordersTableColumn"
 import { getAllOrders } from "@/actions/admin/order-actions"
+import { CustomerOrder } from "@/lib/getData"
 
 interface RecentOrdersProps {
   filterType?: "online" | "pos" | "pickup"
 }
 
-const getRecentOrders = (allOrders: Order[], filterType?: string) => {
+const getRecentOrders = (allOrders: CustomerOrder[], filterType?: string) => {
 
   if (!filterType || filterType === "all") {
     return allOrders
