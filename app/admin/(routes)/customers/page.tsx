@@ -1,8 +1,6 @@
 import type { Metadata } from "next"
-import { Button } from "@/components/ui/button"
-import { PlusIcon } from "lucide-react"
+
 import { CustomersTable } from "@/components/admin/customers/customers-table"
-import { CustomersFilter } from "@/components/admin/customers/customers-filter"
 import { getCustomers } from "@/lib/getData"
 import { redirect } from "next/navigation"
 import { auth } from "@/auth"

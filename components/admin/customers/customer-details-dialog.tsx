@@ -17,9 +17,10 @@ import { format } from "date-fns"
 import { CalendarIcon, MailIcon, MapPinIcon, PhoneIcon, UserIcon } from "lucide-react"
 import { OrdersTable } from "../orders/orders-table"
 import useUIStore from "@/stores/uistore"
+import { CustomerNew } from "@/lib/getData"
 
 interface CustomerDetailsDialogProps {
-  customer: Customer | null
+  customer: CustomerNew | null
 }
 
 export function CustomerDetailsDialog({ customer }: CustomerDetailsDialogProps) {

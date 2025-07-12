@@ -26,11 +26,11 @@ import { OrderStatus } from "@/lib/generated/prisma"
 import { usePrintContext } from "@/lib/usecontext.tsx/print-context"
 import { useReactToPrint } from "react-to-print";
 import { useCopyToClipboard } from "usehooks-ts"
-import { ReceiptModal } from "@/components/pos/receipt"
-import { useState } from "react"
+
+import { CustomerOrder } from "@/lib/getData"
 
 interface OrderDetailsDialogProps {
-  order: Order | null
+  order: CustomerOrder | null
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -64,7 +64,6 @@ export function OrderDetailsDialog({ order, open, onOpenChange }: OrderDetailsDi
 
   const { contentRef } = usePrintContext();
   const reactToPrintFn = useReactToPrint({ contentRef });
-  const [isRecieptOpen, setIsRecieptOpen] = useState(false)
   const form = useForm<z.infer<typeof orderSchema>>({
     resolver: zodResolver(orderSchema),
     defaultValues: {

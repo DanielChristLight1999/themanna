@@ -1,7 +1,5 @@
-
-import { Customer } from "@/lib/columns/customersTableColumn";
-import { Order } from "@/lib/columns/ordersTableColumn";
 import { MenuItem } from "@/lib/columns/productsTableColumn";
+import { CustomerNew, CustomerOrder } from "@/lib/getData";
 import { create } from "zustand";
 
 interface UIStore {
@@ -17,8 +15,8 @@ interface UIStore {
     setCurrentFoodItem: (currentFoodItem: FoodItem) => void;
     isOrderDetailsDialogOpen: boolean;
     setIsOrderDetailsDialogOpen: (isOrderDetailsDialogOpen: boolean) => void;
-    setSelectedOrder: (order: Order | null) => void;
-    selectedOrder: Order | null;
+    setSelectedOrder: (order: CustomerOrder | null) => void;
+    selectedOrder: CustomerOrder | null;
     isMenuItemDialogOpen: boolean;
     setIsMenuItemDialogOpen: (isMenuItemDialogOpen: boolean) => void;
     selectedMenuItem: MenuItem | null;
@@ -27,8 +25,8 @@ interface UIStore {
     setIsConfirmDeleteDialogOpen: (isConfirmDeleteDialogOpen: boolean) => void;
     isCustomerDialogOpen: boolean;
     setIsCustomerDialogOpen: (isCustomerDialogOpen: boolean) => void;
-    selectedCustomer: Customer | null;
-    setSelectedCustomer: (selectedCustomer: Customer | null) => void;
+    selectedCustomer: CustomerNew | null;
+    setSelectedCustomer: (selectedCustomer: CustomerNew | null) => void;
     selectedCategory: string | null
     setSelectedCategory: (selectedCategory: string) => void;
 }

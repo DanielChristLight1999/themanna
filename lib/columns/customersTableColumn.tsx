@@ -6,6 +6,7 @@ import { formatPrice } from "../utils";
 import { format } from "date-fns";
 import useUIStore from "@/stores/uistore";
 import { Order } from "./ordersTableColumn";
+import { CustomerNew } from "../getData";
 
 
 
@@ -23,7 +24,7 @@ export interface Customer {
     joinDate: Date;
 }
 
-export const customersTableColumn: ColumnDef<Customer>[] =[
+export const customersTableColumn: ColumnDef<CustomerNew>[] =[
     {
         id: "Customer",
         header: "Customer",
@@ -79,7 +80,7 @@ export const customersTableColumn: ColumnDef<Customer>[] =[
             const customer = row.original;
             const setIsOpen = useUIStore((state) => state.setIsCustomerDialogOpen);
             const setselectedCustomer = useUIStore((state) => state.setSelectedCustomer);
-            const handleViewDetails = (customer: Customer) => {
+            const handleViewDetails = (customer: CustomerNew) => {
                 setIsOpen(true);
                 setselectedCustomer(customer);
             }

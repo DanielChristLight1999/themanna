@@ -5,6 +5,7 @@ import { format } from "date-fns"
 import { extractorderId, formatPrice } from "../utils"
 import { EyeIcon } from "lucide-react"
 import useUIStore from "@/stores/uistore"
+import { CustomerOrder } from "../getData"
 
 
 export type Order = {
@@ -26,7 +27,7 @@ export type Order = {
     address: string
 }
 
-export const ordersTableColumn: ColumnDef<Order>[] = [
+export const ordersTableColumn: ColumnDef<CustomerOrder>[] = [
     {
         accessorKey: "id",
         header: "Order ID",
@@ -99,7 +100,7 @@ export const ordersTableColumn: ColumnDef<Order>[] = [
             const order = row.original
             const setSelectedOrder = useUIStore((state) => state.setSelectedOrder)
             const setIsDetailsOpen = useUIStore((state) => state.setIsOrderDetailsDialogOpen)
-            const handleViewDetails = (order: Order) => {
+            const handleViewDetails = (order: CustomerOrder) => {
                 setSelectedOrder(order)
                 setIsDetailsOpen(true)
             }

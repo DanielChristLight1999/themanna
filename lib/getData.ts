@@ -1,7 +1,7 @@
 import prisma from "@/db";
 import { Customer } from "./columns/customersTableColumn";
 import { endOfDay, isAfter, startOfDay, startOfMonth, startOfWeek } from "date-fns";
-import { PaymentMethod } from "./generated/prisma";
+import { OrderStatus, PaymentMethod } from "./generated/prisma";
 import { auth } from "@/auth";
 
 
@@ -122,8 +122,41 @@ export async function getCart(userId: string) {
 
     return cartItems
 }
+export interface CustomerOrderItem {
+  name: string
+  quantity: number
+  price: number
+}
 
-export async function getCustomers() {
+export interface CustomerOrder {
+  id: string
+  customer: string
+  phone: string | null
+  date: Date
+  total: number
+  deliveryFee: number | null
+  status: OrderStatus
+  paymentMethod?: string
+  type: string
+  items: CustomerOrderItem[]
+  address: string
+}
+
+export interface CustomerNew {
+  id: string
+  name: string | null
+  email: string
+  phone: string | null
+  orders: CustomerOrder[]
+  totalOrders: number
+  totalSpent: number
+  lastOrder?: Date
+  status: string
+  addresses: any[] // Or define a proper type if known
+  joinDate: Date
+}
+
+export async function getCustomers(): Promise<CustomerNew[]> {
     const data = await prisma.user.findMany({
         where: {
             role: "CUSTOMER"
