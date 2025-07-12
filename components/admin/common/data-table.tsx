@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
         </div>
 
         <div className="flex gap-2">
-          <Button
+          {/* <Button
             variant="outline"
             size="sm"
             onClick={() =>
@@ -127,8 +127,8 @@ export function DataTable<TData, TValue>({
             }
           >
             Export CSV
-          </Button>
-          <Button
+          </Button> */}
+          {/* <Button
             variant="outline"
             size="sm"
             onClick={() =>
@@ -139,7 +139,7 @@ export function DataTable<TData, TValue>({
             }
           >
             Export PDF
-          </Button>
+          </Button> */}
         </div>
       </div>
 

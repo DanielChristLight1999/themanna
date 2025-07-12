@@ -1,4 +1,5 @@
 import { ChefHat } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
@@ -7,10 +8,9 @@ const FooterSection = () => {
         <footer className="bg-gray-900 text-white py-8">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row items-center justify-between">
-                    <div className="flex items-center space-x-2 mb-4 md:mb-0">
-                        <ChefHat className="h-8 w-8 text-orange-500" />
-                        <span className="text-2xl font-bold">Mana</span>
-                    </div>
+                    <Link href={"/"}>
+                        <Image src={"/images/themanalogonew.png"} alt="logo" width={150} height={150} />
+                    </Link>
                     <div className="flex items-center space-x-6">
                         <Link href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
                             Privacy Policy

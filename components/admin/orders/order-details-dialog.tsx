@@ -26,6 +26,8 @@ import { OrderStatus } from "@/lib/generated/prisma"
 import { usePrintContext } from "@/lib/usecontext.tsx/print-context"
 import { useReactToPrint } from "react-to-print";
 import { useCopyToClipboard } from "usehooks-ts"
+import { ReceiptModal } from "@/components/pos/receipt"
+import { useState } from "react"
 
 interface OrderDetailsDialogProps {
   order: Order | null
@@ -62,6 +64,7 @@ export function OrderDetailsDialog({ order, open, onOpenChange }: OrderDetailsDi
 
   const { contentRef } = usePrintContext();
   const reactToPrintFn = useReactToPrint({ contentRef });
+  const [isRecieptOpen, setIsRecieptOpen] = useState(false)
   const form = useForm<z.infer<typeof orderSchema>>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
@@ -70,12 +73,12 @@ export function OrderDetailsDialog({ order, open, onOpenChange }: OrderDetailsDi
   })
   const [clipboardText, setClipboardText] = useCopyToClipboard()
   const handleCopyToClipboard = async (text: string) => {
-   const success = await setClipboardText(text)
-   if(success){
-     toast.success("Copied to clipboard")
-   } else {
-     toast.error("Failed to copy to clipboard")
-   }
+    const success = await setClipboardText(text)
+    if (success) {
+      toast.success("Copied to clipboard")
+    } else {
+      toast.error("Failed to copy to clipboard")
+    }
   }
   const handleUpdateStatus = async (data: z.infer<typeof orderSchema>) => {
     // Handle status update logic here
@@ -90,123 +93,147 @@ export function OrderDetailsDialog({ order, open, onOpenChange }: OrderDetailsDi
 
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            <span>Order ORD-{extractorderId(order.id as string)}</span>
-            <Badge variant={getStatusBadgeVariant(order.status)}>{order.status.replace("_", " ")}</Badge>
-          </DialogTitle>
-          <DialogDescription className="uppercase text-left">
-            {format(order.date, "dd/MM/yyyy HH:mm")} · {order.type} Order
-          </DialogDescription>
-        </DialogHeader>
-
-        <div ref={contentRef} className="grid gap-6">
-          <div className="grid gap-3">
-            <div className="text-sm font-medium">Customer Information</div>
-            <div className="grid gap-2">
-              <div className="flex items-center gap-2 text-sm">
-                <UserIcon className="h-4 w-4 text-muted-foreground" />
-                <span>{order.customer}</span>
-              </div>
-              {order.phone ? (
-                <div className="flex items-center gap-2 text-sm">
-                  <PhoneIcon className="h-4 w-4 text-muted-foreground" />
-                  <span>{order.phone}</span>
-                </div>
-              ) : ""}
-              <div className="flex items-start gap-2 text-sm">
-                <MapPinIcon className="h-4 w-4 text-muted-foreground mt-0.5" />
-                <span>{order.address}</span>
-              </div>
-            </div>
-          </div>
-
-          <Separator />
-
-          <div className="grid gap-3">
-            <div className="text-sm font-medium">Order Items</div>
-            <div className="space-y-3">
-              {order.items.map((item: any, index: number) => (
-                <div key={index} className="flex justify-between text-sm">
-                  <div>
-                    <span className="font-medium">{item.quantity}x</span> {item.name}
+    <div className="h-full">
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-2xl h-[80vh] overflow-y-auto">
+          <div ref={contentRef} className="print:flex print:flex-col print:gap-2 print:p-6 print-items-center max-w-2xl h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center justify-between">
+                <span>Order ORD-{extractorderId(order.id as string)}</span>
+                <Badge variant={getStatusBadgeVariant(order.status)}>{order.status.replace("_", " ")}</Badge>
+              </DialogTitle>
+              <DialogDescription className="uppercase text-left">
+                {format(order.date, "dd/MM/yyyy HH:mm")} · {order.type} Order
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="grid gap-6">
+              <div className="grid gap-3">
+                <div className="text-sm font-medium">Customer Information</div>
+                <div className="grid gap-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <UserIcon className="h-4 w-4 text-muted-foreground" />
+                    <span>{order.customer}</span>
                   </div>
-                  <div>{formatPrice(item.price * item.quantity)}</div>
+                  {order.phone ? (
+                    <div className="flex items-center gap-2 text-sm">
+                      <PhoneIcon className="h-4 w-4 text-muted-foreground" />
+                      <span>{order.phone}</span>
+                    </div>
+                  ) : ""}
+                  <div className="flex items-start gap-2 text-sm">
+                    <MapPinIcon className="h-4 w-4 text-muted-foreground mt-0.5" />
+                    <span>{order.address}</span>
+                  </div>
                 </div>
-              ))}
+              </div>
+            
+              <Separator />
+            
+              <div className="grid gap-3">
+                <div className="text-sm font-medium">Order Items</div>
+                <div className="space-y-3">
+                  {order.items.map((item: any, index: number) => (
+                    <div key={index} className="flex justify-between text-sm">
+                      <div>
+                        <span className="font-medium">{item.quantity}x</span> {item.name}
+                      </div>
+                      <div>{formatPrice(item.price * item.quantity)}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            
+              <Separator />
+            
+              <div className="grid gap-3">
+                <div className="text-sm font-medium">Payment Details</div>
+                <div className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span>Subtotal</span>
+                    <span>{formatPrice(order.total - (order.deliveryFee || 0))}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span>Delivery Fee</span>
+                    <span>{formatPrice(order.deliveryFee || 0)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm font-medium">
+                    <span>Total</span>
+                    <span>{formatPrice(order.total)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Payment Method</span>
+                    <span>{order.paymentMethod}</span>
+                  </div>
+                </div>
+              </div>
+            
+              <Separator />
+            
+              <div className="print:hidden grid gap-3">
+                <div className="text-sm font-medium">Update Order Status</div>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(handleUpdateStatus)} className="flex w-full gap-2">
+                    <FormField control={form.control} name="status" render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormControl>
+                          <Select onValueChange={field.onChange} value={field.value} defaultValue={order.status}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="PENDING">Pending</SelectItem>
+                              <SelectItem value="CONFIRMED">Confirmed</SelectItem>
+                              <SelectItem value="IN_TRANSIT">In Transit</SelectItem>
+                              <SelectItem value="DELIVERED">Delivered</SelectItem>
+                              <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+            
+                    <Button>Update</Button>
+                  </form>
+                </Form>
+              </div>
             </div>
           </div>
 
-          <Separator />
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button onClick={() => reactToPrintFn()} variant="outline" className="flex-1 gap-2">
+              <PrinterIcon className="h-4 w-4" />
+              Print Receipt
+            </Button>
+            <Button onClick={async () => await handleCopyToClipboard(order?.id as string)} variant="outline" className="flex-1 gap-2">
+              <ClipboardIcon className="h-4 w-4" />
+              Copy Order ID
+            </Button>
+            <Button onClick={() => onOpenChange(false)} className="flex-1">Close</Button>
+          </DialogFooter>
 
-          <div className="grid gap-3">
-            <div className="text-sm font-medium">Payment Details</div>
-            <div className="space-y-1">
-              <div className="flex justify-between text-sm">
-                <span>Subtotal</span>
-                <span>{formatPrice(order.total - (order.deliveryFee || 0))}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span>Delivery Fee</span>
-                <span>{formatPrice(order.deliveryFee || 0)}</span>
-              </div>
-              <div className="flex justify-between text-sm font-medium">
-                <span>Total</span>
-                <span>{formatPrice(order.total)}</span>
-              </div>
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>Payment Method</span>
-                <span>{order.paymentMethod}</span>
-              </div>
-            </div>
-          </div>
-
-          <Separator />
-
-          <div className="print:hidden grid gap-3">
-            <div className="text-sm font-medium">Update Order Status</div>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleUpdateStatus)} className="flex w-full gap-2">
-                <FormField control={form.control} name="status" render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value} defaultValue={order.status}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="PENDING">Pending</SelectItem>
-                          <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-                          <SelectItem value="IN_TRANSIT">In Transit</SelectItem>
-                          <SelectItem value="DELIVERED">Delivered</SelectItem>
-                          <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-
-                <Button>Update</Button>
-              </form>
-            </Form>
-          </div>
-        </div>
-
-        <DialogFooter className="flex flex-col sm:flex-row gap-2">
-          <Button onClick={() => reactToPrintFn()} variant="outline" className="flex-1 gap-2">
-            <PrinterIcon className="h-4 w-4" />
-            Print Receipt
-          </Button>
-          <Button onClick={async () => await handleCopyToClipboard(order?.id as string)} variant="outline" className="flex-1 gap-2">
-            <ClipboardIcon className="h-4 w-4" />
-            Copy Order ID
-          </Button>
-          <Button onClick={() => onOpenChange(false)} className="flex-1">Close</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+      {/* <ReceiptModal isOpen={isRecieptOpen} onClose={() => setIsRecieptOpen(false)} order={{
+        id: order.id,
+        items: order.items.map((item) => ({
+          product: {
+            id: item.id,
+            name: item.name,
+            price: item.price,
+          },
+          quantity: item.quantity,
+        })),
+        subtotal: order.total as number,
+        status: order.status,
+        taxAmount: 0,
+        totalAmount: order?.total,
+        payment: { method: order?.paymentMethod as "CARD" | "TRANSFER" | "CASH" },
+        placedAt: order?.date as Date,
+        cashierName: order?.customer as string,
+        changeGiven: 0,
+      }} /> */}
+    </div>
   )
 }

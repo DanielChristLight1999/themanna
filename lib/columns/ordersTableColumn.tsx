@@ -18,6 +18,7 @@ export type Order = {
     type: string,
     paymentMethod?: PaymentMethod,
     items: {
+        id: number,
         name: string,
         quantity: number,
         price: number

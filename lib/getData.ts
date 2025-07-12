@@ -1,6 +1,6 @@
 import prisma from "@/db";
 import { Customer } from "./columns/customersTableColumn";
-import { isAfter, startOfDay, startOfMonth, startOfWeek } from "date-fns";
+import { endOfDay, isAfter, startOfDay, startOfMonth, startOfWeek } from "date-fns";
 import { PaymentMethod } from "./generated/prisma";
 import { auth } from "@/auth";
 
@@ -29,6 +29,17 @@ export async function getProducts() {
         price: product.price,
         description: product.description,
     }))
+    return products
+}
+
+export async function getAllProducts() {
+    const products = await prisma.product.findMany({
+        include: {
+            category: true,
+            images: true,
+        }
+    })
+
     return products
 }
 
@@ -112,7 +123,7 @@ export async function getCart(userId: string) {
     return cartItems
 }
 
-export async function getCustomers(): Promise<Customer[]> {
+export async function getCustomers() {
     const data = await prisma.user.findMany({
         where: {
             role: "CUSTOMER"
@@ -370,4 +381,48 @@ export async function getAllPOSSessions(): Promise<PosSessionWithOrdersAndStaff[
     }))
 
     return sessions
+}
+
+// export async function getFoodsOfTheDay() {
+    
+// const today = new Date().toISOString().split('T')[0];
+
+// const foodsOfTheDay = await prisma.foodOfTheDay.findMany({
+//   where: {
+//     date: {
+//       gte: new Date(today + "T00:00:00Z"),
+//       lt: new Date(today + "T23:59:59Z"),
+//     },
+//   },
+//   include: { product: {include: {
+//     category: true,
+//     images: true,
+//   }}, },
+// });
+
+// return foodsOfTheDay
+// }
+
+export async function getFoodsOfTheDay() {
+  const todayStart = startOfDay(new Date())
+  const todayEnd = endOfDay(new Date())
+
+  const foodsOfTheDay = await prisma.foodOfTheDay.findMany({
+    where: {
+      date: {
+        gte: todayStart,
+        lte: todayEnd,
+      },
+    },
+    include: {
+      product: {
+        include: {
+          category: true,
+          images: true,
+        },
+      },
+    },
+  })
+
+  return foodsOfTheDay
 }

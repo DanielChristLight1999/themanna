@@ -22,7 +22,7 @@ export async function getAllOrders(daysAgo: number = 30) {
             status: true,
             orderType: true,
             items: {select: {
-                product: {select: {name: true}},
+                product: {select: {name: true, id: true}},
                 quantity: true,
                 unitPrice: true
             }},
@@ -49,7 +49,7 @@ export async function getAllOrders(daysAgo: number = 30) {
             paymentMethod: order.payment?.method,
             type: order.orderType,
             items: order.items.map(item => {
-                return {name: item.product.name, quantity: item.quantity, price: item.unitPrice}
+                return {id:item.product.id, name: item.product.name, quantity: item.quantity, price: item.unitPrice}
             }),
             address: address,
         }

@@ -1,0 +1,12 @@
+-- CreateTable
+CREATE TABLE "FoodOfTheDay" (
+    "id" SERIAL NOT NULL,
+    "productId" INTEGER NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "FoodOfTheDay_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "FoodOfTheDay" ADD CONSTRAINT "FoodOfTheDay_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;

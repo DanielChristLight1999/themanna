@@ -133,6 +133,11 @@ export type DeliveryZone = $Result.DefaultSelection<Prisma.$DeliveryZonePayload>
  * 
  */
 export type RestaurantInfo = $Result.DefaultSelection<Prisma.$RestaurantInfoPayload>
+/**
+ * Model FoodOfTheDay
+ * 
+ */
+export type FoodOfTheDay = $Result.DefaultSelection<Prisma.$FoodOfTheDayPayload>
 
 /**
  * Enums
@@ -599,6 +604,16 @@ export class PrismaClient<
     * ```
     */
   get restaurantInfo(): Prisma.RestaurantInfoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.foodOfTheDay`: Exposes CRUD operations for the **FoodOfTheDay** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FoodOfTheDays
+    * const foodOfTheDays = await prisma.foodOfTheDay.findMany()
+    * ```
+    */
+  get foodOfTheDay(): Prisma.FoodOfTheDayDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1062,7 +1077,8 @@ export namespace Prisma {
     Setting: 'Setting',
     DeliverySetting: 'DeliverySetting',
     DeliveryZone: 'DeliveryZone',
-    RestaurantInfo: 'RestaurantInfo'
+    RestaurantInfo: 'RestaurantInfo',
+    FoodOfTheDay: 'FoodOfTheDay'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1081,7 +1097,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "permission" | "userPermission" | "affiliate" | "affiliatePayoutAccount" | "referral" | "address" | "commission" | "commissionPayoutLog" | "category" | "product" | "productImage" | "inventory" | "inventoryTransaction" | "order" | "orderItem" | "payment" | "posSession" | "posItem" | "cartItem" | "setting" | "deliverySetting" | "deliveryZone" | "restaurantInfo"
+      modelProps: "user" | "permission" | "userPermission" | "affiliate" | "affiliatePayoutAccount" | "referral" | "address" | "commission" | "commissionPayoutLog" | "category" | "product" | "productImage" | "inventory" | "inventoryTransaction" | "order" | "orderItem" | "payment" | "posSession" | "posItem" | "cartItem" | "setting" | "deliverySetting" | "deliveryZone" | "restaurantInfo" | "foodOfTheDay"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2861,6 +2877,80 @@ export namespace Prisma {
           }
         }
       }
+      FoodOfTheDay: {
+        payload: Prisma.$FoodOfTheDayPayload<ExtArgs>
+        fields: Prisma.FoodOfTheDayFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FoodOfTheDayFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FoodOfTheDayFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload>
+          }
+          findFirst: {
+            args: Prisma.FoodOfTheDayFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FoodOfTheDayFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload>
+          }
+          findMany: {
+            args: Prisma.FoodOfTheDayFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload>[]
+          }
+          create: {
+            args: Prisma.FoodOfTheDayCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload>
+          }
+          createMany: {
+            args: Prisma.FoodOfTheDayCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FoodOfTheDayCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload>[]
+          }
+          delete: {
+            args: Prisma.FoodOfTheDayDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload>
+          }
+          update: {
+            args: Prisma.FoodOfTheDayUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload>
+          }
+          deleteMany: {
+            args: Prisma.FoodOfTheDayDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FoodOfTheDayUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FoodOfTheDayUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload>[]
+          }
+          upsert: {
+            args: Prisma.FoodOfTheDayUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FoodOfTheDayPayload>
+          }
+          aggregate: {
+            args: Prisma.FoodOfTheDayAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFoodOfTheDay>
+          }
+          groupBy: {
+            args: Prisma.FoodOfTheDayGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FoodOfTheDayGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FoodOfTheDayCountArgs<ExtArgs>
+            result: $Utils.Optional<FoodOfTheDayCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2969,6 +3059,7 @@ export namespace Prisma {
     deliverySetting?: DeliverySettingOmit
     deliveryZone?: DeliveryZoneOmit
     restaurantInfo?: RestaurantInfoOmit
+    foodOfTheDay?: FoodOfTheDayOmit
   }
 
   /* Types for Logging */
@@ -3285,6 +3376,7 @@ export namespace Prisma {
     orderItems: number
     cartItems: number
     posItems: number
+    foodOfDays: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3292,6 +3384,7 @@ export namespace Prisma {
     orderItems?: boolean | ProductCountOutputTypeCountOrderItemsArgs
     cartItems?: boolean | ProductCountOutputTypeCountCartItemsArgs
     posItems?: boolean | ProductCountOutputTypeCountPosItemsArgs
+    foodOfDays?: boolean | ProductCountOutputTypeCountFoodOfDaysArgs
   }
 
   // Custom InputTypes
@@ -3331,6 +3424,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountPosItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PosItemWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountFoodOfDaysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FoodOfTheDayWhereInput
   }
 
 
@@ -15101,6 +15201,7 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     cartItems?: boolean | Product$cartItemsArgs<ExtArgs>
     posItems?: boolean | Product$posItemsArgs<ExtArgs>
+    foodOfDays?: boolean | Product$foodOfDaysArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -15156,6 +15257,7 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     cartItems?: boolean | Product$cartItemsArgs<ExtArgs>
     posItems?: boolean | Product$posItemsArgs<ExtArgs>
+    foodOfDays?: boolean | Product$foodOfDaysArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15174,6 +15276,7 @@ export namespace Prisma {
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
       cartItems: Prisma.$CartItemPayload<ExtArgs>[]
       posItems: Prisma.$PosItemPayload<ExtArgs>[]
+      foodOfDays: Prisma.$FoodOfTheDayPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -15587,6 +15690,7 @@ export namespace Prisma {
     orderItems<T extends Product$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cartItems<T extends Product$cartItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$cartItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     posItems<T extends Product$posItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$posItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PosItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    foodOfDays<T extends Product$foodOfDaysArgs<ExtArgs> = {}>(args?: Subset<T, Product$foodOfDaysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16135,6 +16239,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PosItemScalarFieldEnum | PosItemScalarFieldEnum[]
+  }
+
+  /**
+   * Product.foodOfDays
+   */
+  export type Product$foodOfDaysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    where?: FoodOfTheDayWhereInput
+    orderBy?: FoodOfTheDayOrderByWithRelationInput | FoodOfTheDayOrderByWithRelationInput[]
+    cursor?: FoodOfTheDayWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FoodOfTheDayScalarFieldEnum | FoodOfTheDayScalarFieldEnum[]
   }
 
   /**
@@ -30940,6 +31068,1089 @@ export namespace Prisma {
 
 
   /**
+   * Model FoodOfTheDay
+   */
+
+  export type AggregateFoodOfTheDay = {
+    _count: FoodOfTheDayCountAggregateOutputType | null
+    _avg: FoodOfTheDayAvgAggregateOutputType | null
+    _sum: FoodOfTheDaySumAggregateOutputType | null
+    _min: FoodOfTheDayMinAggregateOutputType | null
+    _max: FoodOfTheDayMaxAggregateOutputType | null
+  }
+
+  export type FoodOfTheDayAvgAggregateOutputType = {
+    id: number | null
+    productId: number | null
+  }
+
+  export type FoodOfTheDaySumAggregateOutputType = {
+    id: number | null
+    productId: number | null
+  }
+
+  export type FoodOfTheDayMinAggregateOutputType = {
+    id: number | null
+    productId: number | null
+    date: Date | null
+    createdAt: Date | null
+  }
+
+  export type FoodOfTheDayMaxAggregateOutputType = {
+    id: number | null
+    productId: number | null
+    date: Date | null
+    createdAt: Date | null
+  }
+
+  export type FoodOfTheDayCountAggregateOutputType = {
+    id: number
+    productId: number
+    date: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FoodOfTheDayAvgAggregateInputType = {
+    id?: true
+    productId?: true
+  }
+
+  export type FoodOfTheDaySumAggregateInputType = {
+    id?: true
+    productId?: true
+  }
+
+  export type FoodOfTheDayMinAggregateInputType = {
+    id?: true
+    productId?: true
+    date?: true
+    createdAt?: true
+  }
+
+  export type FoodOfTheDayMaxAggregateInputType = {
+    id?: true
+    productId?: true
+    date?: true
+    createdAt?: true
+  }
+
+  export type FoodOfTheDayCountAggregateInputType = {
+    id?: true
+    productId?: true
+    date?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FoodOfTheDayAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FoodOfTheDay to aggregate.
+     */
+    where?: FoodOfTheDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FoodOfTheDays to fetch.
+     */
+    orderBy?: FoodOfTheDayOrderByWithRelationInput | FoodOfTheDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FoodOfTheDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FoodOfTheDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FoodOfTheDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FoodOfTheDays
+    **/
+    _count?: true | FoodOfTheDayCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FoodOfTheDayAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FoodOfTheDaySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FoodOfTheDayMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FoodOfTheDayMaxAggregateInputType
+  }
+
+  export type GetFoodOfTheDayAggregateType<T extends FoodOfTheDayAggregateArgs> = {
+        [P in keyof T & keyof AggregateFoodOfTheDay]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFoodOfTheDay[P]>
+      : GetScalarType<T[P], AggregateFoodOfTheDay[P]>
+  }
+
+
+
+
+  export type FoodOfTheDayGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FoodOfTheDayWhereInput
+    orderBy?: FoodOfTheDayOrderByWithAggregationInput | FoodOfTheDayOrderByWithAggregationInput[]
+    by: FoodOfTheDayScalarFieldEnum[] | FoodOfTheDayScalarFieldEnum
+    having?: FoodOfTheDayScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FoodOfTheDayCountAggregateInputType | true
+    _avg?: FoodOfTheDayAvgAggregateInputType
+    _sum?: FoodOfTheDaySumAggregateInputType
+    _min?: FoodOfTheDayMinAggregateInputType
+    _max?: FoodOfTheDayMaxAggregateInputType
+  }
+
+  export type FoodOfTheDayGroupByOutputType = {
+    id: number
+    productId: number
+    date: Date
+    createdAt: Date
+    _count: FoodOfTheDayCountAggregateOutputType | null
+    _avg: FoodOfTheDayAvgAggregateOutputType | null
+    _sum: FoodOfTheDaySumAggregateOutputType | null
+    _min: FoodOfTheDayMinAggregateOutputType | null
+    _max: FoodOfTheDayMaxAggregateOutputType | null
+  }
+
+  type GetFoodOfTheDayGroupByPayload<T extends FoodOfTheDayGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FoodOfTheDayGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FoodOfTheDayGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FoodOfTheDayGroupByOutputType[P]>
+            : GetScalarType<T[P], FoodOfTheDayGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FoodOfTheDaySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    date?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["foodOfTheDay"]>
+
+  export type FoodOfTheDaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    date?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["foodOfTheDay"]>
+
+  export type FoodOfTheDaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    productId?: boolean
+    date?: boolean
+    createdAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["foodOfTheDay"]>
+
+  export type FoodOfTheDaySelectScalar = {
+    id?: boolean
+    productId?: boolean
+    date?: boolean
+    createdAt?: boolean
+  }
+
+  export type FoodOfTheDayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "date" | "createdAt", ExtArgs["result"]["foodOfTheDay"]>
+  export type FoodOfTheDayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type FoodOfTheDayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+  export type FoodOfTheDayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+  }
+
+  export type $FoodOfTheDayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FoodOfTheDay"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      productId: number
+      date: Date
+      createdAt: Date
+    }, ExtArgs["result"]["foodOfTheDay"]>
+    composites: {}
+  }
+
+  type FoodOfTheDayGetPayload<S extends boolean | null | undefined | FoodOfTheDayDefaultArgs> = $Result.GetResult<Prisma.$FoodOfTheDayPayload, S>
+
+  type FoodOfTheDayCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FoodOfTheDayFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FoodOfTheDayCountAggregateInputType | true
+    }
+
+  export interface FoodOfTheDayDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FoodOfTheDay'], meta: { name: 'FoodOfTheDay' } }
+    /**
+     * Find zero or one FoodOfTheDay that matches the filter.
+     * @param {FoodOfTheDayFindUniqueArgs} args - Arguments to find a FoodOfTheDay
+     * @example
+     * // Get one FoodOfTheDay
+     * const foodOfTheDay = await prisma.foodOfTheDay.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FoodOfTheDayFindUniqueArgs>(args: SelectSubset<T, FoodOfTheDayFindUniqueArgs<ExtArgs>>): Prisma__FoodOfTheDayClient<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FoodOfTheDay that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FoodOfTheDayFindUniqueOrThrowArgs} args - Arguments to find a FoodOfTheDay
+     * @example
+     * // Get one FoodOfTheDay
+     * const foodOfTheDay = await prisma.foodOfTheDay.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FoodOfTheDayFindUniqueOrThrowArgs>(args: SelectSubset<T, FoodOfTheDayFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FoodOfTheDayClient<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FoodOfTheDay that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodOfTheDayFindFirstArgs} args - Arguments to find a FoodOfTheDay
+     * @example
+     * // Get one FoodOfTheDay
+     * const foodOfTheDay = await prisma.foodOfTheDay.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FoodOfTheDayFindFirstArgs>(args?: SelectSubset<T, FoodOfTheDayFindFirstArgs<ExtArgs>>): Prisma__FoodOfTheDayClient<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FoodOfTheDay that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodOfTheDayFindFirstOrThrowArgs} args - Arguments to find a FoodOfTheDay
+     * @example
+     * // Get one FoodOfTheDay
+     * const foodOfTheDay = await prisma.foodOfTheDay.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FoodOfTheDayFindFirstOrThrowArgs>(args?: SelectSubset<T, FoodOfTheDayFindFirstOrThrowArgs<ExtArgs>>): Prisma__FoodOfTheDayClient<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FoodOfTheDays that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodOfTheDayFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FoodOfTheDays
+     * const foodOfTheDays = await prisma.foodOfTheDay.findMany()
+     * 
+     * // Get first 10 FoodOfTheDays
+     * const foodOfTheDays = await prisma.foodOfTheDay.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const foodOfTheDayWithIdOnly = await prisma.foodOfTheDay.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FoodOfTheDayFindManyArgs>(args?: SelectSubset<T, FoodOfTheDayFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FoodOfTheDay.
+     * @param {FoodOfTheDayCreateArgs} args - Arguments to create a FoodOfTheDay.
+     * @example
+     * // Create one FoodOfTheDay
+     * const FoodOfTheDay = await prisma.foodOfTheDay.create({
+     *   data: {
+     *     // ... data to create a FoodOfTheDay
+     *   }
+     * })
+     * 
+     */
+    create<T extends FoodOfTheDayCreateArgs>(args: SelectSubset<T, FoodOfTheDayCreateArgs<ExtArgs>>): Prisma__FoodOfTheDayClient<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FoodOfTheDays.
+     * @param {FoodOfTheDayCreateManyArgs} args - Arguments to create many FoodOfTheDays.
+     * @example
+     * // Create many FoodOfTheDays
+     * const foodOfTheDay = await prisma.foodOfTheDay.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FoodOfTheDayCreateManyArgs>(args?: SelectSubset<T, FoodOfTheDayCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FoodOfTheDays and returns the data saved in the database.
+     * @param {FoodOfTheDayCreateManyAndReturnArgs} args - Arguments to create many FoodOfTheDays.
+     * @example
+     * // Create many FoodOfTheDays
+     * const foodOfTheDay = await prisma.foodOfTheDay.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FoodOfTheDays and only return the `id`
+     * const foodOfTheDayWithIdOnly = await prisma.foodOfTheDay.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FoodOfTheDayCreateManyAndReturnArgs>(args?: SelectSubset<T, FoodOfTheDayCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FoodOfTheDay.
+     * @param {FoodOfTheDayDeleteArgs} args - Arguments to delete one FoodOfTheDay.
+     * @example
+     * // Delete one FoodOfTheDay
+     * const FoodOfTheDay = await prisma.foodOfTheDay.delete({
+     *   where: {
+     *     // ... filter to delete one FoodOfTheDay
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FoodOfTheDayDeleteArgs>(args: SelectSubset<T, FoodOfTheDayDeleteArgs<ExtArgs>>): Prisma__FoodOfTheDayClient<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FoodOfTheDay.
+     * @param {FoodOfTheDayUpdateArgs} args - Arguments to update one FoodOfTheDay.
+     * @example
+     * // Update one FoodOfTheDay
+     * const foodOfTheDay = await prisma.foodOfTheDay.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FoodOfTheDayUpdateArgs>(args: SelectSubset<T, FoodOfTheDayUpdateArgs<ExtArgs>>): Prisma__FoodOfTheDayClient<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FoodOfTheDays.
+     * @param {FoodOfTheDayDeleteManyArgs} args - Arguments to filter FoodOfTheDays to delete.
+     * @example
+     * // Delete a few FoodOfTheDays
+     * const { count } = await prisma.foodOfTheDay.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FoodOfTheDayDeleteManyArgs>(args?: SelectSubset<T, FoodOfTheDayDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FoodOfTheDays.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodOfTheDayUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FoodOfTheDays
+     * const foodOfTheDay = await prisma.foodOfTheDay.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FoodOfTheDayUpdateManyArgs>(args: SelectSubset<T, FoodOfTheDayUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FoodOfTheDays and returns the data updated in the database.
+     * @param {FoodOfTheDayUpdateManyAndReturnArgs} args - Arguments to update many FoodOfTheDays.
+     * @example
+     * // Update many FoodOfTheDays
+     * const foodOfTheDay = await prisma.foodOfTheDay.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FoodOfTheDays and only return the `id`
+     * const foodOfTheDayWithIdOnly = await prisma.foodOfTheDay.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FoodOfTheDayUpdateManyAndReturnArgs>(args: SelectSubset<T, FoodOfTheDayUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FoodOfTheDay.
+     * @param {FoodOfTheDayUpsertArgs} args - Arguments to update or create a FoodOfTheDay.
+     * @example
+     * // Update or create a FoodOfTheDay
+     * const foodOfTheDay = await prisma.foodOfTheDay.upsert({
+     *   create: {
+     *     // ... data to create a FoodOfTheDay
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FoodOfTheDay we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FoodOfTheDayUpsertArgs>(args: SelectSubset<T, FoodOfTheDayUpsertArgs<ExtArgs>>): Prisma__FoodOfTheDayClient<$Result.GetResult<Prisma.$FoodOfTheDayPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FoodOfTheDays.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodOfTheDayCountArgs} args - Arguments to filter FoodOfTheDays to count.
+     * @example
+     * // Count the number of FoodOfTheDays
+     * const count = await prisma.foodOfTheDay.count({
+     *   where: {
+     *     // ... the filter for the FoodOfTheDays we want to count
+     *   }
+     * })
+    **/
+    count<T extends FoodOfTheDayCountArgs>(
+      args?: Subset<T, FoodOfTheDayCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FoodOfTheDayCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FoodOfTheDay.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodOfTheDayAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FoodOfTheDayAggregateArgs>(args: Subset<T, FoodOfTheDayAggregateArgs>): Prisma.PrismaPromise<GetFoodOfTheDayAggregateType<T>>
+
+    /**
+     * Group by FoodOfTheDay.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FoodOfTheDayGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FoodOfTheDayGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FoodOfTheDayGroupByArgs['orderBy'] }
+        : { orderBy?: FoodOfTheDayGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FoodOfTheDayGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFoodOfTheDayGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FoodOfTheDay model
+   */
+  readonly fields: FoodOfTheDayFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FoodOfTheDay.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FoodOfTheDayClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FoodOfTheDay model
+   */
+  interface FoodOfTheDayFieldRefs {
+    readonly id: FieldRef<"FoodOfTheDay", 'Int'>
+    readonly productId: FieldRef<"FoodOfTheDay", 'Int'>
+    readonly date: FieldRef<"FoodOfTheDay", 'DateTime'>
+    readonly createdAt: FieldRef<"FoodOfTheDay", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FoodOfTheDay findUnique
+   */
+  export type FoodOfTheDayFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodOfTheDay to fetch.
+     */
+    where: FoodOfTheDayWhereUniqueInput
+  }
+
+  /**
+   * FoodOfTheDay findUniqueOrThrow
+   */
+  export type FoodOfTheDayFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodOfTheDay to fetch.
+     */
+    where: FoodOfTheDayWhereUniqueInput
+  }
+
+  /**
+   * FoodOfTheDay findFirst
+   */
+  export type FoodOfTheDayFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodOfTheDay to fetch.
+     */
+    where?: FoodOfTheDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FoodOfTheDays to fetch.
+     */
+    orderBy?: FoodOfTheDayOrderByWithRelationInput | FoodOfTheDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FoodOfTheDays.
+     */
+    cursor?: FoodOfTheDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FoodOfTheDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FoodOfTheDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FoodOfTheDays.
+     */
+    distinct?: FoodOfTheDayScalarFieldEnum | FoodOfTheDayScalarFieldEnum[]
+  }
+
+  /**
+   * FoodOfTheDay findFirstOrThrow
+   */
+  export type FoodOfTheDayFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodOfTheDay to fetch.
+     */
+    where?: FoodOfTheDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FoodOfTheDays to fetch.
+     */
+    orderBy?: FoodOfTheDayOrderByWithRelationInput | FoodOfTheDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FoodOfTheDays.
+     */
+    cursor?: FoodOfTheDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FoodOfTheDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FoodOfTheDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FoodOfTheDays.
+     */
+    distinct?: FoodOfTheDayScalarFieldEnum | FoodOfTheDayScalarFieldEnum[]
+  }
+
+  /**
+   * FoodOfTheDay findMany
+   */
+  export type FoodOfTheDayFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    /**
+     * Filter, which FoodOfTheDays to fetch.
+     */
+    where?: FoodOfTheDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FoodOfTheDays to fetch.
+     */
+    orderBy?: FoodOfTheDayOrderByWithRelationInput | FoodOfTheDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FoodOfTheDays.
+     */
+    cursor?: FoodOfTheDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FoodOfTheDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FoodOfTheDays.
+     */
+    skip?: number
+    distinct?: FoodOfTheDayScalarFieldEnum | FoodOfTheDayScalarFieldEnum[]
+  }
+
+  /**
+   * FoodOfTheDay create
+   */
+  export type FoodOfTheDayCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FoodOfTheDay.
+     */
+    data: XOR<FoodOfTheDayCreateInput, FoodOfTheDayUncheckedCreateInput>
+  }
+
+  /**
+   * FoodOfTheDay createMany
+   */
+  export type FoodOfTheDayCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FoodOfTheDays.
+     */
+    data: FoodOfTheDayCreateManyInput | FoodOfTheDayCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FoodOfTheDay createManyAndReturn
+   */
+  export type FoodOfTheDayCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * The data used to create many FoodOfTheDays.
+     */
+    data: FoodOfTheDayCreateManyInput | FoodOfTheDayCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FoodOfTheDay update
+   */
+  export type FoodOfTheDayUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FoodOfTheDay.
+     */
+    data: XOR<FoodOfTheDayUpdateInput, FoodOfTheDayUncheckedUpdateInput>
+    /**
+     * Choose, which FoodOfTheDay to update.
+     */
+    where: FoodOfTheDayWhereUniqueInput
+  }
+
+  /**
+   * FoodOfTheDay updateMany
+   */
+  export type FoodOfTheDayUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FoodOfTheDays.
+     */
+    data: XOR<FoodOfTheDayUpdateManyMutationInput, FoodOfTheDayUncheckedUpdateManyInput>
+    /**
+     * Filter which FoodOfTheDays to update
+     */
+    where?: FoodOfTheDayWhereInput
+    /**
+     * Limit how many FoodOfTheDays to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FoodOfTheDay updateManyAndReturn
+   */
+  export type FoodOfTheDayUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * The data used to update FoodOfTheDays.
+     */
+    data: XOR<FoodOfTheDayUpdateManyMutationInput, FoodOfTheDayUncheckedUpdateManyInput>
+    /**
+     * Filter which FoodOfTheDays to update
+     */
+    where?: FoodOfTheDayWhereInput
+    /**
+     * Limit how many FoodOfTheDays to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FoodOfTheDay upsert
+   */
+  export type FoodOfTheDayUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FoodOfTheDay to update in case it exists.
+     */
+    where: FoodOfTheDayWhereUniqueInput
+    /**
+     * In case the FoodOfTheDay found by the `where` argument doesn't exist, create a new FoodOfTheDay with this data.
+     */
+    create: XOR<FoodOfTheDayCreateInput, FoodOfTheDayUncheckedCreateInput>
+    /**
+     * In case the FoodOfTheDay was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FoodOfTheDayUpdateInput, FoodOfTheDayUncheckedUpdateInput>
+  }
+
+  /**
+   * FoodOfTheDay delete
+   */
+  export type FoodOfTheDayDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+    /**
+     * Filter which FoodOfTheDay to delete.
+     */
+    where: FoodOfTheDayWhereUniqueInput
+  }
+
+  /**
+   * FoodOfTheDay deleteMany
+   */
+  export type FoodOfTheDayDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FoodOfTheDays to delete
+     */
+    where?: FoodOfTheDayWhereInput
+    /**
+     * Limit how many FoodOfTheDays to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FoodOfTheDay without action
+   */
+  export type FoodOfTheDayDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FoodOfTheDay
+     */
+    select?: FoodOfTheDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FoodOfTheDay
+     */
+    omit?: FoodOfTheDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FoodOfTheDayInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -31264,6 +32475,16 @@ export namespace Prisma {
   };
 
   export type RestaurantInfoScalarFieldEnum = (typeof RestaurantInfoScalarFieldEnum)[keyof typeof RestaurantInfoScalarFieldEnum]
+
+
+  export const FoodOfTheDayScalarFieldEnum: {
+    id: 'id',
+    productId: 'productId',
+    date: 'date',
+    createdAt: 'createdAt'
+  };
+
+  export type FoodOfTheDayScalarFieldEnum = (typeof FoodOfTheDayScalarFieldEnum)[keyof typeof FoodOfTheDayScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -32183,6 +33404,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     cartItems?: CartItemListRelationFilter
     posItems?: PosItemListRelationFilter
+    foodOfDays?: FoodOfTheDayListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -32203,6 +33425,7 @@ export namespace Prisma {
     orderItems?: OrderItemOrderByRelationAggregateInput
     cartItems?: CartItemOrderByRelationAggregateInput
     posItems?: PosItemOrderByRelationAggregateInput
+    foodOfDays?: FoodOfTheDayOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -32226,6 +33449,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     cartItems?: CartItemListRelationFilter
     posItems?: PosItemListRelationFilter
+    foodOfDays?: FoodOfTheDayListRelationFilter
   }, "id" | "sku">
 
   export type ProductOrderByWithAggregationInput = {
@@ -33168,6 +34392,59 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"RestaurantInfo"> | Date | string
   }
 
+  export type FoodOfTheDayWhereInput = {
+    AND?: FoodOfTheDayWhereInput | FoodOfTheDayWhereInput[]
+    OR?: FoodOfTheDayWhereInput[]
+    NOT?: FoodOfTheDayWhereInput | FoodOfTheDayWhereInput[]
+    id?: IntFilter<"FoodOfTheDay"> | number
+    productId?: IntFilter<"FoodOfTheDay"> | number
+    date?: DateTimeFilter<"FoodOfTheDay"> | Date | string
+    createdAt?: DateTimeFilter<"FoodOfTheDay"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }
+
+  export type FoodOfTheDayOrderByWithRelationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    date?: SortOrder
+    createdAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type FoodOfTheDayWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    productId_date?: FoodOfTheDayProductIdDateCompoundUniqueInput
+    AND?: FoodOfTheDayWhereInput | FoodOfTheDayWhereInput[]
+    OR?: FoodOfTheDayWhereInput[]
+    NOT?: FoodOfTheDayWhereInput | FoodOfTheDayWhereInput[]
+    productId?: IntFilter<"FoodOfTheDay"> | number
+    date?: DateTimeFilter<"FoodOfTheDay"> | Date | string
+    createdAt?: DateTimeFilter<"FoodOfTheDay"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+  }, "id" | "productId_date">
+
+  export type FoodOfTheDayOrderByWithAggregationInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    date?: SortOrder
+    createdAt?: SortOrder
+    _count?: FoodOfTheDayCountOrderByAggregateInput
+    _avg?: FoodOfTheDayAvgOrderByAggregateInput
+    _max?: FoodOfTheDayMaxOrderByAggregateInput
+    _min?: FoodOfTheDayMinOrderByAggregateInput
+    _sum?: FoodOfTheDaySumOrderByAggregateInput
+  }
+
+  export type FoodOfTheDayScalarWhereWithAggregatesInput = {
+    AND?: FoodOfTheDayScalarWhereWithAggregatesInput | FoodOfTheDayScalarWhereWithAggregatesInput[]
+    OR?: FoodOfTheDayScalarWhereWithAggregatesInput[]
+    NOT?: FoodOfTheDayScalarWhereWithAggregatesInput | FoodOfTheDayScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"FoodOfTheDay"> | number
+    productId?: IntWithAggregatesFilter<"FoodOfTheDay"> | number
+    date?: DateTimeWithAggregatesFilter<"FoodOfTheDay"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"FoodOfTheDay"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -33887,6 +35164,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     posItems?: PosItemCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -33906,6 +35184,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     posItems?: PosItemUncheckedCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -33924,6 +35203,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     posItems?: PosItemUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -33943,6 +35223,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     posItems?: PosItemUncheckedUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -34885,6 +36166,51 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FoodOfTheDayCreateInput = {
+    date: Date | string
+    createdAt?: Date | string
+    product: ProductCreateNestedOneWithoutFoodOfDaysInput
+  }
+
+  export type FoodOfTheDayUncheckedCreateInput = {
+    id?: number
+    productId: number
+    date: Date | string
+    createdAt?: Date | string
+  }
+
+  export type FoodOfTheDayUpdateInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutFoodOfDaysNestedInput
+  }
+
+  export type FoodOfTheDayUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productId?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FoodOfTheDayCreateManyInput = {
+    id?: number
+    productId: number
+    date: Date | string
+    createdAt?: Date | string
+  }
+
+  export type FoodOfTheDayUpdateManyMutationInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FoodOfTheDayUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    productId?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -35707,6 +37033,12 @@ export namespace Prisma {
     none?: PosItemWhereInput
   }
 
+  export type FoodOfTheDayListRelationFilter = {
+    every?: FoodOfTheDayWhereInput
+    some?: FoodOfTheDayWhereInput
+    none?: FoodOfTheDayWhereInput
+  }
+
   export type ProductImageOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -35716,6 +37048,10 @@ export namespace Prisma {
   }
 
   export type PosItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FoodOfTheDayOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -36473,6 +37809,42 @@ export namespace Prisma {
 
   export type RestaurantInfoSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type FoodOfTheDayProductIdDateCompoundUniqueInput = {
+    productId: number
+    date: Date | string
+  }
+
+  export type FoodOfTheDayCountOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    date?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FoodOfTheDayAvgOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type FoodOfTheDayMaxOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    date?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FoodOfTheDayMinOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    date?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FoodOfTheDaySumOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
   }
 
   export type OrderCreateNestedManyWithoutCustomerInput = {
@@ -37281,6 +38653,13 @@ export namespace Prisma {
     connect?: PosItemWhereUniqueInput | PosItemWhereUniqueInput[]
   }
 
+  export type FoodOfTheDayCreateNestedManyWithoutProductInput = {
+    create?: XOR<FoodOfTheDayCreateWithoutProductInput, FoodOfTheDayUncheckedCreateWithoutProductInput> | FoodOfTheDayCreateWithoutProductInput[] | FoodOfTheDayUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: FoodOfTheDayCreateOrConnectWithoutProductInput | FoodOfTheDayCreateOrConnectWithoutProductInput[]
+    createMany?: FoodOfTheDayCreateManyProductInputEnvelope
+    connect?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
+  }
+
   export type ProductImageUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput> | ProductImageCreateWithoutProductInput[] | ProductImageUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductImageCreateOrConnectWithoutProductInput | ProductImageCreateOrConnectWithoutProductInput[]
@@ -37313,6 +38692,13 @@ export namespace Prisma {
     connectOrCreate?: PosItemCreateOrConnectWithoutProductInput | PosItemCreateOrConnectWithoutProductInput[]
     createMany?: PosItemCreateManyProductInputEnvelope
     connect?: PosItemWhereUniqueInput | PosItemWhereUniqueInput[]
+  }
+
+  export type FoodOfTheDayUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<FoodOfTheDayCreateWithoutProductInput, FoodOfTheDayUncheckedCreateWithoutProductInput> | FoodOfTheDayCreateWithoutProductInput[] | FoodOfTheDayUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: FoodOfTheDayCreateOrConnectWithoutProductInput | FoodOfTheDayCreateOrConnectWithoutProductInput[]
+    createMany?: FoodOfTheDayCreateManyProductInputEnvelope
+    connect?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
   }
 
   export type NullableFloatFieldUpdateOperationsInput = {
@@ -37397,6 +38783,20 @@ export namespace Prisma {
     deleteMany?: PosItemScalarWhereInput | PosItemScalarWhereInput[]
   }
 
+  export type FoodOfTheDayUpdateManyWithoutProductNestedInput = {
+    create?: XOR<FoodOfTheDayCreateWithoutProductInput, FoodOfTheDayUncheckedCreateWithoutProductInput> | FoodOfTheDayCreateWithoutProductInput[] | FoodOfTheDayUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: FoodOfTheDayCreateOrConnectWithoutProductInput | FoodOfTheDayCreateOrConnectWithoutProductInput[]
+    upsert?: FoodOfTheDayUpsertWithWhereUniqueWithoutProductInput | FoodOfTheDayUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: FoodOfTheDayCreateManyProductInputEnvelope
+    set?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
+    disconnect?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
+    delete?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
+    connect?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
+    update?: FoodOfTheDayUpdateWithWhereUniqueWithoutProductInput | FoodOfTheDayUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: FoodOfTheDayUpdateManyWithWhereWithoutProductInput | FoodOfTheDayUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: FoodOfTheDayScalarWhereInput | FoodOfTheDayScalarWhereInput[]
+  }
+
   export type ProductImageUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput> | ProductImageCreateWithoutProductInput[] | ProductImageUncheckedCreateWithoutProductInput[]
     connectOrCreate?: ProductImageCreateOrConnectWithoutProductInput | ProductImageCreateOrConnectWithoutProductInput[]
@@ -37461,6 +38861,20 @@ export namespace Prisma {
     update?: PosItemUpdateWithWhereUniqueWithoutProductInput | PosItemUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: PosItemUpdateManyWithWhereWithoutProductInput | PosItemUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: PosItemScalarWhereInput | PosItemScalarWhereInput[]
+  }
+
+  export type FoodOfTheDayUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<FoodOfTheDayCreateWithoutProductInput, FoodOfTheDayUncheckedCreateWithoutProductInput> | FoodOfTheDayCreateWithoutProductInput[] | FoodOfTheDayUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: FoodOfTheDayCreateOrConnectWithoutProductInput | FoodOfTheDayCreateOrConnectWithoutProductInput[]
+    upsert?: FoodOfTheDayUpsertWithWhereUniqueWithoutProductInput | FoodOfTheDayUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: FoodOfTheDayCreateManyProductInputEnvelope
+    set?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
+    disconnect?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
+    delete?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
+    connect?: FoodOfTheDayWhereUniqueInput | FoodOfTheDayWhereUniqueInput[]
+    update?: FoodOfTheDayUpdateWithWhereUniqueWithoutProductInput | FoodOfTheDayUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: FoodOfTheDayUpdateManyWithWhereWithoutProductInput | FoodOfTheDayUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: FoodOfTheDayScalarWhereInput | FoodOfTheDayScalarWhereInput[]
   }
 
   export type ProductCreateNestedOneWithoutImagesInput = {
@@ -37965,6 +39379,20 @@ export namespace Prisma {
     upsert?: DeliverySettingUpsertWithoutZonesInput
     connect?: DeliverySettingWhereUniqueInput
     update?: XOR<XOR<DeliverySettingUpdateToOneWithWhereWithoutZonesInput, DeliverySettingUpdateWithoutZonesInput>, DeliverySettingUncheckedUpdateWithoutZonesInput>
+  }
+
+  export type ProductCreateNestedOneWithoutFoodOfDaysInput = {
+    create?: XOR<ProductCreateWithoutFoodOfDaysInput, ProductUncheckedCreateWithoutFoodOfDaysInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutFoodOfDaysInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutFoodOfDaysNestedInput = {
+    create?: XOR<ProductCreateWithoutFoodOfDaysInput, ProductUncheckedCreateWithoutFoodOfDaysInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutFoodOfDaysInput
+    upsert?: ProductUpsertWithoutFoodOfDaysInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutFoodOfDaysInput, ProductUpdateWithoutFoodOfDaysInput>, ProductUncheckedUpdateWithoutFoodOfDaysInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -39876,6 +41304,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     posItems?: PosItemCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -39894,6 +41323,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     posItems?: PosItemUncheckedCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -40069,6 +41499,27 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FoodOfTheDayCreateWithoutProductInput = {
+    date: Date | string
+    createdAt?: Date | string
+  }
+
+  export type FoodOfTheDayUncheckedCreateWithoutProductInput = {
+    id?: number
+    date: Date | string
+    createdAt?: Date | string
+  }
+
+  export type FoodOfTheDayCreateOrConnectWithoutProductInput = {
+    where: FoodOfTheDayWhereUniqueInput
+    create: XOR<FoodOfTheDayCreateWithoutProductInput, FoodOfTheDayUncheckedCreateWithoutProductInput>
+  }
+
+  export type FoodOfTheDayCreateManyProductInputEnvelope = {
+    data: FoodOfTheDayCreateManyProductInput | FoodOfTheDayCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CategoryUpsertWithoutProductsInput = {
     update: XOR<CategoryUpdateWithoutProductsInput, CategoryUncheckedUpdateWithoutProductsInput>
     create: XOR<CategoryCreateWithoutProductsInput, CategoryUncheckedCreateWithoutProductsInput>
@@ -40217,6 +41668,32 @@ export namespace Prisma {
     unitPrice?: FloatFilter<"PosItem"> | number
   }
 
+  export type FoodOfTheDayUpsertWithWhereUniqueWithoutProductInput = {
+    where: FoodOfTheDayWhereUniqueInput
+    update: XOR<FoodOfTheDayUpdateWithoutProductInput, FoodOfTheDayUncheckedUpdateWithoutProductInput>
+    create: XOR<FoodOfTheDayCreateWithoutProductInput, FoodOfTheDayUncheckedCreateWithoutProductInput>
+  }
+
+  export type FoodOfTheDayUpdateWithWhereUniqueWithoutProductInput = {
+    where: FoodOfTheDayWhereUniqueInput
+    data: XOR<FoodOfTheDayUpdateWithoutProductInput, FoodOfTheDayUncheckedUpdateWithoutProductInput>
+  }
+
+  export type FoodOfTheDayUpdateManyWithWhereWithoutProductInput = {
+    where: FoodOfTheDayScalarWhereInput
+    data: XOR<FoodOfTheDayUpdateManyMutationInput, FoodOfTheDayUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type FoodOfTheDayScalarWhereInput = {
+    AND?: FoodOfTheDayScalarWhereInput | FoodOfTheDayScalarWhereInput[]
+    OR?: FoodOfTheDayScalarWhereInput[]
+    NOT?: FoodOfTheDayScalarWhereInput | FoodOfTheDayScalarWhereInput[]
+    id?: IntFilter<"FoodOfTheDay"> | number
+    productId?: IntFilter<"FoodOfTheDay"> | number
+    date?: DateTimeFilter<"FoodOfTheDay"> | Date | string
+    createdAt?: DateTimeFilter<"FoodOfTheDay"> | Date | string
+  }
+
   export type ProductCreateWithoutImagesInput = {
     name: string
     description?: string | null
@@ -40232,6 +41709,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     posItems?: PosItemCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutImagesInput = {
@@ -40250,6 +41728,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     posItems?: PosItemUncheckedCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutImagesInput = {
@@ -40283,6 +41762,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     posItems?: PosItemUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -40301,6 +41781,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     posItems?: PosItemUncheckedUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateWithoutInventoryInput = {
@@ -40318,6 +41799,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     posItems?: PosItemCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutInventoryInput = {
@@ -40336,6 +41818,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     posItems?: PosItemUncheckedCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutInventoryInput = {
@@ -40392,6 +41875,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     posItems?: PosItemUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutInventoryInput = {
@@ -40410,6 +41894,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     posItems?: PosItemUncheckedUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type InventoryTransactionUpsertWithWhereUniqueWithoutInventoryInput = {
@@ -40930,6 +42415,7 @@ export namespace Prisma {
     inventory?: InventoryCreateNestedOneWithoutProductInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
     posItems?: PosItemCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -40948,6 +42434,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedCreateNestedOneWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
     posItems?: PosItemUncheckedCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -41034,6 +42521,7 @@ export namespace Prisma {
     inventory?: InventoryUpdateOneWithoutProductNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     posItems?: PosItemUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -41052,6 +42540,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedUpdateOneWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     posItems?: PosItemUncheckedUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutPaymentInput = {
@@ -41401,6 +42890,7 @@ export namespace Prisma {
     inventory?: InventoryCreateNestedOneWithoutProductInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     cartItems?: CartItemCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutPosItemsInput = {
@@ -41419,6 +42909,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedCreateNestedOneWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutPosItemsInput = {
@@ -41491,6 +42982,7 @@ export namespace Prisma {
     inventory?: InventoryUpdateOneWithoutProductNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutPosItemsInput = {
@@ -41509,6 +43001,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedUpdateOneWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutCartItemsInput = {
@@ -41569,6 +43062,7 @@ export namespace Prisma {
     inventory?: InventoryCreateNestedOneWithoutProductInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     posItems?: PosItemCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCartItemsInput = {
@@ -41587,6 +43081,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedCreateNestedOneWithoutProductInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     posItems?: PosItemUncheckedCreateNestedManyWithoutProductInput
+    foodOfDays?: FoodOfTheDayUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCartItemsInput = {
@@ -41669,6 +43164,7 @@ export namespace Prisma {
     inventory?: InventoryUpdateOneWithoutProductNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     posItems?: PosItemUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCartItemsInput = {
@@ -41687,6 +43183,7 @@ export namespace Prisma {
     inventory?: InventoryUncheckedUpdateOneWithoutProductNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     posItems?: PosItemUncheckedUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type DeliveryZoneCreateWithoutSettingInput = {
@@ -41802,6 +43299,96 @@ export namespace Prisma {
     deliveryRadius?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProductCreateWithoutFoodOfDaysInput = {
+    name: string
+    description?: string | null
+    price: number
+    costPrice?: number | null
+    sku?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    category: CategoryCreateNestedOneWithoutProductsInput
+    images?: ProductImageCreateNestedManyWithoutProductInput
+    inventory?: InventoryCreateNestedOneWithoutProductInput
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    cartItems?: CartItemCreateNestedManyWithoutProductInput
+    posItems?: PosItemCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutFoodOfDaysInput = {
+    id?: number
+    name: string
+    description?: string | null
+    price: number
+    costPrice?: number | null
+    sku?: string | null
+    isActive?: boolean
+    categoryId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    images?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutProductInput
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    cartItems?: CartItemUncheckedCreateNestedManyWithoutProductInput
+    posItems?: PosItemUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutFoodOfDaysInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutFoodOfDaysInput, ProductUncheckedCreateWithoutFoodOfDaysInput>
+  }
+
+  export type ProductUpsertWithoutFoodOfDaysInput = {
+    update: XOR<ProductUpdateWithoutFoodOfDaysInput, ProductUncheckedUpdateWithoutFoodOfDaysInput>
+    create: XOR<ProductCreateWithoutFoodOfDaysInput, ProductUncheckedCreateWithoutFoodOfDaysInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutFoodOfDaysInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutFoodOfDaysInput, ProductUncheckedUpdateWithoutFoodOfDaysInput>
+  }
+
+  export type ProductUpdateWithoutFoodOfDaysInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    images?: ProductImageUpdateManyWithoutProductNestedInput
+    inventory?: InventoryUpdateOneWithoutProductNestedInput
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    cartItems?: CartItemUpdateManyWithoutProductNestedInput
+    posItems?: PosItemUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutFoodOfDaysInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    costPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    categoryId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    images?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutProductNestedInput
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
+    posItems?: PosItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateManyCustomerInput = {
@@ -42309,6 +43896,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUpdateManyWithoutProductNestedInput
     posItems?: PosItemUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -42327,6 +43915,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     cartItems?: CartItemUncheckedUpdateManyWithoutProductNestedInput
     posItems?: PosItemUncheckedUpdateManyWithoutProductNestedInput
+    foodOfDays?: FoodOfTheDayUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -42367,6 +43956,12 @@ export namespace Prisma {
     sessionId: string
     quantity: number
     unitPrice: number
+  }
+
+  export type FoodOfTheDayCreateManyProductInput = {
+    id?: number
+    date: Date | string
+    createdAt?: Date | string
   }
 
   export type ProductImageUpdateWithoutProductInput = {
@@ -42444,6 +44039,23 @@ export namespace Prisma {
     sessionId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     unitPrice?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type FoodOfTheDayUpdateWithoutProductInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FoodOfTheDayUncheckedUpdateWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FoodOfTheDayUncheckedUpdateManyWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InventoryTransactionCreateManyInventoryInput = {

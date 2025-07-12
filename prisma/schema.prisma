@@ -208,6 +208,7 @@ model Product {
   orderItems OrderItem[]
   cartItems  CartItem[]
   posItems   PosItem[]
+  foodOfDays FoodOfTheDay[]
 }
 
 model ProductImage {
@@ -384,4 +385,16 @@ model RestaurantInfo {
   logo        String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+
+model FoodOfTheDay {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  date      DateTime // no longer unique
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, date]) // Ensure no duplicate product on same date
 }

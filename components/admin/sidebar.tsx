@@ -46,6 +46,11 @@ const navItems: NavItem[] = [
     icon: ChefHat,
   },
   {
+    title: "Foods of the Day",
+    href: "/foods-of-the-day",
+    icon: Package,
+  },
+  {
     title: "Customers",
     href: "/customers",
     icon: Users,

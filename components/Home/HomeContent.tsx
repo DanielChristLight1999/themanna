@@ -8,48 +8,60 @@ import MenuSection from "./MenuSection"
 import AboutSection from "./AboutSection"
 import ContactSections from "./ContactSections"
 import FooterSection from "./FooterSection"
+import { FeaturedFoodsModal, FloatingFoodButton, useFeaturedFoodsModal } from "./FeaturedFoodsModal"
+import { Featured } from "@/app/admin/(routes)/foods-of-the-day/pageClient"
 
 export interface HomeMenuItem {
-        id: number,
-        name: string,
-        description: string | null,
-        price: number,
-        image: string,
-        category: string,
-    
+  id: number,
+  name: string,
+  description: string | null,
+  price: number,
+  image: string,
+  category: string,
+
 }
-export default function ManaLandingPage({menuitems}: { menuitems: HomeMenuItem[] }) {
-    const [isVisible, setIsVisible] = useState(false)
+export default function ManaLandingPage({ menuitems, featuredFoods }: { menuitems: HomeMenuItem[], featuredFoods: Featured[] }) {
+  const [isVisible, setIsVisible] = useState(false)
+  const { isModalOpen, showFloatingButton, closeModal, openModal } = useFeaturedFoodsModal()
 
-    useEffect(() => {
-        setIsVisible(true)
-    }, [])
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
+  useEffect(() => {
+    openModal()
+  }, [])
 
 
 
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
-            {/* Navigation */}
-            <Nav />
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+      {/* Featured Foods Modal */}
+      {featuredFoods.length > 0 ? <FeaturedFoodsModal featuredFoods={featuredFoods} isOpen={isModalOpen} onClose={closeModal} />: ""}
 
-            {/* Hero Section */}
-            <Hero isVisible={isVisible} />
-            {/* Features Section */}
-            <Features />
+      {/* Floating Food Button */}
+      {showFloatingButton && featuredFoods.length > 0 ? <FloatingFoodButton onClick={openModal} /> : ""}
+      {/* Navigation */}
+      <Nav />
 
-            {/* Menu Section */}
-            <MenuSection menuItems={menuitems} isVisible={isVisible} />
+      {/* Hero Section */}
+      <Hero isVisible={isVisible} />
+      {/* Features Section */}
+      <Features />
 
-            {/* About Section */}
-            <AboutSection />
+      {/* Menu Section */}
+      <MenuSection menuItems={menuitems} isVisible={isVisible} />
 
-            {/* Contact Section */}
-            <ContactSections />
+      {/* About Section */}
+      <AboutSection />
 
-            {/* Footer */}
-            <FooterSection />
+      {/* Contact Section */}
+      <ContactSections />
 
-            <style jsx>{`
+      {/* Footer */}
+      <FooterSection />
+
+      <style jsx>{`
         @keyframes fade-in {
           from {
             opacity: 0;
@@ -65,6 +77,6 @@ export default function ManaLandingPage({menuitems}: { menuitems: HomeMenuItem[]
           animation: fade-in 0.6s ease-out forwards;
         }
       `}</style>
-        </div>
-    )
+    </div>
+  )
 }

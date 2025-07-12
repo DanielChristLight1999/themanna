@@ -1,9 +1,11 @@
 import GoToCart from "@/components/Apps/MainMenu/GoToCart";
 import ManaLandingPage from "@/components/Home/HomeContent";
 import prisma from "@/db";
+import { getFoodsOfTheDay } from "@/lib/getData";
 
 export default async function Home() {
   // const session = await auth()
+  const featuredFoods = await getFoodsOfTheDay()
   const data = await prisma.product.findMany({
     select: {
       id: true,
@@ -25,7 +27,7 @@ export default async function Home() {
 
   return (
     <div className="">
-      <ManaLandingPage menuitems={menuItems} />
+      <ManaLandingPage featuredFoods={featuredFoods} menuitems={menuItems} />
       <GoToCart fromLanding={true} />
     </div>
   );

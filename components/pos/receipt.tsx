@@ -53,7 +53,8 @@ function ReceiptContent({ order }: { order: PastOrderWithItems  }) {
   })
 
   return (
-    <div className="receipt-content p-4 text-sm font-mono max-w-sm mx-auto text-black">
+    <div className="receipt-content h-full p-4 text-sm font-mono max-w-sm mx-auto text-black">
+      {JSON.stringify(order)}
       <div className="text-center mb-4">
         <h1 className="text-xl font-bold">{name}</h1>
         <p className="text-xs">{address}</p>
@@ -152,12 +153,12 @@ export function ReceiptModal({ isOpen, onClose, order }: ReceiptProps) {
             <span>Receipt</span>
             <Button size="sm" variant="outline" onClick={handlePrint}>
               <Printer className="h-4 w-4 mr-2" />
-              Print
+              Printer
             </Button>
           </DialogTitle>
         </DialogHeader>
-
-        <div ref={printRef} className="p-4 bg-white">
+        {/* {JSON.stringify(order)} */}
+        <div ref={printRef} className="p-4">
           <ReceiptContent order={order} />
         </div>
       </DialogContent>

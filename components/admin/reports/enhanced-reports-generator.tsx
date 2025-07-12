@@ -182,11 +182,11 @@ export function EnhancedReportsGenerator() {
 
         <CardContent className="space-y-6">
           <Tabs defaultValue="template" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="template">Template</TabsTrigger>
               <TabsTrigger value="fields">Fields</TabsTrigger>
               <TabsTrigger value="filters">Filters</TabsTrigger>
-              <TabsTrigger value="format">Output</TabsTrigger>
+              {/* <TabsTrigger value="format">Output</TabsTrigger> */}
             </TabsList>
 
             <TabsContent value="template" className="space-y-4">
@@ -359,7 +359,7 @@ export function EnhancedReportsGenerator() {
               )}
             </TabsContent>
 
-            <TabsContent value="format" className="space-y-4">
+            {/* <TabsContent value="format" className="space-y-4">
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Report Format</Label>
@@ -436,7 +436,7 @@ export function EnhancedReportsGenerator() {
                   </div>
                 </Card>
               </div>
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
 
           <Separator />
