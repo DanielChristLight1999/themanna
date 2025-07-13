@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { LogOutOAuth } from "@/actions/authactions"
+import Image from "next/image"
 
 interface NavItem {
   title: string
@@ -94,8 +95,9 @@ export default function AdminSidebar() {
         <SheetContent side="left" className="w-64 p-0">
           <SheetHeader className="border-b p-4">
             <SheetTitle className="text-left flex items-center gap-2">
-              <Package className="h-5 w-5" />
-              <span>The Mana</span>
+              <Link href={"/"} className="">
+                <Image src={"/images/themanalogonew.png"} alt="logo" width={150} height={150} />
+              </Link>
             </SheetTitle>
           </SheetHeader>
           <div className="flex flex-col gap-1 p-2">
@@ -124,8 +126,9 @@ export default function AdminSidebar() {
       {/* Desktop Sidebar */}
       <div className="hidden md:flex flex-col w-64 border-r bg-background">
         <div className="p-4 border-b flex items-center gap-2 font-semibold">
-          <Package className="h-5 w-5" />
-          <span>The Mana</span>
+          <Link href={"/"} className="">
+            <Image src={"/images/themanalogonew.png"} alt="logo" width={150} height={150} />
+          </Link>
         </div>
         <div className="flex flex-col gap-1 p-2 flex-1">
           {navItems.map((item) => (
