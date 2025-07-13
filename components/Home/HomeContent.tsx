@@ -8,8 +8,9 @@ import MenuSection from "./MenuSection"
 import AboutSection from "./AboutSection"
 import ContactSections from "./ContactSections"
 import FooterSection from "./FooterSection"
-import { FeaturedFoodsModal, FloatingFoodButton, useFeaturedFoodsModal } from "./FeaturedFoodsModal"
+import { FeaturedFoodsModal, FloatingFoodButton } from "./FeaturedFoodsModal"
 import { Featured } from "@/app/admin/(routes)/foods-of-the-day/pageClient"
+import { useFeaturedFoodsModal } from "@/hooks/use-featured-modal"
 
 export interface HomeMenuItem {
   id: number,
