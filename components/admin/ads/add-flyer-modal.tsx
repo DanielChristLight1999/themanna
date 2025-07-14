@@ -1,0 +1,351 @@
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
+import { format } from "date-fns"
+import { Calendar, Upload, X } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+
+import { Button } from "@/components/ui/button"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Calendar as CalendarComponent } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { cn } from "@/lib/utils"
+import { FlyerAd } from "@/lib/generated/prisma"
+import { createFlyer } from "@/actions/admin/ads-actions"
+import { toast } from "sonner"
+import imageCompression from 'browser-image-compression'
+import { upload } from "@vercel/blob/client"
+
+type FileLike = {
+  name: string;
+  lastModified: number;
+  preview: string;
+};
+
+async function compressImage(file: File | FileLike): Promise<File> {
+  const options = {
+    maxSizeMB: 0.5, // Maximum file size in MB (adjust as needed)
+    maxWidthOrHeight: 1024, // Maximum width or height
+    useWebWorker: true,
+    fileType: 'image/jpeg' // You can adjust this based on your needs
+  };
+
+  try {
+    let fileToCompress: File;
+    
+    if (file instanceof File) {
+      fileToCompress = file;
+    } else {
+      const response = await fetch(file.preview);
+      const blob = await response.blob();
+      fileToCompress = new File([blob], file.name, { type: blob.type });
+    }
+
+    // Skip compression if not an image
+    if (!fileToCompress.type.match(/^image\//)) {
+      return fileToCompress;
+    }
+
+    // const compressedFile = await imageCompression(fileToCompress, options);
+    return fileToCompress;
+  } catch (error) {
+    console.error('Error compressing image:', error);
+    throw error;
+  }
+}
+
+async function uploadImage(file: File | FileLike) {
+
+    try {
+      let fileName: string;
+      let blob: Blob;
+
+      // Compress the image first
+      const compressedFile = await compressImage(file);
+      fileName = compressedFile.name;
+      blob = compressedFile;
+
+      const response = await upload(`images/flyers/${fileName}`, blob, {
+        access: 'public',
+        handleUploadUrl: "/api/imageupload",
+      });
+      return response.url;
+    } catch (error) {
+      console.error('Error uploading file:', file.name, error);
+      // You might want to handle this error differently
+      throw error;
+    }
+
+}
+
+interface AddFlyerModalProps {
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    onSubmit: (flyer: FlyerAd) => void
+}
+
+const formSchema = z.object({
+    title: z.string().min(1, "Title is required").max(100, "Title must be less than 100 characters"),
+    imageUrl: z.string().min(1, "Image URL is required").url("Please enter a valid URL"),
+    linkUrl: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
+    position: z.enum(["top", "middle", "footer"], {
+        required_error: "Please select a position",
+    }),
+    isActive: z.boolean(),
+    expiresAt: z.date().optional(),
+})
+
+export type FormDataFlyer = z.infer<typeof formSchema>
+
+export function AddFlyerModal({ open, onOpenChange, onSubmit }: AddFlyerModalProps) {
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const form = useForm<FormDataFlyer, any, FormDataFlyer>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            title: "",
+            imageUrl: "",
+            linkUrl: "",
+            position: "top", // or pick a sensible default to avoid undefined issues
+            isActive: true,
+            expiresAt: undefined,
+        },
+    })
+
+    const handleSubmit = async (data: FormDataFlyer) => {
+        setIsSubmitting(true)
+
+        try {
+            // Simulate API call
+            const response = await createFlyer(data)
+            if (response.error || !response.data) {
+                toast.error(response.message)
+                return
+            }
+            onSubmit(response.data)
+            form.reset()
+            onOpenChange(false)
+        } catch (error) {
+            console.log("Error creating flyer:", error)
+            toast.error("Failed to create flyer ad")
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    const handleImageUpload =async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            // In a real app, you would upload to a service like Cloudinary or AWS S3
+            const url = await uploadImage(file)
+            form.setValue("imageUrl", url)
+        }
+    }
+
+    const handleOpenChange = (newOpen: boolean) => {
+        if (!newOpen) {
+            form.reset()
+        }
+        onOpenChange(newOpen)
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={handleOpenChange}>
+            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                    <DialogTitle>Add New Flyer</DialogTitle>
+                    <DialogDescription>Create a new flyer advertisement to display on your platform.</DialogDescription>
+                </DialogHeader>
+
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+                        <div className="grid gap-4">
+                            {/* Title */}
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Title</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter flyer title" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Image Upload */}
+                            <FormField
+                                control={form.control}
+                                name="imageUrl"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Image</FormLabel>
+                                        <FormControl>
+                                            <div className="space-y-2">
+                                                <div className="flex items-center gap-2">
+                                                    <Input placeholder="Enter image URL or upload file" {...field} />
+                                                    <div className="relative">
+                                                        <Input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={handleImageUpload}
+                                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                        />
+                                                        <Button type="button" variant="outline" size="sm">
+                                                            <Upload className="h-4 w-4 mr-2" />
+                                                            Upload
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                                {field.value && (
+                                                    <div className="relative w-full h-32 border rounded-lg overflow-hidden">
+                                                        <img
+                                                            src={field.value || "/placeholder.svg"}
+                                                            alt="Preview"
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                        <Button
+                                                            type="button"
+                                                            variant="destructive"
+                                                            size="sm"
+                                                            className="absolute top-2 right-2"
+                                                            onClick={() => form.setValue("imageUrl", "")}
+                                                        >
+                                                            <X className="h-3 w-3" />
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* <ImageUploader name="imageUrl" /> */}
+
+                            {/* Link URL */}
+                            <FormField
+                                control={form.control}
+                                name="linkUrl"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Link URL</FormLabel>
+                                        <FormControl>
+                                            <Input type="url" placeholder="https://example.com" {...field} />
+                                        </FormControl>
+                                        <FormDescription>Optional URL to redirect users when they click the flyer</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Position */}
+                            <FormField
+                                control={form.control}
+                                name="position"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Position</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select position" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="top">Top</SelectItem>
+                                                <SelectItem value="middle">Middle</SelectItem>
+                                                <SelectItem value="footer">Footer</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormDescription>Choose where the flyer will be displayed on the page</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Expiration Date */}
+                            <FormField
+                                control={form.control}
+                                name="expiresAt"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>Expiration Date</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant="outline"
+                                                        className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                                                    >
+                                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                                        <Calendar className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <CalendarComponent
+                                                    mode="single"
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+                                                    disabled={(date) => date < new Date()}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormDescription>Optional expiration date for the flyer</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Active Status */}
+                            <FormField
+                                control={form.control}
+                                name="isActive"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                        <FormControl>
+                                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                        </FormControl>
+                                        <div className="space-y-1 leading-none">
+                                            <FormLabel>Active</FormLabel>
+                                            <FormDescription>Make this flyer visible to users immediately</FormDescription>
+                                        </div>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        <DialogFooter>
+                            <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isSubmitting}>
+                                Cancel
+                            </Button>
+                            <Button type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? "Creating..." : "Create Flyer"}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}

@@ -459,3 +459,26 @@ export async function getFoodsOfTheDay() {
 
   return foodsOfTheDay
 }
+
+
+export async function getAllflyers(){
+    const flyers = await prisma.flyerAd.findMany({
+        orderBy: { createdAt: "desc" },
+    })
+    return flyers
+}
+export async function getActiveFlyers(position: "top" | "middle" | "footer") {
+  const now = new Date()
+
+  return await prisma.flyerAd.findMany({
+    where: {
+      isActive: true,
+      position,
+      OR: [
+        { expiresAt: null },
+        { expiresAt: { gt: now } },
+      ],
+    },
+    orderBy: { createdAt: "desc" }
+  })
+}

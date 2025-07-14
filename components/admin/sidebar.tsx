@@ -7,6 +7,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   BarChart3,
+  Blocks,
   ChefHat,
   ClipboardList,
   CreditCard,
@@ -50,6 +51,11 @@ const navItems: NavItem[] = [
     title: "Foods of the Day",
     href: "/foods-of-the-day",
     icon: Package,
+  },
+  {
+    title: "Advertisements",
+    href: "/ads",
+    icon: Blocks,
   },
   {
     title: "Customers",

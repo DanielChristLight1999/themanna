@@ -11,6 +11,8 @@ import FooterSection from "./FooterSection"
 import { FeaturedFoodsModal, FloatingFoodButton } from "./FeaturedFoodsModal"
 import { Featured } from "@/app/admin/(routes)/foods-of-the-day/pageClient"
 import { useFeaturedFoodsModal } from "@/hooks/use-featured-modal"
+import { FlyerAd } from "@/lib/generated/prisma"
+import { FlyerCarousel } from "./FlyerCarousel"
 
 export interface HomeMenuItem {
   id: number,
@@ -21,7 +23,7 @@ export interface HomeMenuItem {
   category: string,
 
 }
-export default function ManaLandingPage({ menuitems, featuredFoods }: { menuitems: HomeMenuItem[], featuredFoods: Featured[] }) {
+export default function ManaLandingPage({ menuitems, featuredFoods, topFlyers, middleFlyers, bottomFlyers }: { menuitems: HomeMenuItem[], featuredFoods: Featured[], topFlyers: FlyerAd[], middleFlyers: FlyerAd[], bottomFlyers: FlyerAd[] }) {
   const [isVisible, setIsVisible] = useState(false)
   const { isModalOpen, showFloatingButton, closeModal, openModal } = useFeaturedFoodsModal()
 
@@ -38,17 +40,28 @@ export default function ManaLandingPage({ menuitems, featuredFoods }: { menuitem
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
       {/* Featured Foods Modal */}
-      {featuredFoods.length > 0 ? <FeaturedFoodsModal featuredFoods={featuredFoods} isOpen={isModalOpen} onClose={closeModal} />: ""}
+      {featuredFoods.length > 0 ? <FeaturedFoodsModal featuredFoods={featuredFoods} isOpen={isModalOpen} onClose={closeModal} /> : ""}
 
       {/* Floating Food Button */}
       {showFloatingButton && featuredFoods.length > 0 ? <FloatingFoodButton onClick={openModal} /> : ""}
       {/* Navigation */}
       <Nav />
-
+      {/* Render Top Flyers */}
+      {topFlyers.length > 0 && (
+        <div className="w-full py-2">
+          <FlyerCarousel flyers={topFlyers} />
+        </div>
+      )}
       {/* Hero Section */}
       <Hero isVisible={isVisible} />
       {/* Features Section */}
       <Features />
+
+      {middleFlyers.length > 0 && (
+        <div className="w-full py-4">
+          <FlyerCarousel flyers={middleFlyers} />
+        </div>
+      )}
 
       {/* Menu Section */}
       <MenuSection menuItems={menuitems} isVisible={isVisible} />
@@ -58,6 +71,13 @@ export default function ManaLandingPage({ menuitems, featuredFoods }: { menuitem
 
       {/* Contact Section */}
       <ContactSections />
+
+      {/* Render Footer Flyers */}
+      {bottomFlyers.length > 0 && (
+        <div className="w-full py-4">
+          <FlyerCarousel flyers={bottomFlyers} />
+        </div>
+      )}
 
       {/* Footer */}
       <FooterSection />

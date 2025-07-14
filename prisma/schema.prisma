@@ -398,3 +398,21 @@ model FoodOfTheDay {
 
   @@unique([productId, date]) // Ensure no duplicate product on same date
 }
+
+
+model FlyerAd {
+  id         Int      @id @default(autoincrement())
+  title      String
+  imageUrl   String
+  linkUrl    String?
+  position   FlyerPosition
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime?
+}
+
+enum FlyerPosition {
+  top
+  middle
+  footer
+}
