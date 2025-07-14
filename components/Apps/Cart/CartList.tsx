@@ -2,30 +2,31 @@
 import CartItemCard from './CartItemCard'
 import Link from 'next/link'
 import useCartStore from '@/stores/cartstore'
-// import { getCartFromLanding } from '@/actions/cartactions'
-// import { useReadLocalStorage } from 'usehooks-ts'
+import { useReadLocalStorage } from 'usehooks-ts'
+import { useEffect } from 'react'
+import { getCartFromLanding } from '@/actions/cartactions'
 
 const CartList = () => {
     const cart = useCartStore((state) => state.cart)
-    // const setCart = useCartStore((state) => state.setCart)
-    // const guestId = useReadLocalStorage<string>("guestId")
+    const setCart = useCartStore((state) => state.setCart)
+    const guestId = useReadLocalStorage<string>("guestId")
 
-    // useEffect(() => {
-    //     async function checkForExistingCart() {
-    //         if (guestId) {
-    //             const response = await getCartFromLanding(guestId)
-    //             if (response.error) {
-    //                 return
-    //             }
-    //             const cartItems = response.cartItems
-    //             if (!cartItems) {
-    //                 return
-    //             }
-    //             setCart(cartItems)
-    //         }
-    //     }
-    //     checkForExistingCart()
-    // }, [guestId])
+    useEffect(() => {
+        async function checkForExistingCart() {
+            if (guestId) {
+                const response = await getCartFromLanding(guestId)
+                if (response.error) {
+                    return
+                }
+                const cartItems = response.cartItems
+                if (!cartItems) {
+                    return
+                }
+                setCart(cartItems)
+            }
+        }
+        checkForExistingCart()
+    }, [guestId])
     if (cart.length === 0) {
         return (
             <div className="text-center py-12">

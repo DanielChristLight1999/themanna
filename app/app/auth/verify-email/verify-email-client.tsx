@@ -15,11 +15,11 @@ import { emailVerificationSchema, type EmailVerificationFormData } from "@/lib/v
 import { sendVerificationEmail, verifyEmailCode } from "@/actions/authactions"
 import { toast } from "sonner"
 import { VerificationCodeInput } from "@/components/Apps/common/verification-code-input"
-import { useLocalStorage } from "usehooks-ts"
+import { useLocalStorage, useReadLocalStorage } from "usehooks-ts"
 
 export default function VerifyEmailPage({ email }: { email: string }) {
     const router = useRouter()
-
+    const guestId = useReadLocalStorage<string>("guestId")
     const [isLoading, setIsLoading] = useState(false)
     const [isSending, setIsSending] = useState(false)
     const [serverError, setServerError] = useState("")
@@ -104,7 +104,11 @@ export default function VerifyEmailPage({ email }: { email: string }) {
                 return
             }
             setSuccessMessage("Email verified successfully! Redirecting...")
-            router.replace("/")
+            if(guestId){
+                router.replace("/orders")
+            }else{
+                router.replace("/")
+            }
 
         } catch (error) {
             setServerError(error instanceof Error ? error.message : "Verification failed. Please try again.")

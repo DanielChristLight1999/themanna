@@ -52,7 +52,11 @@ export default function LoginForm({guestId}: { guestId?: string }) {
         return
       }
       toast.success(response.message)
-      router.replace("/")
+      if(id === ""){
+        router.replace("/")
+      }else{
+        router.replace("/orders")
+      }
       // Handle successful login (redirect, etc.)
     } catch (error) {
       setServerError(error instanceof Error ? error.message : "An unexpected error occurred")
