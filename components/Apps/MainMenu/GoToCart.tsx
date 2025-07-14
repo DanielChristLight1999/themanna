@@ -28,7 +28,7 @@ const GoToCart = ({fromLanding = false}: { fromLanding?: boolean }) => {
                 console.error(response.message)
                 return
             }
-            router.push(`/auth/signup?guestId=${guestId}`)
+            router.push(`https://app.${window.location.host}/auth/signup?guestId=${guestId}`)
         } else {
             router.push("/orders")
         }
