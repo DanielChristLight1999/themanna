@@ -1,4 +1,4 @@
-import { auth, signIn } from '@/auth'
+import { auth } from '@/auth'
 import FoodMenu from '@/components/Apps/MainMenu/FoodMenu'
 import GoToCart from '@/components/Apps/MainMenu/GoToCart'
 import MenuHeader from '@/components/Apps/MainMenu/MenuHeader'

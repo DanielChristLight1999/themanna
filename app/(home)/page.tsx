@@ -1,6 +1,5 @@
 import GoToCart from "@/components/Apps/MainMenu/GoToCart";
 import ManaLandingPage from "@/components/Home/HomeContent";
-import prisma from "@/db";
 import { getActiveFlyers, getFoodsOfTheDay, getProductsHome } from "@/lib/getData";
 
 export default async function Home() {
