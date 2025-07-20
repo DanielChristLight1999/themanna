@@ -1,7 +1,7 @@
 import GoToCart from "@/components/Apps/MainMenu/GoToCart";
 import ManaLandingPage from "@/components/Home/HomeContent";
 import prisma from "@/db";
-import { getActiveFlyers, getFoodsOfTheDay } from "@/lib/getData";
+import { getActiveFlyers, getFoodsOfTheDay, getProductsHome } from "@/lib/getData";
 
 export default async function Home() {
   // const session = await auth()
@@ -11,24 +11,8 @@ export default async function Home() {
     getActiveFlyers("middle"),
     getActiveFlyers("footer")
   ])
-  const data = await prisma.product.findMany({
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      price: true,
-      images: { select: { url: true } },
-      category: { select: { name: true } },
-    }
-  });
-  const menuItems = data.map((item) => ({
-    id: item.id,
-    name: item.name,
-    description: item.description,
-    price: item.price,
-    image: item.images[0].url,
-    category: item.category.name,
-  }));
+  
+  const menuItems = await getProductsHome()
 
   return (
     <div>

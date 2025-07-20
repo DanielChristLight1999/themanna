@@ -8,6 +8,10 @@ import { auth } from "@/auth";
 
 export async function getProducts() {
     const data = await prisma.product.findMany({
+        where: {
+            isActive: true,
+            deletedAt: null,
+        },
         select: {
             id: true,
             name: true,
@@ -30,6 +34,32 @@ export async function getProducts() {
         description: product.description,
     }))
     return products
+}
+
+export async function getProductsHome() {
+    const data = await prisma.product.findMany({
+        where: {
+            isActive: true,
+            deletedAt: null,
+        },
+        select: {
+            id: true,
+            name: true,
+            description: true,
+            price: true,
+            images: { select: { url: true } },
+            category: { select: { name: true } },
+        }
+    });
+    const menuItems = data.map((item) => ({
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        image: item.images[0].url,
+        category: item.category.name,
+    }));
+    return menuItems
 }
 
 export async function getAllProducts() {
@@ -58,38 +88,38 @@ export async function getCategories() {
 }
 
 export async function loadCart() {
-  const session = await auth()
+    const session = await auth()
 
-  if (!session) {
-    throw new Error("Not authenticated")
-  }
-
-  const userId = session.user?.id
-  const data = await prisma.cartItem.findMany({
-    where: {
-      userId
-    },
-    select: {
-      quantity: true,
-      productId: true,
-      product: {
-        select: {
-          price: true,
-          name: true,
-          images: true,
-
-        }
-      }
+    if (!session) {
+        throw new Error("Not authenticated")
     }
-  })
-  const cartItems = data.map((item) => ({
-    quantity: item.quantity,
-    productId: item.productId.toString(),
-    price: item.product.price,
-    image: item.product.images?.[0]?.url,
-    name: item.product.name
-  }))
-  return cartItems
+
+    const userId = session.user?.id
+    const data = await prisma.cartItem.findMany({
+        where: {
+            userId
+        },
+        select: {
+            quantity: true,
+            productId: true,
+            product: {
+                select: {
+                    price: true,
+                    name: true,
+                    images: true,
+
+                }
+            }
+        }
+    })
+    const cartItems = data.map((item) => ({
+        quantity: item.quantity,
+        productId: item.productId.toString(),
+        price: item.product.price,
+        image: item.product.images?.[0]?.url,
+        name: item.product.name
+    }))
+    return cartItems
 }
 
 
@@ -123,37 +153,37 @@ export async function getCart(userId: string) {
     return cartItems
 }
 export interface CustomerOrderItem {
-  name: string
-  quantity: number
-  price: number
+    name: string
+    quantity: number
+    price: number
 }
 
 export interface CustomerOrder {
-  id: string
-  customer: string
-  phone: string | null
-  date: Date
-  total: number
-  deliveryFee: number | null
-  status: OrderStatus
-  paymentMethod?: string
-  type: string
-  items: CustomerOrderItem[]
-  address: string
+    id: string
+    customer: string
+    phone: string | null
+    date: Date
+    total: number
+    deliveryFee: number | null
+    status: OrderStatus
+    paymentMethod?: string
+    type: string
+    items: CustomerOrderItem[]
+    address: string
 }
 
 export interface CustomerNew {
-  id: string
-  name: string | null
-  email: string
-  phone: string | null
-  orders: CustomerOrder[]
-  totalOrders: number
-  totalSpent: number
-  lastOrder?: Date
-  status: string
-  addresses: any[] // Or define a proper type if known
-  joinDate: Date
+    id: string
+    name: string | null
+    email: string
+    phone: string | null
+    orders: CustomerOrder[]
+    totalOrders: number
+    totalSpent: number
+    lastOrder?: Date
+    status: string
+    addresses: any[] // Or define a proper type if known
+    joinDate: Date
 }
 
 export async function getCustomers(): Promise<CustomerNew[]> {
@@ -387,7 +417,7 @@ export async function getAllPOSSessions(): Promise<PosSessionWithOrdersAndStaff[
     const data = await prisma.posSession.findMany({
         include: {
             staff: { select: { id: true, name: true } },
-            orders: { include: { items: {select: {id: true}}, payment: {select: {method: true}} } },
+            orders: { include: { items: { select: { id: true } }, payment: { select: { method: true } } } },
         },
         orderBy: { openedAt: "desc" },
     })
@@ -417,7 +447,7 @@ export async function getAllPOSSessions(): Promise<PosSessionWithOrdersAndStaff[
 }
 
 // export async function getFoodsOfTheDay() {
-    
+
 // const today = new Date().toISOString().split('T')[0];
 
 // const foodsOfTheDay = await prisma.foodOfTheDay.findMany({
@@ -437,48 +467,48 @@ export async function getAllPOSSessions(): Promise<PosSessionWithOrdersAndStaff[
 // }
 
 export async function getFoodsOfTheDay() {
-  const todayStart = startOfDay(new Date())
-  const todayEnd = endOfDay(new Date())
+    const todayStart = startOfDay(new Date())
+    const todayEnd = endOfDay(new Date())
 
-  const foodsOfTheDay = await prisma.foodOfTheDay.findMany({
-    where: {
-      date: {
-        gte: todayStart,
-        lte: todayEnd,
-      },
-    },
-    include: {
-      product: {
-        include: {
-          category: true,
-          images: true,
+    const foodsOfTheDay = await prisma.foodOfTheDay.findMany({
+        where: {
+            date: {
+                gte: todayStart,
+                lte: todayEnd,
+            },
         },
-      },
-    },
-  })
+        include: {
+            product: {
+                include: {
+                    category: true,
+                    images: true,
+                },
+            },
+        },
+    })
 
-  return foodsOfTheDay
+    return foodsOfTheDay
 }
 
 
-export async function getAllflyers(){
+export async function getAllflyers() {
     const flyers = await prisma.flyerAd.findMany({
         orderBy: { createdAt: "desc" },
     })
     return flyers
 }
 export async function getActiveFlyers(position: "top" | "middle" | "footer") {
-  const now = new Date()
+    const now = new Date()
 
-  return await prisma.flyerAd.findMany({
-    where: {
-      isActive: true,
-      position,
-      OR: [
-        { expiresAt: null },
-        { expiresAt: { gt: now } },
-      ],
-    },
-    orderBy: { createdAt: "desc" }
-  })
+    return await prisma.flyerAd.findMany({
+        where: {
+            isActive: true,
+            position,
+            OR: [
+                { expiresAt: null },
+                { expiresAt: { gt: now } },
+            ],
+        },
+        orderBy: { createdAt: "desc" }
+    })
 }
