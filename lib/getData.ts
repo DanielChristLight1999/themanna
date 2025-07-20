@@ -1,5 +1,4 @@
 import prisma from "@/db";
-import { Customer } from "./columns/customersTableColumn";
 import { endOfDay, isAfter, startOfDay, startOfMonth, startOfWeek } from "date-fns";
 import { OrderStatus, PaymentMethod } from "./generated/prisma";
 import { auth } from "@/auth";

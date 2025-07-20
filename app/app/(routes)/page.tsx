@@ -6,6 +6,8 @@ import { getCategories, getProducts } from '@/lib/getData'
 import { checkVerifiedEmail } from '@/lib/validations'
 import { redirect } from 'next/navigation'
 
+export const dynamic = "force-dynamic"
+
 
 const page = async () => {
   const session = await auth()
@@ -18,6 +20,7 @@ const page = async () => {
   }
   const products = await getProducts()
   const categories = await getCategories()
+  
   return (
     <div className='relative md:px-0 w-full md:max-w-2/3 h-fit'>
       <MenuHeader />

@@ -2,6 +2,7 @@ import GoToCart from "@/components/Apps/MainMenu/GoToCart";
 import ManaLandingPage from "@/components/Home/HomeContent";
 import { getActiveFlyers, getFoodsOfTheDay, getProductsHome } from "@/lib/getData";
 
+export const dynamic = "force-dynamic"
 export default async function Home() {
   // const session = await auth()
   const [featuredFoods, topFlyers, middleFlyers, bottomFlyers] = await Promise.all([
