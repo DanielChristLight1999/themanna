@@ -53,16 +53,22 @@ export async function getProductsHome() {
             description: true,
             price: true,
             images: { select: { url: true } },
-            category: { select: { name: true } },
+            category: { select: { name: true, id: true } },
+            inventory: {
+                select: {
+                    quantity: true
+                }
+            }
         }
     });
     const menuItems = data.map((item) => ({
-        id: item.id,
+        id: item.id.toString(),
         name: item.name,
         description: item.description,
         price: item.price,
         image: item.images[0].url,
-        category: item.category.name,
+        category: {id: item.category.id.toString(), name: item.category.name},
+        stock: item.inventory?.quantity || 0,
     }));
     return menuItems
 }

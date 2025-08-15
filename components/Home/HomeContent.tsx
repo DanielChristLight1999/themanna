@@ -15,12 +15,13 @@ import { FlyerAd } from "@/lib/generated/prisma"
 import { FlyerCarousel } from "./FlyerCarousel"
 
 export interface HomeMenuItem {
-  id: number,
+  id: string,
   name: string,
   description: string | null,
   price: number,
-  image: string,
-  category: string,
+  image: string | null,
+  category: {id: string, name: string},
+  stock: number
 
 }
 export default function ManaLandingPage({ menuitems, featuredFoods, topFlyers, middleFlyers, bottomFlyers }: { menuitems: HomeMenuItem[], featuredFoods: Featured[], topFlyers: FlyerAd[], middleFlyers: FlyerAd[], bottomFlyers: FlyerAd[] }) {
