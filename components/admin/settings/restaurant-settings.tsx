@@ -22,6 +22,7 @@ import { RolePermissionSettings } from "@/lib/permissions/types"
 export const restaurantInfoSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
+  commision: z.number().min(0).max(100), // Commission percentage
   address: z.string().min(1),
   phone: z.string().min(1),
   email: z.string().min(1),
@@ -60,6 +61,7 @@ export function RestaurantSettings({ restaurant, permissions }: { restaurant: Re
     defaultValues: {
       name: restaurant.name,
       description: restaurant.description,
+      commision: restaurant.commision * 100,
       address: restaurant.address,
       phone: restaurant.phone,
       email: restaurant.email,
@@ -91,6 +93,7 @@ export function RestaurantSettings({ restaurant, permissions }: { restaurant: Re
       phone: data.phone,
       email: data.email,
       website: data.website,
+      commision: data.commision / 100, // Convert percentage to decimal
     }
     if (data.logo) {
       const imageurl = await uploadImage(data.logo)
@@ -159,6 +162,16 @@ export function RestaurantSettings({ restaurant, permissions }: { restaurant: Re
               <FormField control={form.control} name="address" render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input disabled={!canUpdateSettings} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="commision" render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>Commision Percentage %</FormLabel>
                   <FormControl>
                     <Input disabled={!canUpdateSettings} {...field} />
                   </FormControl>

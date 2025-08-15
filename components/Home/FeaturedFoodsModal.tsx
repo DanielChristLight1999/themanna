@@ -258,11 +258,15 @@ interface FloatingFoodButtonProps {
 export function FloatingFoodButton({ onClick }: FloatingFoodButtonProps) {
   return (
     <Button
+      variant={"ghost"}
       onClick={onClick}
-      className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-14 h-14 md:w-16 md:h-16 rounded-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 animate-in slide-in-from-bottom-4 z-40 hover:scale-110"
+      className="fixed bottom-4  p-0 right-4 md:bottom-6 md:right-6 w-20 h-20 md:w-40 md:h-40 rounded-full text-white shadow-lg hover:shadow-xl transition-all duration-300 animate-bounce slide-in-from-bottom-4 z-40 hover:scale-110"
       size="icon"
     >
-      <span className="text-xl md:text-2xl">🍽️</span>
+      {/* Ping Animation */}
+      <span className="absolute  inline-flex h-full w-full rounded-full bg-orange-200 opacity-40 animate-ping"></span>
+
+      <Image src="/speciaIicon.png" alt="Featured Foods" width={100} height={100} className="w-full z-50 rounded-full h-full" />
     </Button>
   )
 }

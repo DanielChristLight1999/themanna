@@ -17,7 +17,7 @@ export async function updateRestaurantInfo(data: RestaurantInfo) {
             action: "update",
         })
         if (!canUpdate) return { error: true, message: 'Unauthorized' }
-        const { id, name, description, address, phone, email, website, logo } = data
+        const { id, name, description, address, phone, email, website, logo, commision } = data
 
         await prisma.restaurantInfo.update({
             where: {
@@ -31,6 +31,7 @@ export async function updateRestaurantInfo(data: RestaurantInfo) {
                 email,
                 website,
                 logo,
+                commision
             },
         })
         return { error: false, message: 'Restaurant info updated successfully' }

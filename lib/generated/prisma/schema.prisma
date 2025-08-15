@@ -383,6 +383,7 @@ model RestaurantInfo {
   email       String
   website     String
   logo        String?
+  commision   Float    @default(0.05) // 5% commission on orders
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

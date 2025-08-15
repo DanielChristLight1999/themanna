@@ -19,6 +19,7 @@ interface FoodMenuProps {
         image: string;
         price: number;
         description: string | null;
+        stock: number
     }[];
     categories: {
         id: string;
@@ -68,21 +69,21 @@ const FoodMenu = ({ products, categories }: FoodMenuProps) => {
                 </TabsList>
 
                 <TabsContent value="all">
-                    <FoodMenuCarousel foodsbycategory={products} />
-                    <FoodGrid foods={products} />
+                    {/* <FoodMenuCarousel foodsbycategory={products} /> */}
+                    <FoodGrid category={"all"} foods={products} />
                 </TabsContent>
 
                 {categories.map((category) => {
                 
                     return (
                         <TabsContent key={category.id} value={category.id}>
-                            <FoodMenuCarousel foodsbycategory={products} />
-                            <FoodGrid foods={products} />
+                            {/* <FoodMenuCarousel foodsbycategory={products} /> */}
+                            <FoodGrid category={category.id} foods={products} />
                         </TabsContent>
                     )
                 })}
             </Tabs>
-            <FoodDialog />
+            {/* <FoodDialog /> */}
         </div>
     )
 }

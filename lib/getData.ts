@@ -18,6 +18,11 @@ export async function getProducts() {
             images: true,
             price: true,
             description: true,
+            inventory: {
+                select: {
+                    quantity: true
+                }
+            }
         }
     });
 
@@ -31,6 +36,7 @@ export async function getProducts() {
         image: product.images?.[0]?.url,
         price: product.price,
         description: product.description,
+        stock: product.inventory?.quantity || 0,
     }))
     return products
 }

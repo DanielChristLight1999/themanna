@@ -180,11 +180,11 @@ model CommissionPayoutLog {
 }
 
 model Category {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
   deletedAt DateTime?
-  isActive  Boolean  @default(true)
+  isActive  Boolean   @default(true)
 
   products Product[]
 }
@@ -383,10 +383,10 @@ model RestaurantInfo {
   email       String
   website     String
   logo        String?
+  commision   Float    @default(0.05) // 5% commission on orders
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
-
 
 model FoodOfTheDay {
   id        Int      @id @default(autoincrement())
@@ -399,16 +399,15 @@ model FoodOfTheDay {
   @@unique([productId, date]) // Ensure no duplicate product on same date
 }
 
-
 model FlyerAd {
-  id         Int      @id @default(autoincrement())
-  title      String
-  imageUrl   String
-  linkUrl    String?
-  position   FlyerPosition
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  expiresAt  DateTime?
+  id        Int           @id @default(autoincrement())
+  title     String
+  imageUrl  String
+  linkUrl   String?
+  position  FlyerPosition
+  isActive  Boolean       @default(true)
+  createdAt DateTime      @default(now())
+  expiresAt DateTime?
 }
 
 enum FlyerPosition {

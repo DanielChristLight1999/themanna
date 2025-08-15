@@ -30091,10 +30091,12 @@ export namespace Prisma {
 
   export type RestaurantInfoAvgAggregateOutputType = {
     id: number | null
+    commision: number | null
   }
 
   export type RestaurantInfoSumAggregateOutputType = {
     id: number | null
+    commision: number | null
   }
 
   export type RestaurantInfoMinAggregateOutputType = {
@@ -30106,6 +30108,7 @@ export namespace Prisma {
     email: string | null
     website: string | null
     logo: string | null
+    commision: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -30119,6 +30122,7 @@ export namespace Prisma {
     email: string | null
     website: string | null
     logo: string | null
+    commision: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -30132,6 +30136,7 @@ export namespace Prisma {
     email: number
     website: number
     logo: number
+    commision: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -30140,10 +30145,12 @@ export namespace Prisma {
 
   export type RestaurantInfoAvgAggregateInputType = {
     id?: true
+    commision?: true
   }
 
   export type RestaurantInfoSumAggregateInputType = {
     id?: true
+    commision?: true
   }
 
   export type RestaurantInfoMinAggregateInputType = {
@@ -30155,6 +30162,7 @@ export namespace Prisma {
     email?: true
     website?: true
     logo?: true
+    commision?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -30168,6 +30176,7 @@ export namespace Prisma {
     email?: true
     website?: true
     logo?: true
+    commision?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -30181,6 +30190,7 @@ export namespace Prisma {
     email?: true
     website?: true
     logo?: true
+    commision?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -30281,6 +30291,7 @@ export namespace Prisma {
     email: string
     website: string
     logo: string | null
+    commision: number
     createdAt: Date
     updatedAt: Date
     _count: RestaurantInfoCountAggregateOutputType | null
@@ -30313,6 +30324,7 @@ export namespace Prisma {
     email?: boolean
     website?: boolean
     logo?: boolean
+    commision?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["restaurantInfo"]>
@@ -30326,6 +30338,7 @@ export namespace Prisma {
     email?: boolean
     website?: boolean
     logo?: boolean
+    commision?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["restaurantInfo"]>
@@ -30339,6 +30352,7 @@ export namespace Prisma {
     email?: boolean
     website?: boolean
     logo?: boolean
+    commision?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["restaurantInfo"]>
@@ -30352,11 +30366,12 @@ export namespace Prisma {
     email?: boolean
     website?: boolean
     logo?: boolean
+    commision?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RestaurantInfoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "address" | "phone" | "email" | "website" | "logo" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurantInfo"]>
+  export type RestaurantInfoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "address" | "phone" | "email" | "website" | "logo" | "commision" | "createdAt" | "updatedAt", ExtArgs["result"]["restaurantInfo"]>
 
   export type $RestaurantInfoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "RestaurantInfo"
@@ -30370,6 +30385,7 @@ export namespace Prisma {
       email: string
       website: string
       logo: string | null
+      commision: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["restaurantInfo"]>
@@ -30803,6 +30819,7 @@ export namespace Prisma {
     readonly email: FieldRef<"RestaurantInfo", 'String'>
     readonly website: FieldRef<"RestaurantInfo", 'String'>
     readonly logo: FieldRef<"RestaurantInfo", 'String'>
+    readonly commision: FieldRef<"RestaurantInfo", 'Float'>
     readonly createdAt: FieldRef<"RestaurantInfo", 'DateTime'>
     readonly updatedAt: FieldRef<"RestaurantInfo", 'DateTime'>
   }
@@ -33642,6 +33659,7 @@ export namespace Prisma {
     email: 'email',
     website: 'website',
     logo: 'logo',
+    commision: 'commision',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -35525,6 +35543,7 @@ export namespace Prisma {
     email?: StringFilter<"RestaurantInfo"> | string
     website?: StringFilter<"RestaurantInfo"> | string
     logo?: StringNullableFilter<"RestaurantInfo"> | string | null
+    commision?: FloatFilter<"RestaurantInfo"> | number
     createdAt?: DateTimeFilter<"RestaurantInfo"> | Date | string
     updatedAt?: DateTimeFilter<"RestaurantInfo"> | Date | string
   }
@@ -35538,6 +35557,7 @@ export namespace Prisma {
     email?: SortOrder
     website?: SortOrder
     logo?: SortOrderInput | SortOrder
+    commision?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -35554,6 +35574,7 @@ export namespace Prisma {
     email?: StringFilter<"RestaurantInfo"> | string
     website?: StringFilter<"RestaurantInfo"> | string
     logo?: StringNullableFilter<"RestaurantInfo"> | string | null
+    commision?: FloatFilter<"RestaurantInfo"> | number
     createdAt?: DateTimeFilter<"RestaurantInfo"> | Date | string
     updatedAt?: DateTimeFilter<"RestaurantInfo"> | Date | string
   }, "id">
@@ -35567,6 +35588,7 @@ export namespace Prisma {
     email?: SortOrder
     website?: SortOrder
     logo?: SortOrderInput | SortOrder
+    commision?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RestaurantInfoCountOrderByAggregateInput
@@ -35588,6 +35610,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"RestaurantInfo"> | string
     website?: StringWithAggregatesFilter<"RestaurantInfo"> | string
     logo?: StringNullableWithAggregatesFilter<"RestaurantInfo"> | string | null
+    commision?: FloatWithAggregatesFilter<"RestaurantInfo"> | number
     createdAt?: DateTimeWithAggregatesFilter<"RestaurantInfo"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RestaurantInfo"> | Date | string
   }
@@ -37355,6 +37378,7 @@ export namespace Prisma {
     email: string
     website: string
     logo?: string | null
+    commision?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -37368,6 +37392,7 @@ export namespace Prisma {
     email: string
     website: string
     logo?: string | null
+    commision?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -37380,6 +37405,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     website?: StringFieldUpdateOperationsInput | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    commision?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -37393,6 +37419,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     website?: StringFieldUpdateOperationsInput | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    commision?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -37406,6 +37433,7 @@ export namespace Prisma {
     email: string
     website: string
     logo?: string | null
+    commision?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -37418,6 +37446,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     website?: StringFieldUpdateOperationsInput | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    commision?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -37431,6 +37460,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     website?: StringFieldUpdateOperationsInput | string
     logo?: NullableStringFieldUpdateOperationsInput | string | null
+    commision?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39116,12 +39146,14 @@ export namespace Prisma {
     email?: SortOrder
     website?: SortOrder
     logo?: SortOrder
+    commision?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type RestaurantInfoAvgOrderByAggregateInput = {
     id?: SortOrder
+    commision?: SortOrder
   }
 
   export type RestaurantInfoMaxOrderByAggregateInput = {
@@ -39133,6 +39165,7 @@ export namespace Prisma {
     email?: SortOrder
     website?: SortOrder
     logo?: SortOrder
+    commision?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -39146,12 +39179,14 @@ export namespace Prisma {
     email?: SortOrder
     website?: SortOrder
     logo?: SortOrder
+    commision?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type RestaurantInfoSumOrderByAggregateInput = {
     id?: SortOrder
+    commision?: SortOrder
   }
 
   export type FoodOfTheDayProductIdDateCompoundUniqueInput = {

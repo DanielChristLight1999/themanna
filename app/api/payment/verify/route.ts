@@ -2,6 +2,7 @@ import prisma from "@/db"
 import { format } from "date-fns"
 import { NextRequest, NextResponse } from "next/server"
 import { PaymentStatus } from "@/lib/generated/prisma";
+import { getRestaurantSettingsNoAdmin } from "@/lib/getsettingsData";
 export  async function GET(req: NextRequest) {
   const reference = req.nextUrl.searchParams.get("reference");
 
@@ -86,8 +87,8 @@ export  async function GET(req: NextRequest) {
           where: {referralCode: order.affiliateCode}
         })
         if(affiliate){
-
-          const commisionAmount = order.totalAmount * 0.05 // 5% commission
+          const {restaurantInfo} = await getRestaurantSettingsNoAdmin()
+          const commisionAmount = order.totalAmount * (restaurantInfo?.commision || 0.05) // 5% commission
 
           await prisma.commission.create({
             data: {

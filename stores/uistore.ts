@@ -4,6 +4,8 @@ import { create } from "zustand";
 
 interface UIStore {
     isLoading: boolean;
+    searchQuery: string;
+    setSearchQuery: (searchQuery: string) => void;
     setIsLoading: (isLoading: boolean) => void;
     isNewAddressDialogOpen: boolean;
     setIsNewAddressDialogOpen: (isNewAddressDialogOpen: boolean) => void;
@@ -39,9 +41,13 @@ export interface FoodItem {
     price: number;
     // rating: number;
     description: string | null;
+    stock: number;
 }
 
 const useUIStore = create<UIStore>((set) => ({
+    searchQuery: "",
+    setSearchQuery: (searchQuery) => set({ searchQuery }),
+    isSidebarOpen: false,
     isLoading: false,
     isNewAddressDialogOpen: false,
     setIsNewAddressDialogOpen: (isNewAddressDialogOpen) => set({ isNewAddressDialogOpen }),
@@ -58,6 +64,7 @@ const useUIStore = create<UIStore>((set) => ({
         price: 0,
         // rating: 0,
         description: "",
+        stock: 0,
     },
     setCurrentFoodItem: (currentFoodItem) => set({ currentFoodItem }),
     isOrderDetailsDialogOpen: false,
