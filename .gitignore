@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# MCP / local agent tooling (machine-specific; do not push)
+.cursor/*
+.gemini/*
+.vscode/*
+config/*
+.codex/*
+.zed/*
+opencode.json
+.mcp.json

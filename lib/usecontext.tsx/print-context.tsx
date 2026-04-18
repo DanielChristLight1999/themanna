@@ -2,7 +2,7 @@
 import { createContext, useContext, useRef, ReactNode } from "react";
 
 type PrintContextType = {
-  contentRef: React.RefObject<HTMLDivElement>;
+  contentRef: React.RefObject<HTMLDivElement | null>;
 };
 
 const PrintContext = createContext<PrintContextType | undefined>(undefined);

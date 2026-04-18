@@ -22,16 +22,7 @@ export function formatPrice(price: number) {
   return formatter.format(price)
 }
 
-export function stripAppSubdomain(host: string): string {
-  // Remove port if present
-  const [hostname, port] = host.split(':');
-
-  // If hostname starts with "app.", remove it
-  const stripped = hostname.startsWith('app.') ? hostname.slice(4) : hostname;
-
-  // Return the modified host (with port if present)
-  return port ? `${stripped}:${port}` : stripped;
-}
+export { stripAppSubdomain } from "./strip-app-subdomain"
 
 
 export function estimatedDeliveryTime( deliveryEnd: Date) {
