@@ -264,7 +264,7 @@ export function EditFlyerModal({ open, onOpenChange, flyer, onSubmit }: EditFlye
                                                         selected={field.value}
                                                         onSelect={field.onChange}
                                                         disabled={(date) => date < new Date()}
-                                                        initialFocus
+                                                        autoFocus
                                                     />
                                                 </PopoverContent>
                                             </Popover>

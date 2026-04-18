@@ -1,184 +1,3 @@
-// import { withAccelerate } from "@prisma/extension-accelerate"
-// import { PrismaClient, Role } from "@/lib/generated/prisma"
-// import { hashPassword } from "@/lib/utils"
-
-// const prisma = new PrismaClient().$extends(withAccelerate())
-
-// const seedData = [
-//   {
-//     name: "Foods",
-//     items: [
-//       {
-//         name: "Chicken Tikka",
-//         sku: "FOD-CHICK-001",
-//         price: 10000,
-//         image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
-//         description:
-//           "Chicken Tikka is a popular Indian dish made with marinated chicken pieces cooked in a tandoor oven.",
-//         stock: 100
-//       },
-//       {
-//         name: "Mango Lassi",
-//         sku: "FOD-MANGO-001",
-//         price: 4250,
-//         image: "https://images.unsplash.com/photo-1525385133512-2f3bdd039054",
-//         description: "Mango Lassi is a refreshing Indian yogurt drink blended with ripe mangoes.",
-//         stock: 50
-//       },
-//       {
-//         name: "Margherita Pizza",
-//         sku: "FOD-MARG-001",
-//         price: 12000,
-//         image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38",
-//         description: "Classic Italian pizza with mozzarella cheese and fresh basil.",
-//         stock: 60
-//       },
-//       {
-//         name: "French Fries",
-//         sku: "FOD-FRIES-001",
-//         price: 5000,
-//         image: "https://images.unsplash.com/photo-1630431341973-02e1b662ec35",
-//         description: "Crispy golden French fries, lightly salted.",
-//         stock: 50
-//       },
-//       {
-//         name: "Chocolate Lava Cake",
-//         sku: "FOD-CHOC-001",
-//         price: 6000,
-//         image: "https://images.unsplash.com/photo-1665556387816-cba60197beec",
-//         description: "Warm chocolate cake with a molten center.",
-//         stock: 60
-//       }
-//     ]
-//   },
-//   {
-//     name: "Beverages",
-//     items: [
-//       {
-//         name: "Coca Cola",
-//         sku: "BEV-COKE-001",
-//         price: 200,
-//         image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97",
-//         description: "Chilled 500ml Coca Cola bottle",
-//         stock: 100
-//       },
-//       {
-//         name: "Pepsi",
-//         sku: "BEV-PEPSI-001",
-//         price: 190,
-//         image: "https://images.unsplash.com/photo-1553456558-aff63285bdd1",
-//         description: "Refreshing 500ml Pepsi drink",
-//         stock: 90
-//       }
-//     ]
-//   },
-//   {
-//     name: "Pastries",
-//     items: [
-//       {
-//         name: "Chocolate Croissant",
-//         sku: "PAS-CHCRO-001",
-//         price: 250,
-//         image: "https://images.unsplash.com/photo-1530610476181-d83430b64dcd",
-//         description: "Flaky pastry filled with chocolate",
-//         stock: 50
-//       },
-//       {
-//         name: "Cinnamon Roll",
-//         sku: "PAS-CINROLL-001",
-//         price: 300,
-//         image: "https://images.unsplash.com/photo-1530610476181-d83430b64dcd",
-//         description: "Soft and sweet cinnamon roll",
-//         stock: 60
-//       }
-//     ]
-//   },
-//   {
-//     name: "Wines",
-//     items: [
-//       {
-//         name: "Red Wine",
-//         sku: "WIN-RED-001",
-//         price: 15000,
-//         image: "https://images.unsplash.com/photo-1630369160812-26c7604cbd8c",
-//         description: "750ml bottle of premium red wine",
-//         stock: 30
-//       },
-//       {
-//         name: "White Wine",
-//         sku: "WIN-WHITE-001",
-//         price: 14500,
-//         image: "https://images.unsplash.com/photo-1630369160812-26c7604cbd8c",
-//         description: "750ml bottle of crisp white wine",
-//         stock: 25
-//       }
-//     ]
-//   }
-// ]
-
-// export async function main() {
-//   const adminEmail = process.env.ADMIN_EMAIL
-//   const adminPassword = process.env.ADMIN_PASSWORD
-//   if (!adminEmail || !adminPassword) {
-//     throw new Error("Missing admin email or password")
-//   }
-
-//   const adminUser = await prisma.user.findUnique({
-//     where: {
-//       email: adminEmail
-//     }
-//   })
-
-//   if (!adminUser) {
-//     const passwordHash = hashPassword(adminPassword)
-//     await prisma.user.create({
-//       data: {
-//         email: adminEmail,
-//         name: "Super Admin",
-//         phone: "1234567890",
-//         passwordHash: passwordHash,
-//         role: Role.ADMIN
-//       }
-//     })
-//     console.log("✅ Admin user created")
-//   }
-//   for (const category of seedData) {
-//     await prisma.category.create({
-//       data: {
-//         name: category.name,
-//         products: {
-//           create: category.items.map((item) => ({
-//             name: item.name,
-//             sku: item.sku,
-//             price: item.price,
-//             description: item.description,
-//             isActive: true,
-//             images: {
-//               create: [{ url: item.image }]
-//             },
-//             inventory: {
-//               create: { quantity: item.stock }
-//             }
-//           }))
-//         }
-//       }
-//     })
-//   }
-// }
-
-// main()
-//   .then(() => {
-//     console.log("✅ Seeding completed.")
-//     return prisma.$disconnect()
-//   })
-//   .catch(async (e) => {
-//     console.error("❌ Seeding error:", e)
-//     await prisma.$disconnect()
-//     process.exit(1)
-//   })
-
-
-
 import { withAccelerate } from "@prisma/extension-accelerate"
 import { PrismaClient, Role, OrderStatus, OrderType, PaymentStatus, PaymentMethod, DeliveryType } from "@/lib/generated/prisma"
 import { hashPassword } from "@/lib/utils"
@@ -214,127 +33,127 @@ const defaultPermissions = {
   },
 }
 
-const seedData = [
-  {
-    name: "Foods",
-    items: [
-      {
-        name: "Chicken Tikka",
-        sku: "FOD-CHICK-001",
-        price: 10000,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/anh-nguyen-kcA-c3f_3FE-unsplash-5oH5KPttfZ64BaP2ShPUX4uPNaYLy8.jpg",
-        description:
-          "Chicken Tikka is a popular Indian dish made with marinated chicken pieces cooked in a tandoor oven.",
-        stock: 100,
-        costPrice: 5000,
-      },
-      {
-        name: "Mango Lassi",
-        sku: "FOD-MANGO-001",
-        price: 4250,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/julia-zyablova-KlVIYmGVRQ8-unsplash-LNb8DmEJHUUa2IJNSvOgo43nGsbcal.jpg",
-        description: "Mango Lassi is a refreshing Indian yogurt drink blended with ripe mangoes.",
-        stock: 50,
-        costPrice: 2000,
-      },
-      {
-        name: "Margherita Pizza",
-        sku: "FOD-MARG-001",
-        price: 12000,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/chad-montano-MqT0asuoIcU-unsplash-nQ8eLWyLcGhqK1UAVXODP9OqlyHkvd.jpg",
-        description: "Classic Italian pizza with mozzarella cheese and fresh basil.",
-        stock: 60,
-        costPrice: 6000,
-      },
-      {
-        name: "French Fries",
-        sku: "FOD-FRIES-001",
-        price: 5000,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/fernanda-martinez-H2RzlOijhlQ-unsplash-ZikyFvVI7lNx6Ms8bpDimq5ZeV7qwP.jpg",
-        description: "Crispy golden French fries, lightly salted.",
-        stock: 50,
-        costPrice: 4000,
-      },
-      {
-        name: "Chocolate Lava Cake",
-        sku: "FOD-CHOC-001",
-        price: 6000,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/jacob-thomas-6jHpcBPw7i8-unsplash-PsjMK0fALiVgVhUFImhPn8hDkJebn8.jpg",
-        description: "Warm chocolate cake with a molten center.",
-        stock: 60,
-        costPrice: 5000,
-      }
-    ]
-  },
-  {
-    name: "Beverages",
-    items: [
-      {
-        name: "Coca Cola",
-        sku: "BEV-COKE-001",
-        price: 200,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/alessandro-d-antonio-qy4vrr2qi3M-unsplash-bUFKjQeBWMGm8uS309EwHKpDicsboH.jpg",
-        description: "Chilled 500ml Coca Cola bottle",
-        stock: 100,
-        costPrice: 1000,
-      },
-      {
-        name: "Pepsi",
-        sku: "BEV-PEPSI-001",
-        price: 190,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/andrew-valdivia-rEVX0kkBAV4-unsplash-Dkpw2c7uD1whJBfL0iPbgKb4XImuSp.jpg",
-        description: "Refreshing 500ml Pepsi drink",
-        stock: 90,
-        costPrice: 500,
-      }
-    ]
-  },
-  {
-    name: "Pastries",
-    items: [
-      {
-        name: "Chocolate Croissant",
-        sku: "PAS-CHCRO-001",
-        price: 250,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/personalgraphic-com-VzUE5RtCuBA-unsplash-esDxvTV6jX5w4Rr2DKnaIdJgLIN9BW.jpg",
-        description: "Flaky pastry filled with chocolate",
-        stock: 50,
-        costPrice: 150,
-      },
-      {
-        name: "Cinnamon Roll",
-        sku: "PAS-CINROLL-001",
-        price: 300,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/anisa-cakesandbakes-c07YNJmNfaE-unsplash-jv8EdmE2nrzbd3EbDsljfDJSDMtBDk.jpg",
-        description: "Soft and sweet cinnamon roll",
-        stock: 60,
-        costPrice: 200,
-      }
-    ]
-  },
-  {
-    name: "Wines",
-    items: [
-      {
-        name: "Red Wine",
-        sku: "WIN-RED-001",
-        price: 15000,
-        image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/brenda-godinez-CrK843Pl9a4-unsplash-Vli902jMLnbuydFGpzYvZsRtpfKG0S.jpg",
-        description: "750ml bottle of premium red wine",
-        stock: 30,
-        costPrice: 1000,
-      },
-      {
-        name: "White Wine",
-        sku: "WIN-WHITE-001",
-        price: 14500,
-        image: "https://images.unsplash.com/photo-1630369160812-26c7604cbd8c",
-        description: "750ml bottle of crisp white wine",
-        stock: 25,
-        costPrice: 500,
-      }
-    ]
-  }
+const seedData: { name: string, items: { name: string, sku: string, price: number, image: string, description: string, stock: number, costPrice: number }[] }[] = [
+  // {
+  //   name: "Foods",
+  //   items: [
+  //     {
+  //       name: "Chicken Tikka",
+  //       sku: "FOD-CHICK-001",
+  //       price: 10000,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/anh-nguyen-kcA-c3f_3FE-unsplash-5oH5KPttfZ64BaP2ShPUX4uPNaYLy8.jpg",
+  //       description:
+  //         "Chicken Tikka is a popular Indian dish made with marinated chicken pieces cooked in a tandoor oven.",
+  //       stock: 100,
+  //       costPrice: 5000,
+  //     },
+  //     {
+  //       name: "Mango Lassi",
+  //       sku: "FOD-MANGO-001",
+  //       price: 4250,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/julia-zyablova-KlVIYmGVRQ8-unsplash-LNb8DmEJHUUa2IJNSvOgo43nGsbcal.jpg",
+  //       description: "Mango Lassi is a refreshing Indian yogurt drink blended with ripe mangoes.",
+  //       stock: 50,
+  //       costPrice: 2000,
+  //     },
+  //     {
+  //       name: "Margherita Pizza",
+  //       sku: "FOD-MARG-001",
+  //       price: 12000,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/chad-montano-MqT0asuoIcU-unsplash-nQ8eLWyLcGhqK1UAVXODP9OqlyHkvd.jpg",
+  //       description: "Classic Italian pizza with mozzarella cheese and fresh basil.",
+  //       stock: 60,
+  //       costPrice: 6000,
+  //     },
+  //     {
+  //       name: "French Fries",
+  //       sku: "FOD-FRIES-001",
+  //       price: 5000,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/fernanda-martinez-H2RzlOijhlQ-unsplash-ZikyFvVI7lNx6Ms8bpDimq5ZeV7qwP.jpg",
+  //       description: "Crispy golden French fries, lightly salted.",
+  //       stock: 50,
+  //       costPrice: 4000,
+  //     },
+  //     {
+  //       name: "Chocolate Lava Cake",
+  //       sku: "FOD-CHOC-001",
+  //       price: 6000,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/jacob-thomas-6jHpcBPw7i8-unsplash-PsjMK0fALiVgVhUFImhPn8hDkJebn8.jpg",
+  //       description: "Warm chocolate cake with a molten center.",
+  //       stock: 60,
+  //       costPrice: 5000,
+  //     }
+  //   ]
+  // },
+  // {
+  //   name: "Beverages",
+  //   items: [
+  //     {
+  //       name: "Coca Cola",
+  //       sku: "BEV-COKE-001",
+  //       price: 200,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/alessandro-d-antonio-qy4vrr2qi3M-unsplash-bUFKjQeBWMGm8uS309EwHKpDicsboH.jpg",
+  //       description: "Chilled 500ml Coca Cola bottle",
+  //       stock: 100,
+  //       costPrice: 1000,
+  //     },
+  //     {
+  //       name: "Pepsi",
+  //       sku: "BEV-PEPSI-001",
+  //       price: 190,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/andrew-valdivia-rEVX0kkBAV4-unsplash-Dkpw2c7uD1whJBfL0iPbgKb4XImuSp.jpg",
+  //       description: "Refreshing 500ml Pepsi drink",
+  //       stock: 90,
+  //       costPrice: 500,
+  //     }
+  //   ]
+  // },
+  // {
+  //   name: "Pastries",
+  //   items: [
+  //     {
+  //       name: "Chocolate Croissant",
+  //       sku: "PAS-CHCRO-001",
+  //       price: 250,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/personalgraphic-com-VzUE5RtCuBA-unsplash-esDxvTV6jX5w4Rr2DKnaIdJgLIN9BW.jpg",
+  //       description: "Flaky pastry filled with chocolate",
+  //       stock: 50,
+  //       costPrice: 150,
+  //     },
+  //     {
+  //       name: "Cinnamon Roll",
+  //       sku: "PAS-CINROLL-001",
+  //       price: 300,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/anisa-cakesandbakes-c07YNJmNfaE-unsplash-jv8EdmE2nrzbd3EbDsljfDJSDMtBDk.jpg",
+  //       description: "Soft and sweet cinnamon roll",
+  //       stock: 60,
+  //       costPrice: 200,
+  //     }
+  //   ]
+  // },
+  // {
+  //   name: "Wines",
+  //   items: [
+  //     {
+  //       name: "Red Wine",
+  //       sku: "WIN-RED-001",
+  //       price: 15000,
+  //       image: "https://af7rxiuwmjmjjw3k.public.blob.vercel-storage.com/images/products/brenda-godinez-CrK843Pl9a4-unsplash-Vli902jMLnbuydFGpzYvZsRtpfKG0S.jpg",
+  //       description: "750ml bottle of premium red wine",
+  //       stock: 30,
+  //       costPrice: 1000,
+  //     },
+  //     {
+  //       name: "White Wine",
+  //       sku: "WIN-WHITE-001",
+  //       price: 14500,
+  //       image: "https://images.unsplash.com/photo-1630369160812-26c7604cbd8c",
+  //       description: "750ml bottle of crisp white wine",
+  //       stock: 25,
+  //       costPrice: 500,
+  //     }
+  //   ]
+  // }
 ]
 
 export async function main() {
