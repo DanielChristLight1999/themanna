@@ -1,5 +1,5 @@
 import { withAccelerate } from "@prisma/extension-accelerate"
-import { PrismaClient, Role, OrderStatus, OrderType, PaymentStatus, PaymentMethod, DeliveryType } from "@/lib/generated/prisma"
+import { PrismaClient, Role } from "@/lib/generated/prisma"
 import { hashPassword } from "@/lib/utils"
 
 const prisma = new PrismaClient().$extends(withAccelerate())
@@ -275,7 +275,7 @@ export async function main() {
       },
     })
 
-    const address = await prisma.address.create({
+    await prisma.address.create({
       data: {
         userId: user.id,
         label: "Home",
@@ -286,48 +286,6 @@ export async function main() {
         isDefault: true,
       },
     })
-
-    const products = await prisma.product.findMany()
-    const orderCount = Math.floor(Math.random() * 7) + 4
-
-    for (let i = 0; i < orderCount; i++) {
-      const orderItems = products.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 5) + 1).map((product) => {
-        const quantity = Math.floor(Math.random() * 3) + 1
-        return {
-          productId: product.id,
-          quantity,
-          unitPrice: product.price
-        }
-      })
-
-      const totalAmount = orderItems.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
-
-      const order = await prisma.order.create({
-        data: {
-          customerId: user.id,
-          addressId: address.id,
-          status: OrderStatus.DELIVERED,
-          orderType: OrderType.ONLINE,
-          paymentStatus: PaymentStatus.SUCCESS,
-          deliveryType: DeliveryType.DELIVERY,
-          totalAmount,
-          placedAt: new Date(Date.now() - Math.floor(Math.random() * 60) * 86400000),
-          items: {
-            create: orderItems,
-          },
-        }
-      })
-
-      await prisma.payment.create({
-        data: {
-          orderId: order.id,
-          method: [PaymentMethod.CASH, PaymentMethod.CARD, PaymentMethod.TRANSFER][Math.floor(Math.random() * 3)],
-          amount: totalAmount,
-          status: PaymentStatus.SUCCESS,
-          paidAt: new Date(),
-        },
-      })
-    }
   }
 }
 

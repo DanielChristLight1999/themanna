@@ -1,4 +1,5 @@
 import GoToCart from "@/components/Apps/MainMenu/GoToCart";
+import GoToWhatsapp from "@/components/Apps/MainMenu/GoToWhatsapp";
 import ManaLandingPage from "@/components/Home/HomeContent";
 import { getActiveFlyers, getFoodsOfTheDay, getProductsHome } from "@/lib/getData";
 
@@ -24,6 +25,7 @@ export default async function Home() {
         menuitems={menuItems} 
         />
       <GoToCart fromLanding={true} />
+      <GoToWhatsapp />
     </div>
   );
 }
