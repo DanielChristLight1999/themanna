@@ -22,12 +22,15 @@ import { RolePermissionSettings } from "@/lib/permissions/types"
 export const restaurantInfoSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
-  commision: z.number().min(0).max(100), // Commission percentage
+  commision: z.coerce.number().min(0).max(100), // Commission percentage
   address: z.string().min(1),
   phone: z.string().min(1),
   email: z.string().min(1),
   website: z.string().min(1),
-  logo: z.instanceof(File).optional().refine((file) => file?.type.startsWith("image/"), "Invalid file type. Please upload an image."),
+  logo: z
+    .instanceof(File)
+    .refine((file) => file.type.startsWith("image/"), "Invalid file type. Please upload an image.")
+    .optional(),
 
 })
 
@@ -173,12 +176,12 @@ export function RestaurantSettings({ restaurant, permissions }: { restaurant: Re
                 <FormItem className="space-y-2">
                   <FormLabel>Commision Percentage %</FormLabel>
                   <FormControl>
-                    <Input disabled={!canUpdateSettings} {...field} />
+                    <Input type="number" min={0} max={100} disabled={!canUpdateSettings} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
-              <FormField control={form.control} name="name" render={({ field }) => (
+              <FormField control={form.control} name="description" render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel>Description</FormLabel>
                   <FormControl>
